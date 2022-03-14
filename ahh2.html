@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <canvas id="myCanvas" width="2000" height="2000" style="border:1px solid #d3d3d3;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+
+  <script>
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    var sides = 3;
+    var r = 500;
+    var rot = Math.round((sides - 2) * 180 / sides * 2)
+    var piv = 360 / sides;
+    var angle = 120;
+
+    startx = 1000//1875/2;
+    starty = 1000//950/2;//-(Math.tan(30*Math.PI/180)*width/2);
+
+    var stt = 0.5 * Math.PI - rad(rot) + rad(angle);
+    var end = 0;
+
+    for (let j = 0; j < 29; j++) {
+      setTimeout(() => {
+
+        for (let i = 1; i < sides + 1; i++) {
+          end = stt + rad(rot);
+          ctx.beginPath();
+          ctx.arc(startx + Math.cos(rad(90 + piv * i + angle)) * r, starty + Math.sin(rad(90 + piv * i + angle)) * r, r, stt, end, 0);
+          //ctx.arc(startx+ 200*i, starty, r, stt, end ,0);
+          ctx.strokeStyle = "black";
+          ctx.stroke();
+          stt = end + -(rad(rot - piv));
+        }
+        angle += j;
+
+      }, 100 * j);
+
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+
+    }
+    /*
+    sides = 6;
+    r = 700;
+    rot = Math.round((sides - 2)*180/sides*2)
+    piv = 360/sides;
+    
+    width = Math.cos(30*Math.PI/180)*r*2;
+    
+    startx = 1500//1875/2;
+    starty = 1500//950/2;//-(Math.tan(30*Math.PI/180)*width/2);
+    
+    stt =0.5*Math.PI - rad(rot);
+    end = 0;
+    
+    for (let i = 1; i < sides +1 ; i++) {
+      end = stt + rad(rot)
+      ctx.beginPath();
+      ctx.arc(startx+ Math.cos(rad(90+piv*i))*r, starty+ Math.sin(rad(90+piv*i))*r, r, stt, end ,0);
+      //ctx.arc(startx+ 200*i, starty, r, stt, end ,0);
+      ctx.stroke();
+      stt = end+ -(rad(rot-piv));
+    }
+    */
+
+    /*
+    ctx.beginPath();
+    ctx.moveTo(300-50, 300);
+    ctx.lineTo(300+50, 300);
+    ctx.strokeStyle = "red";
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(300, 300-50);
+    ctx.lineTo(300, 300+50);
+    ctx.strokeStyle = "red";
+    ctx.stroke();
+    */
+
+    ctx.beginPath();
+    ctx.moveTo(startx + Math.cos(rad(90 + 120 * 1)) * r, starty + Math.sin(rad(90 + 120 * 1)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 2)) * r, starty + Math.sin(rad(90 + 120 * 2)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 3)) * r, starty + Math.sin(rad(90 + 120 * 3)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 1)) * r, starty + Math.sin(rad(90 + 120 * 1)) * r);
+    ctx.strokeStyle = "red";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(startx + Math.cos(rad(90 + 120 * 1 + 60)) * r, starty + Math.sin(rad(90 + 120 * 1 + 60)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 2 + 60)) * r, starty + Math.sin(rad(90 + 120 * 2 + 60)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 3 + 60)) * r, starty + Math.sin(rad(90 + 120 * 3 + 60)) * r);
+    ctx.lineTo(startx + Math.cos(rad(90 + 120 * 1 + 60)) * r, starty + Math.sin(rad(90 + 120 * 1 + 60)) * r);
+    ctx.strokeStyle = "red";
+    ctx.stroke();
+
+  </script>
+
+</body>
+
+</html>

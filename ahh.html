@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+function rad(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+
+var r = 100;
+var width = Math.cos(30*Math.PI/180)*r*2;
+
+startx = 300;
+starty = 300;//-(Math.tan(30*Math.PI/180)*width/2);
+
+var stt =0.5;
+
+var stt1 = (stt-2/3)*Math.PI;
+var end1 = (stt)*Math.PI ;
+
+var stt2 = end1;
+var end2 = stt2+(2/3)*Math.PI;
+
+var stt3 = end2;
+var end3 = stt3+(2/3)*Math.PI;
+
+ctx.beginPath();
+ctx.arc(startx+ Math.cos(rad(90+120*1))*r, starty+ Math.sin(rad(90+120*1))*r, r, stt1, end1 ,0);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(startx+ Math.cos(rad(90+120*2))*r, starty+ Math.sin(rad(90+120*2))*r, r, stt2, end2 ,0);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(startx + Math.cos(rad(90+120*3))*r, starty+ Math.sin(rad(90+120*3))*r, r, stt3, end3 ,0);
+ctx.stroke();
+
+/*
+ctx.beginPath();
+ctx.moveTo(300-50, 300);
+ctx.lineTo(300+50, 300);
+ctx.strokeStyle = "red";
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(300, 300-50);
+ctx.lineTo(300, 300+50);
+ctx.strokeStyle = "red";
+ctx.stroke();
+*/
+
+ctx.beginPath();
+ctx.moveTo(startx+ Math.cos(rad(90+120*1))*r, starty+ Math.sin(rad(90+120*1))*r);
+ctx.lineTo(startx+ Math.cos(rad(90+120*2))*r, starty+ Math.sin(rad(90+120*2))*r);
+ctx.lineTo(startx+ Math.cos(rad(90+120*3))*r, starty+ Math.sin(rad(90+120*3))*r);
+ctx.lineTo(startx+ Math.cos(rad(90+120*1))*r, starty+ Math.sin(rad(90+120*1))*r);
+ctx.strokeStyle = "red";
+ctx.stroke();
+
+
+
+</script> 
+
+</body>
+</html>
