@@ -1,0 +1,2 @@
+https://stackoverflow.com/questions/16119991/how-to-speed-up-pythons-turtle-function-and-stop-it-freezing-at-the-end
+used to speed up image, but wont be able to see animation
