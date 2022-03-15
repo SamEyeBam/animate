@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;overflow: hidden;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+
+
+    let deg_per_sec = 15;
+    let time = 120;
+    let fps = 60;
+
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+
+    rotation = 0; //was = j = angle
+    currentFrame = 0; //was = i
+
+
+
+    function render() {
+      if (currentFrame < time / (1 / fps)) {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          Draw_nodal(300, 100, 31, rotation, "blue");
+
+
+          // Draw_center(); //Debugging
+          // DrawBorder();
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        currentFrame += 1; // was = i
+      }
+    }
+
+    render();
+
+    function Draw_nodal(radius, points, step, rotate, colour) {
+      var angle = 360 / points * step
+      ctx.beginPath();
+      var start_angle = angle;
+      var done = false;
+      var total_moves = 1;
+      ctx.moveTo(centerX + (Math.cos(rad(angle + rotate)) * radius), centerY + (Math.sin(rad(angle + rotate)) * radius));
+
+      while (done != true) {
+        if ((total_moves * step) % points != 0) {
+          total_moves++
+        }
+        else {
+          total_moves++
+          done = true
+        }
+      }
+      for (let z = 1; z <= total_moves; z++) {
+        ctx.lineTo(centerX + (Math.cos(rad(angle * z + rotate)) * radius), centerY + (Math.sin(rad(angle * z + rotate)) * radius));
+      }
+      ctx.strokeStyle = colour;
+      ctx.stroke();
+
+    }
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+    function render_clear() {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+
+
+  </script>
+</body>
+
+</html>

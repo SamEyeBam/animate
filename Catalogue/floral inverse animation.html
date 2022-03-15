@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;overflow: hidden;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+    let deg_per_sec = 30;
+    let time = 120;
+    let fps = 60;
+
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+
+    rotation = 0; //was = j = angle
+    currentFrame = 0; //was = i
+
+
+    function render() {
+      if (currentFrame < time / (1 / fps)) {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          Draw_Spiral_Pattern(6, 200, rotation, centerX, centerY, 'red')
+
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        currentFrame += 1; // was = i
+      }
+    }
+
+    render();
+
+    function Draw_Spiral_Pattern(sides, radius, rotation, x, y, colour) {
+      var rot = Math.round((sides - 2) * 180 / sides * 2)
+      var piv = 360 / sides;
+      var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
+      var end = 0;
+      var n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
+
+      for (let i = 1; i < sides + 1; i++) {
+        end = stt + rad(rot);
+
+        ctx.beginPath();
+        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt + rad(rotation) - (stt - end) / 2, end + rad(rotation) + rad(n), 0);
+        ctx.strokeStyle = colour;
+        ctx.stroke();
+
+
+        ctx.beginPath();
+        ctx.arc(x + Math.cos(rad(90 + piv * i - rotation)) * radius, y + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt - rad(rotation), end - (end - stt) / 2 + rad(n) - rad(rotation), 0);
+        ctx.strokeStyle = colour;
+        ctx.stroke();
+
+
+        stt = end + -(rad(rot - piv)) //+rad(30);
+      }
+
+    }
+
+   
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+
+    function render_clear() {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+  </script>
+</body>
+
+</html>

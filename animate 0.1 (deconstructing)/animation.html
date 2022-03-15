@@ -28,23 +28,6 @@
       return newColor;
     }
 
-    function draw_shape(sides, radius, rotation, x, y, colour) {
-      var rot = Math.round((sides - 2) * 180 / sides * 2)
-      var piv = 360 / sides;
-      var stt = 0.5 * Math.PI - rad(rot) + rad(rotation);
-      var end = 0;
-
-      for (let i = 1; i < sides + 1; i++) {
-        end = stt + rad(rot);
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt, end, 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-        stt = end + -(rad(rot - piv)) //+rad(30);
-
-      }
-    }
 
     function draw_shape_sub(sides, radius, rotation, x, y, colour) {
       var denominator = sides - 2
@@ -97,85 +80,7 @@
       }
     }
 
-    function Draw_Shape_accident(sides, radius, rotation, x, y, colour) {
-      var rot = Math.round((sides - 2) * 180 / sides * 2)
-      var piv = 360 / sides;
-      var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
-      var end = 0;
-      var n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
-
-      for (let i = 1; i < sides + 1; i++) {
-        end = stt + rad(rot);
-
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt - (stt - end + rad(rotation)) / 2, end + rad(n), 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i - rotation)) * radius, y + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt, end - (end - stt - rad(rotation)) / 2 + rad(n), 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-
-        stt = end + -(rad(rot - piv)) //+rad(30);
-      }
-
-    }
-
-    function Draw_Spiral_Pattern(sides, radius, rotation, x, y, colour) {
-      var rot = Math.round((sides - 2) * 180 / sides * 2)
-      var piv = 360 / sides;
-      var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
-      var end = 0;
-      var n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
-
-      for (let i = 1; i < sides + 1; i++) {
-        end = stt + rad(rot);
-
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt + rad(rotation) - (stt - end) / 2, end + rad(rotation) + rad(n), 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i - rotation)) * radius, y + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt - rad(rotation), end - (end - stt) / 2 + rad(n) - rad(rotation), 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-
-        stt = end + -(rad(rot - piv)) //+rad(30);
-      }
-
-    }
-
-    function Draw_Spiral(sides, radius, rotation, x, y, colour) {
-      var rot = Math.round((sides - 2) * 180 / sides * 2)
-      var piv = 360 / sides;
-      var stt = 0.5 * Math.PI - rad(rot) + rad(rotation);
-      var end = 0;
-      var n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
-
-      for (let i = 1; i < sides + 1; i++) {
-        end = stt + rad(rot);
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt - (stt - end) / 2, end + rad(n), 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
-
-        /*
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt, end - (end - stt) / 2 + rad(n), 0);
-        ctx.fillStyle = colour;
-        ctx.fill();
-        */
-
-        stt = end + -(rad(rot - piv)) //+rad(30);
-      }
-
-    }
+ 
 
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -186,10 +91,10 @@
     function draw_triangle(ang, radius) {
 
       ctx.beginPath();
-      ctx.moveTo(startx + Math.cos(rad(90 + 120 * 1 + ang)) * radius, starty + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
-      ctx.lineTo(startx + Math.cos(rad(90 + 120 * 2 + ang)) * radius, starty + Math.sin(rad(90 + 120 * 2 + ang)) * radius);
-      ctx.lineTo(startx + Math.cos(rad(90 + 120 * 3 + ang)) * radius, starty + Math.sin(rad(90 + 120 * 3 + ang)) * radius);
-      ctx.lineTo(startx + Math.cos(rad(90 + 120 * 1 + ang)) * radius, starty + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.moveTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 2 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 2 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 3 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 3 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
       ctx.strokeStyle = "red";
       ctx.stroke();
     }
@@ -208,8 +113,8 @@
     var piv = 360 / sides_org;
     var angle = 0;
 
-    startx = 1920 / 2//1875/2;
-    starty = 1080 / 2//950/2;//-(Math.tan(30*Math.PI/180)*width/2);
+    centerX = 1920 / 2//1875/2;
+    centerY = 1080 / 2//950/2;//-(Math.tan(30*Math.PI/180)*width/2);
 
     j = 0;
     i = 0;
@@ -322,35 +227,35 @@
           //draw_triangle(180+ (theFinalAngle*180/Math.PI) ,L)
 
           //draw_triangle((angle-180)/2.8,tmpA*400)
-          //draw_shape(7,300,0,startx,starty,"red");
-          //draw_shape_sub(7,300,0,startx,starty,"blue");
-          //draw_shape_fill(5,300,angle,startx,starty,"purple");
+          //draw_shape(7,300,0,centerX,centerY,"red");
+          //draw_shape_sub(7,300,0,centerX,centerY,"blue");
+          //draw_shape_fill(5,300,angle,centerX,centerY,"purple");
           /*
-          draw_shape_fill(5,300,angle,startx,starty,"purple");
-          draw_shape_fill(5,115,-(angle+108),startx,starty,"red");
-          draw_shape_fill(5,44,angle+108,startx,starty,"yellow");
+          draw_shape_fill(5,300,angle,centerX,centerY,"purple");
+          draw_shape_fill(5,115,-(angle+108),centerX,centerY,"red");
+          draw_shape_fill(5,44,angle+108,centerX,centerY,"yellow");
   
-          draw_shape(5,300,angle,startx,starty,"red");
-          draw_shape(5,115,-(angle+108),startx,starty,"yellow");
-          draw_shape(5,44,angle+108,startx,starty,"purple");
+          draw_shape(5,300,angle,centerX,centerY,"red");
+          draw_shape(5,115,-(angle+108),centerX,centerY,"yellow");
+          draw_shape(5,44,angle+108,centerX,centerY,"purple");
   */
-          //Draw_Spiral(4,400,0,startx,starty,'red');
-          //Draw_Spiral_Pattern(50, 250, angle, startx, starty, 'red')
-          //Draw_Shape_accident(4,300,angle,startx,starty,'red')
-          //Draw_Spiral(10,400,-angle,startx,starty,'red');
+          //Draw_Spiral(4,400,0,centerX,centerY,'red');
+          //Draw_Spiral_Pattern(50, 250, angle, centerX, centerY, 'red')
+          //Draw_Shape_accident(4,300,angle,centerX,centerY,'red')
+          //Draw_Spiral(10,400,-angle,centerX,centerY,'red');
 
-          //draw_shape(99,300,angle,startx,starty,"red");
+          //draw_shape(99,300,angle,centerX,centerY,"red");
           //draw_triangle(0);
 
           //draw_tri(angle);
 
           //draw_test_fill(angle);
 
-          //draw_shape(5,300,angle,startx,starty);
-          //draw_shape(3,300,-angle,startx,starty)
+          //draw_shape(5,300,angle,centerX,centerY);
+          //draw_shape(3,300,-angle,centerX,centerY)
 
-          //draw_shape(7,400,angle,startx,starty)
-          //draw_shape(6,r,-angle,startx,starty)
+          //draw_shape(7,400,angle,centerX,centerY)
+          //draw_shape(6,r,-angle,centerX,centerY)
 
 
           /*
@@ -364,17 +269,11 @@
           //Draw_nodal_expanding(2.5,100000,angle*2+33000,angle*0, colour1,colour2,0.5, 5)
           //Draw_nodal_expanding(2.5,10000,angle,angle*0, colour1,colour2,0.5, 1)
           //console.log(angle*2)
-          //draw_shape(55,300,angle,startx,starty,"pink")
+          //draw_shape(55,300,angle,centerX,centerY,"pink")
           //Draw_Phyllotaxis(angle/5000+1);
-          //draw_shape_fill(4,400,angle,startx,starty,colourToText(ncolour));
+          //draw_shape_fill(4,400,angle,centerX,centerY,colourToText(ncolour));
 
-          //Draw_rectangle_pattern1(angle, 180, "purple");
-          /*
-                      for (let z = 0; z < 360; z+=360/45) {
-                        Draw_rectangle_pattern1(z+angle,200,"blue");
-                        
-                      }
-                    */
+         
 
 
 
@@ -394,76 +293,23 @@
     render()
     //render_clear()
     //Draw_nodal(500, 100,33)
-    //draw_shape_fill(5,300,angle,startx,starty,"purple");
-    //draw_shape_fill(5,115,angle+108,startx,starty,"red");
-    //draw_shape(5,300,angle,startx,starty);
+    //draw_shape_fill(5,300,angle,centerX,centerY,"purple");
+    //draw_shape_fill(5,115,angle+108,centerX,centerY,"red");
+    //draw_shape(5,300,angle,centerX,centerY);
     //Draw_center();
 
 
-    function Draw_Phyllotaxis(angle) {
-      colour1 = [255, 170, 0];
-      colour2 = [255, 0, 221];
-
-      var c = 32;
-
-      for (let n = 50; n < 300; n += 1) {
-        ncolour = LerpRGB(colour1, colour2, Math.cos(rad(n / 2)));
-        var a = n * (angle)//137.5;
-        var r = c * Math.sqrt(n);
-        var x = r * Math.cos(a) + startx;
-        var y = r * Math.sin(a) + starty;
-
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = colourToText(ncolour);
-        ctx.fill();
-
-      }
+    
 
 
-    }
 
-    function draw_test_fill(angle) {
-
-      ctx.beginPath();
-      ctx.arc(1000, 500, 300, 0, rad(angle));
-      ctx.fillStyle = "purple";
-      ctx.fill();
-
-    }
-
-    function Draw_nodal_expanding(expand, points, step, rotate, colour1, colour2, colour_change, line_width) {
-      var angle = 360 / points * step
-
-      var start_angle = angle;
-      var done = false;
-      var total_moves = 1;
-      var length = expand;
-
-
-      for (let z = 1; z <= 2500; z++) {
-        ctx.beginPath();
-        //ctx.moveTo(startx, starty);
-        ncolour = LerpRGB(colour1, colour2, Math.cos(rad(z * colour_change)));
-
-        ctx.moveTo(startx + (Math.cos(rad(angle * (z - 1) + rotate)) * (length - expand)), starty + (Math.sin(rad(angle * (z - 1) + rotate)) * (length - expand)));
-        ctx.lineTo(startx + (Math.cos(rad(angle * z + rotate)) * length), starty + (Math.sin(rad(angle * z + rotate)) * length));
-        length += expand;
-        ctx.lineWidth = line_width;//try 1
-        ctx.strokeStyle = colourToText(ncolour);
-        ctx.stroke();
-      }
-
-
-    }
-
-    function Draw_nodal(radius, points, step, rotate, colour) {
+    function Draw_nodal(radius, points, step, rotate, colour) { //catalogued
       var angle = 360 / points * step
       ctx.beginPath();
       var start_angle = angle;
       var done = false;
       var total_moves = 1;
-      ctx.moveTo(startx + (Math.cos(rad(angle + rotate)) * radius), starty + (Math.sin(rad(angle + rotate)) * radius));
+      ctx.moveTo(centerX + (Math.cos(rad(angle + rotate)) * radius), centerY + (Math.sin(rad(angle + rotate)) * radius));
 
       while (done != true) {
         if ((total_moves * step) % points != 0) {
@@ -475,16 +321,16 @@
         }
       }
       for (let z = 1; z <= total_moves; z++) {
-        ctx.lineTo(startx + (Math.cos(rad(angle * z + rotate)) * radius), starty + (Math.sin(rad(angle * z + rotate)) * radius));
+        ctx.lineTo(centerX + (Math.cos(rad(angle * z + rotate)) * radius), centerY + (Math.sin(rad(angle * z + rotate)) * radius));
       }
       ctx.strokeStyle = colour;
       ctx.stroke();
 
     }
 
-    function Draw_rectangle_pattern1(angle, size, colour) {
+    function Draw_rectangle_pattern1(angle, size, colour) { //catalogued
       ctx.save();
-      ctx.translate(startx, starty)//-(Math.sin(rad(angle)) *startx));
+      ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
       ctx.rotate(rad(angle + 180));
       ctx.beginPath();
       ctx.strokeStyle = colour;
@@ -494,19 +340,13 @@
 
     }
 
-    function draw_tri(angle) {
-      draw_shape(3, 520, angle, startx + 260, starty - 150);
-      draw_shape(3, 520, angle + 60, startx - 260, starty - 150);
-      draw_shape(3, 520, angle + 120, startx, starty + 300);
-
-    }
 
     function Draw_center() {
       ctx.beginPath();
-      ctx.moveTo(startx - 100, starty);
-      ctx.lineTo(startx + 100, starty);
-      ctx.moveTo(startx, starty - 100);
-      ctx.lineTo(startx, starty + 100);
+      ctx.moveTo(centerX - 100, centerY);
+      ctx.lineTo(centerX + 100, centerY);
+      ctx.moveTo(centerX, centerY - 100);
+      ctx.lineTo(centerX, centerY + 100);
       ctx.strokeStyle = "red";
       ctx.stroke();
 

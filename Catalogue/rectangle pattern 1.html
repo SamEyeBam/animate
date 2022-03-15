@@ -3,14 +3,15 @@
 <!-- ahhh -->
 
 <body style="margin:0;overflow: hidden;">
-  <canvas id="myCanvas" width="10" height="10"
-    style="display: block;box-sizing: border-box;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
     Your browser does not support the HTML5 canvas tag.</canvas>
   <script>
     let c = document.getElementById("myCanvas");
     let ctx = c.getContext("2d");
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+
+
 
     let deg_per_sec = 30;
     let time = 120;
@@ -23,12 +24,22 @@
     currentFrame = 0; //was = i
 
 
+    let squares = 1;
+    let tmpTimer = 0;
+    render_clear();
     function render() {
       if (currentFrame < time / (1 / fps)) {
         setTimeout(() => {
           render();
           render_clear();
 
+          Draw_rectangle_pattern1(rotation, squares, 200, "blue");
+
+          if (tmpTimer >= fps/2 & squares != 40) {
+            tmpTimer = 0;
+            squares += 1;
+          }
+          tmpTimer += 1;
 
         }, 1000 / fps);
         rotation += deg_per_sec / fps; // was = j = angle, now = rotation
@@ -39,12 +50,36 @@
     render();
 
 
+    function Draw_rectangle_pattern1(rotation, squares, size, colour) {
+      for (let z = 0; z < 360; z += 360 / squares) {
+        drawSquare(z + rotation);
+      }
+
+      function drawSquare(angle) {
+        ctx.save();
+        ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
+        ctx.rotate(rad(angle + 180));
+        ctx.beginPath();
+        ctx.strokeStyle = colour;
+        ctx.rect(-size, -size, size, size);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-    
+
+
   </script>
 </body>
 

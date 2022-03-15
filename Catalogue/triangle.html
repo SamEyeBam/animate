@@ -3,8 +3,7 @@
 <!-- ahhh -->
 
 <body style="margin:0;overflow: hidden;">
-  <canvas id="myCanvas" width="10" height="10"
-    style="display: block;box-sizing: border-box;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
     Your browser does not support the HTML5 canvas tag.</canvas>
   <script>
     let c = document.getElementById("myCanvas");
@@ -29,6 +28,7 @@
           render();
           render_clear();
 
+          draw_triangle(0, 200)
 
         }, 1000 / fps);
         rotation += deg_per_sec / fps; // was = j = angle, now = rotation
@@ -38,13 +38,28 @@
 
     render();
 
+    function draw_triangle(ang, radius) {
+      ctx.beginPath();
+      ctx.moveTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 2 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 2 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 3 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 3 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.strokeStyle = "red";
+      ctx.stroke();
+    }
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
 
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-    
+
   </script>
 </body>
 

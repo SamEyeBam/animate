@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;overflow: hidden;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+
+
+    let deg_per_sec = 30;
+    let time = 120;
+    let fps = 60;
+
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+
+    rotation = 0; //was = j = angle
+    currentFrame = 0; //was = i
+
+
+
+    function render() {
+      if (currentFrame < time / (1 / fps)) {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          Draw_Phyllotaxis(rotation / 5000 + 1);
+          // Draw_Phyllotaxis(rotation/5000);
+
+          // Draw_center(); //Debugging
+          // DrawBorder();
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        currentFrame += 1; // was = i
+      }
+    }
+
+    render();
+
+    function Draw_Phyllotaxis(angle) {
+      colour1 = [255, 170, 0];
+      colour2 = [255, 0, 221];
+
+      var c = 24; //something to do with width. but not width
+
+      for (let n = 0; n < 300; n += 1) {
+        ncolour = LerpRGB(colour1, colour2, Math.cos(rad(n / 2)));
+        var a = n * (angle)//137.5;
+        var r = c * Math.sqrt(n);
+        var x = r * Math.cos(a) + centerX;
+        var y = r * Math.sin(a) + centerY;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = colourToText(ncolour);
+        ctx.fill();
+
+      }
+
+
+    }
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+    function LerpRGB(a, b, t) {
+      if (t < 0) {
+        t *= -1;
+      }
+      var newColor = [0, 0, 0];
+      newColor[0] = a[0] + (b[0] - a[0]) * t;
+      newColor[1] = a[1] + (b[1] - a[1]) * t;
+      newColor[2] = a[2] + (b[2] - a[2]) * t;
+      return newColor;
+    }
+
+    function colourToText(colour) {
+      return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")"
+    }
+
+    function render_clear() {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+  </script>
+</body>
+
+</html>

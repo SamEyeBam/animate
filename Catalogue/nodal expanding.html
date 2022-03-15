@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;overflow: hidden;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+
+
+    let deg_per_sec = 30;
+    let time = 120;
+    let fps = 60;
+
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+
+    rotation = 0; //was = j = angle
+    currentFrame = 0; //was = i
+
+
+
+    function render() {
+      if (currentFrame < time / (1 / fps)) {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          let colour1 = [137, 54, 255];
+          let colour2 = [158, 255, 54];
+          // Draw_nodal_expanding(5, 100000, rotation * 2 + 33000,0, colour1, colour2, 0.5, 2)
+          Draw_nodal_expanding(5, 10000, rotation+33000, 0, colour1, colour2, 1, 1)
+
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        currentFrame += 1; // was = i
+      }
+    }
+
+    render();
+
+    function Draw_nodal_expanding(expand, points, step, rotate, colour1, colour2, colour_change, line_width) {
+      var angle = 360 / points * step
+
+      var start_angle = angle;
+      var done = false;
+      var total_moves = 1;
+      var length = expand;
+
+      for (let z = 1; z <= 100; z++) { //why specifically 2500
+        ctx.beginPath();
+        ncolour = LerpRGB(colour1, colour2, Math.cos(rad(z * colour_change)));
+
+        ctx.moveTo(centerX + (Math.cos(rad(angle * (z - 1) + rotate)) * (length - expand)), centerY + (Math.sin(rad(angle * (z - 1) + rotate)) * (length - expand)));
+        ctx.lineTo(centerX + (Math.cos(rad(angle * z + rotate)) * length), centerY + (Math.sin(rad(angle * z + rotate)) * length));
+        length += expand;
+        ctx.lineWidth = line_width;//try 1
+        ctx.strokeStyle = colourToText(ncolour);
+        ctx.stroke();
+      }
+
+
+    }
+
+    function LerpRGB(a, b, t) {
+      if (t < 0) {
+        t *= -1;
+      }
+      var newColor = [0, 0, 0];
+      newColor[0] = a[0] + (b[0] - a[0]) * t;
+      newColor[1] = a[1] + (b[1] - a[1]) * t;
+      newColor[2] = a[2] + (b[2] - a[2]) * t;
+      return newColor;
+    }
+
+    function colourToText(colour) {
+      return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")"
+    }
+
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+
+    function render_clear() {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+  </script>
+</body>
+
+</html>

@@ -3,8 +3,7 @@
 <!-- ahhh -->
 
 <body style="margin:0;overflow: hidden;">
-  <canvas id="myCanvas" width="10" height="10"
-    style="display: block;box-sizing: border-box;">
+  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
     Your browser does not support the HTML5 canvas tag.</canvas>
   <script>
     let c = document.getElementById("myCanvas");
@@ -29,6 +28,8 @@
           render();
           render_clear();
 
+          draw_floral(9, 200, rotation *0, centerX, centerY, "red");
+          
 
         }, 1000 / fps);
         rotation += deg_per_sec / fps; // was = j = angle, now = rotation
@@ -38,13 +39,36 @@
 
     render();
 
+    function draw_floral(sides, radius, rotation, x, y, colour) {
+      var rot = Math.round((sides - 2) * 180 / sides * 2)
+      var piv = 360 / sides;
+      var stt = 0.5 * Math.PI - rad(rot) + rad(rotation);
+      var end = 0;
+
+      for (let i = 1; i < sides + 1; i++) {
+        end = stt + rad(rot);
+        ctx.beginPath();
+        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt, end, 0);
+        ctx.strokeStyle = colour;
+        ctx.stroke();
+
+        stt = end + -(rad(rot - piv)) //+rad(30);
+
+      }
+    }
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
 
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-    
+
   </script>
 </body>
 
