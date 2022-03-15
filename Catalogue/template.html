@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <!-- ahhh -->
+  <body>
+    <canvas
+      id="myCanvas"
+      width="1920"
+      height="1080"
+      style="border: 1px solid #d3d3d3"
+    >
+      Your browser does not support the HTML5 canvas tag.</canvas
+    >
+    <script>
+      let c = document.getElementById("myCanvas");
+      let ctx = c.getContext("2d");
+
+
+      let deg_per_sec = 30;
+      let time = 120;
+      let fps = 60;
+
+      centerX = 1920 / 2;
+      centerY = 1080 / 2;
+
+      j = 0;
+      i = 0;
+
+
+      function render() {
+        if (i < time / (1 / fps)) {
+          setTimeout(() => {
+            render();
+
+            render_clear();
+          }, 1000 / fps);
+          j += (deg_per_sec * 1) / fps; //What is this?
+          i += 1;
+        }
+      }
+
+      render();
+    </script>
+  </body>
+</html>
