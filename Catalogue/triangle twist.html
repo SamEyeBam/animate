@@ -3,7 +3,8 @@
 <!-- ahhh -->
 
 <body style="margin:0;overflow: hidden;">
-  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+  <canvas id="myCanvas" width="10" height="10"
+    style="display: block;box-sizing: border-box;">
     Your browser does not support the HTML5 canvas tag.</canvas>
   <script>
     let c = document.getElementById("myCanvas");
@@ -21,22 +22,56 @@
     rotation = 0; //was = j = angle
     currentFrame = 0; //was = i
 
-
+    
     function render() {
       if (currentFrame < time / (1 / fps)) {
         setTimeout(() => {
           render();
           render_clear();
 
-          draw_triangle(0, 200, "red");
+          DrawTriangleTwist_angle(400,0,rotation,"red")
+          // DrawTriangleTwist_width(400,0,rotation,"red")
 
         }, 1000 / fps);
-        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
         currentFrame += 1; // was = i
       }
     }
 
     render();
+
+
+    function DrawTriangleTwist_width(width, rotation,innerRotation, colour){
+         
+      let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (150 - innerRotation + 120 * Math.floor(innerRotation / 120))))
+
+      for (let i = 0; i < 25; i++) {
+        draw_triangle(180+innerRotation*i,width*widthMultiplier**i, colour)
+      } 
+
+    }
+
+    function DrawTriangleTwist_angle(width, rotation,innerRotation, colour){
+      let out_angle = 0
+      let innerAngle = innerRotation - (120*Math.floor(innerRotation/120));
+      
+      if (innerAngle < 60) {
+        out_angle = 120 / (2 * Math.cos(rad(innerAngle))) - 60
+      }
+      else {
+        out_angle = -120 / (2 * Math.cos(2 * Math.PI / 3 - (innerAngle * Math.PI / 180))) + 180
+      }
+
+      let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (150 - out_angle + 120 * Math.floor(out_angle / 120))))
+      
+      for (let i = 0; i < 25; i++) {
+        draw_triangle(180+out_angle*i,width*widthMultiplier**i, colour)
+      }
+
+    }
+
+    
+
 
     function draw_triangle(ang, radius, colour) {
       ctx.beginPath();
@@ -54,12 +89,13 @@
     }
 
 
+
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-
+    
   </script>
 </body>
 
