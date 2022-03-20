@@ -2,8 +2,9 @@
 <html>
 <!-- ahhh -->
 
-<body style="margin:0;overflow: hidden;">
-  <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+<body style="margin:0;">
+  <canvas id="myCanvas" width="10" height="10"
+    style="display: block;box-sizing: border-box;">
     Your browser does not support the HTML5 canvas tag.</canvas>
   <script>
     let c = document.getElementById("myCanvas");
@@ -21,40 +22,44 @@
     rotation = 0; //was = j = angle
     currentFrame = 0; //was = i
 
-
+    
     function render() {
       if (currentFrame < time / (1 / fps)) {
         setTimeout(() => {
           render();
           render_clear();
 
-          draw_floral(16, 200, rotation *0, centerX, centerY, "red");
-          
-
+          DrawSquareTwist_angle(400,0,rotation,"red")
+         
         }, 1000 / fps);
-        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
         currentFrame += 1; // was = i
       }
     }
 
     render();
 
-    function draw_floral(sides, radius, rotation, x, y, colour) {
-      var rot = Math.round((sides - 2) * 180 / sides * 2)
-      var piv = 360 / sides;
-      var stt = 0.5 * Math.PI - rad(rot) + rad(rotation);
-      var end = 0;
 
-      for (let i = 1; i < sides + 1; i++) {
-        end = stt + rad(rot);
-        ctx.beginPath();
-        ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt, end, 0);
-        ctx.strokeStyle = colour;
-        ctx.stroke();
 
-        stt = end + -(rad(rot - piv)) //+rad(30);
+function DrawSquareTwist_angle(width, rotation,innerRotation, colour){
+    let out_angle = innerRotation;
+    let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (130 - out_angle + 90 * Math.floor(out_angle / 90))))+0.5
 
-      }
+    for (let i = 0; i < 25; i++) {
+      drawSquare(innerRotation*i,width*widthMultiplier**i, colour)
+    } 
+
+  }
+
+  function drawSquare(angle,size, colour) {
+    ctx.save();
+    ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
+    ctx.rotate(rad(angle + 180));
+    ctx.beginPath();
+    ctx.strokeStyle = colour;
+    ctx.rect(-size/2, -size/2, size, size);
+    ctx.stroke();
+    ctx.restore();
     }
 
     function rad(degrees) {
@@ -63,12 +68,13 @@
     }
 
 
+
     function render_clear() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-
+    
   </script>
 </body>
 

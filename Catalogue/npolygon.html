@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <!-- ahhh -->
+
+  <body style="margin: 0; overflow: hidden">
+    <canvas
+      id="myCanvas"
+      width="10"
+      height="10"
+      style="display: block; box-sizing: border-box"
+    >
+      Your browser does not support the HTML5 canvas tag.</canvas
+    >
+    <script>
+      let c = document.getElementById("myCanvas");
+      let ctx = c.getContext("2d");
+      ctx.canvas.width = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
+
+      let deg_per_sec = 30;
+      let time = 120;
+      let fps = 60;
+
+      centerX = ctx.canvas.width / 2;
+      centerY = ctx.canvas.height / 2;
+
+      rotation = 0; //was = j = angle
+      currentFrame = 0; //was = i
+
+      function render() {
+        if (currentFrame < time / (1 / fps)) {
+          setTimeout(() => {
+            render();
+            render_clear();
+
+            DrawPolygon(4, 300, rotation, "red");
+          }, 1000 / fps);
+          rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+          currentFrame += 1; // was = i
+        }
+      }
+
+      render();
+
+      function DrawPolygon(sides, width, rotation, colour) {
+        ctx.beginPath();
+        ctx.moveTo(
+          centerX + width * Math.cos((rotation * Math.PI) / 180),
+          centerY + width * Math.sin((rotation * Math.PI) / 180)
+        );
+
+        for (var i = 1; i <= sides; i += 1) {
+          ctx.lineTo(
+            centerX + width * Math.cos( (i * 2 * Math.PI) / sides + (rotation * Math.PI) / 180 ),
+            centerY + width * Math.sin( (i * 2 * Math.PI) / sides + (rotation * Math.PI) / 180 )
+            );
+        }
+
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      function render_clear() {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      }
+    </script>
+  </body>
+</html>

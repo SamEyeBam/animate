@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;">
+  <canvas id="myCanvas" width="10" height="10"
+    style="display: block;box-sizing: border-box;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+    let deg_per_sec = 30;
+    let time = 120;
+    let fps = 60;
+
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+
+    rotation = 0; //was = j = angle
+    currentFrame = 0; //was = i
+
+    
+    function render() {
+      if (currentFrame < time / (1 / fps)) {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          DrawSquareTwist_width(7,400,0,rotation,"red")
+          // DrawSquareTwist_angle(3,400,0,rotation,"red")
+          
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
+        currentFrame += 1; // was = i
+      }
+    }
+
+    render();
+
+
+    function DrawSquareTwist_angle(sides,width, rotation,innerRotation, colour){
+      let out_angle = innerRotation;
+      // let widthMultiplier = 169 / (239 * Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+      // let widthMultiplier = Math.sqrt(0.5) * 1/ (Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+      let widthMultiplier = Math.sqrt(0.5) * 1/ (Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+
+      for (let i = 0; i < 25; i++) {
+        DrawPolygon(sides,width*widthMultiplier**i,innerRotation*i, colour)
+      } 
+
+    }
+    function DrawSquareTwist_width(sides,width, rotation,innerRotation, colour){
+      // if(innerRotation >59){
+      //   innerRotation=59
+      // }
+
+      let out_angle = 0
+      let innerAngle = 180 - ((sides-2) *180/sides);
+      // console.log(innerAngle);
+      let scopeAngle = innerRotation - (innerAngle*Math.floor(innerRotation/innerAngle));
+      
+      
+
+      if (scopeAngle < innerAngle/2) {
+        out_angle = innerAngle / (2 * Math.cos((2*Math.PI*scopeAngle)/(3*innerAngle))) - innerAngle/2
+      }
+      else {
+        out_angle = -innerAngle / (2 * Math.cos( ((2*Math.PI)/3) - ((2*Math.PI*scopeAngle)/(3*innerAngle))) ) + (innerAngle*3)/2
+      }
+      let minWidth = Math.sin(rad(innerAngle/2))*(0.5/Math.tan(rad(innerAngle/2)))*2;
+      console.log(minWidth);
+      // let widthMultiplier = 169 / (239 * Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+      // let widthMultiplier = Math.sqrt(0.5) * 1/ (Math.sin(Math.PI / 180 * (((innerAngle/2)*3) - out_angle + innerAngle * Math.floor(out_angle / innerAngle))))
+
+      // let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (150 - out_angle + 120 * Math.floor(out_angle / 120)))) //triangle
+      let widthMultiplier = minWidth / Math.sin(Math.PI / 180 * (90+innerAngle/2 - out_angle + innerAngle * Math.floor(out_angle / innerAngle))) //triangle
+      console.log(innerRotation + ": " + out_angle);
+      for (let i = 0; i < 25; i++) {
+        DrawPolygon(sides,width*widthMultiplier**i,out_angle*i, colour)
+        // draw_triangle(180+out_angle*i,width*widthMultiplier**i, colour)
+      } 
+
+    }
+    function DrawPolygon(sides, width, rotation, colour) {
+      ctx.beginPath();
+      ctx.moveTo(centerX + width * Math.cos(((rotation*4)*Math.PI/180) / sides), centerY + width * Math.sin(((rotation*4)*Math.PI/180) / sides));
+
+      for (var i = 1; i <= sides; i += 1) {
+        ctx.lineTo(
+          centerX + width * Math.cos((i * 2 * Math.PI +((rotation*4)*Math.PI/180)) / sides),
+          centerY + width * Math.sin((i * 2 * Math.PI +((rotation*4)*Math.PI/180)) / sides)
+        );
+      }
+
+      ctx.strokeStyle = colour;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    
+    function drawSquare(angle,size, colour) {
+      ctx.save();
+      ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
+      ctx.rotate(rad(angle + 180));
+      ctx.beginPath();
+      ctx.strokeStyle = colour;
+      ctx.rect(-size/2, -size/2, size, size);
+      ctx.stroke();
+      ctx.restore();
+      }
+
+    function draw_triangle(ang, radius, colour) {
+      ctx.beginPath();
+      ctx.moveTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 2 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 2 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 3 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 3 + ang)) * radius);
+      ctx.lineTo(centerX + Math.cos(rad(90 + 120 * 1 + ang)) * radius, centerY + Math.sin(rad(90 + 120 * 1 + ang)) * radius);
+      ctx.strokeStyle = colour;
+      ctx.stroke();
+    }
+
+    function rad(degrees) {
+      var pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+
+
+    function render_clear() {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+    
+  </script>
+</body>
+
+</html>
