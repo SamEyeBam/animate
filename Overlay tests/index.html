@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+<head>
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body style="margin:0;">
+  <canvas id="myCanvas" width="10" height="10"
+    style="display: block;box-sizing: border-box;"></canvas>
+  <div id="toolbar">
+    <br>
+    <P>Size</P>
+    <p id="outputWidth">400</p>
+    <input type="range" min="1" max="600" value="400" class="slider" id="inputWidth">
+    <br>
+    <p># of sides</p>
+    <input type="text" id="inputSides" value="5" onchange="ChangeSides(this.value)">
+    <input type="range" min="3" max="20" value="3" class="slider" id="inputSidesSlider">
+    <br>
+    <p>Colours</p>
+    <input type="color" id="colour1" name="favcolor" value="#4287f5">
+    <input type="color" id="colour2" name="favcolor" value="#42f57b">
+    <br>
+    <p>Depth</p>
+    <input type="text" id="inputDepth" value="300" onchange="ChangeDepth(this.value)">
+    <br>
+    <p>Global Rotation</p>
+    <input type="text" id="inputSetGlobalRotation" value="0" onchange="ChangeGlobalRotation(this.value)">
+    <br>
+    <p>Object Rotation</p>
+    <input type="text" id="inputSetObjectRotation" value="-90" onchange="ChangeObjectRotation(this.value)">
+    <input type="range" min="-180" max="180" value="-90" class="slider" id="inputObjectRotationSlider" onchange="ChangeObjectRotation(this.value)">
+    <br>
+    <p>Degrees Per Second</p>
+    <input type="text" id="inputDegPerSec" value="5" onchange="ChangeDegPerSec(this.value)">
+    <br>
+    <p>Controls</p>
+    <button id="resetButton" onclick="Reset()">Reset</button>
+    <div class="controls">
+      <button onclick="BackwardFrame()"><</button>
+      <button id="pauseButton" onclick="TogglePause()">Play</button>
+      <button onclick="ForwardFrame()">></button>
+    </div>
+  </div>
+</body>
+<script src="./js/math.js" type="text/javascript"></script>
+<script src="./js/objects.js" type="text/javascript"></script>
+<script src="./js/index.js"></script>
+</html>

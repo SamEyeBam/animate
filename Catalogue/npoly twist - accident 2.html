@@ -22,7 +22,7 @@
     rotation = 0; //was = j = angle
     currentFrame = 0; //was = i
 
-    let depth = 300 //custom to npoly twist
+    let depth = 500 //custom to npoly twist
     
     function render() {
       if (currentFrame < time / (1 / fps)) {
@@ -30,13 +30,13 @@
           render();
           render_clear();
           
-          colour1 = [255, 0, 0];
+          colour1 = [235, 64, 52];
           colour2 = [0, 0, 0];
+          // colour1 = [66, 18, 15];
 
-          DrawPolyTwistColour_angle(15,400,-90,rotation/20,colour1, colour2)
-          // DrawPolyTwist_angle(15,400,-90,rotation/20,"red")
-          // DrawPolyTwistColour_width(4,400,-45,rotation/4,colour1,colour2)
+          DrawPolyTwistColour_width(10,400,-90,rotation/20,colour1,colour2)
           // DrawPolyTwist_width(10,400,-90,rotation/20,"red")
+          // DrawSquareTwist_angle(3,400,0,rotation,"red")
           
         }, 1000 / fps);
         rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
@@ -47,14 +47,13 @@
     render();
 
 
-    function DrawPolyTwist_angle(sides,width, rotation,innerRotation, colour){
+    function DrawSquareTwist_angle(sides,width, rotation,innerRotation, colour){
       let out_angle = innerRotation;
-      let innerAngle = 180 - ((sides-2) *180/sides);
-      let minWidth = Math.sin(rad(innerAngle/2))*(0.5/Math.tan(rad(innerAngle/2)))*2;
-      
-      let widthMultiplier = minWidth / Math.sin(Math.PI / 180 * (90+innerAngle/2 - out_angle + innerAngle * Math.floor(out_angle / innerAngle)))
+      // let widthMultiplier = 169 / (239 * Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+      // let widthMultiplier = Math.sqrt(0.5) * 1/ (Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
+      let widthMultiplier = Math.sqrt(0.5) * 1/ (Math.sin(Math.PI / 180 * (135 - out_angle + 90 * Math.floor(out_angle / 90))))
 
-      for (let i = 0; i < depth; i++) {
+      for (let i = 0; i < 25; i++) {
         DrawPolygon(sides,width*widthMultiplier**i,innerRotation*i, colour)
       }
     } 
@@ -80,25 +79,6 @@
       } 
 
     }
-
-    function DrawPolyTwistColour_angle(sides,width, rotation,innerRotation,colour1,colour2){
-      let out_angle = innerRotation;
-      let innerAngle = 180 - ((sides-2) *180/sides);
-      let minWidth = Math.sin(rad(innerAngle/2))*(0.5/Math.tan(rad(innerAngle/2)))*2;
-      
-      let widthMultiplier = minWidth / Math.sin(Math.PI / 180 * (90+innerAngle/2 - out_angle + innerAngle * Math.floor(out_angle / innerAngle)))
-
-      for (let i = 0; i < depth; i++) {
-        let fraction = i/depth;
-        // let fraction = Math.cos(rad(i / 2));
-        // let fraction = (-1*(i-depth)**2)/depth**2+1
-        let ncolour = LerpRGB(colour1,colour2,fraction);
-        // let ncolour = LerpRGB(colour1,colour2,((i-depth)**2)/depth**2);
-        
-        DrawPolygon(sides,width*widthMultiplier**i,out_angle*i+rotation, colourToText(ncolour))
-      }
-    } 
-
     function DrawPolyTwistColour_width(sides,width, rotation,innerRotation, colour1,colour2){
       let out_angle = 0
       let innerAngle = 180 - ((sides-2) *180/sides);
@@ -116,14 +96,14 @@
 
       for (let i = 0; i < depth; i++) {
         // let ncolour = LerpRGB(colour1,colour2,i/depth);
-        let fraction = i/depth;
-        // let fraction = Math.cos(rad(i / 2));
-        // let fraction = (-1*(i-depth)**2)/depth**2+1
+        let fraction = ((-1*(i-depth))**2)/(depth**2)
+        console.log(fraction);
         let ncolour = LerpRGB(colour1,colour2,fraction);
         // let ncolour = LerpRGB(colour1,colour2,((i-depth)**2)/depth**2);
         
         DrawPolygon(sides,width*widthMultiplier**i,out_angle*i+rotation, colourToText(ncolour))
       } 
+
     }
 
     function DrawPolygon(sides, width, rotation, colour) {
