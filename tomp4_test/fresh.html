@@ -1,0 +1,185 @@
+<!-- <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.8.1/dist/ffmpeg.min.js"></script> -->
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.10.0/dist/ffmpeg.min.js"></script>
+
+<canvas id="canvas" style="height: 900px; width: 900px"></canvas>
+
+<video id="myVideo" controls="controls"></video>
+<video id="output-video" controls="controls"></video>
+
+<a id="dl" href="" download="download.mp4"></a>
+
+<div id="message"></div>
+
+<script>
+  let c = document.getElementById("canvas");
+  let ctx = c.getContext("2d");
+  //   ctx.canvas.width = window.innerWidth;
+  //   ctx.canvas.height = window.innerHeight;
+  ctx.canvas.width = 900;
+  ctx.canvas.height = 900;
+
+  centerX = ctx.canvas.width / 2;
+  centerY = ctx.canvas.height / 2;
+
+  let deg_per_sec = 30 / 5000;
+  let timeLimit = 10;
+  let fps = 60;
+
+  rotation = 0; //was = j = angle
+  currentFrame = 0; //was = i
+
+  const { createFFmpeg } = FFmpeg;
+  const ffmpeg = createFFmpeg({
+    log: true,
+  });
+
+  const transcode = async (webcamData) => {
+    const message = document.getElementById("message");
+    const name = "record.webm";
+    await ffmpeg.load();
+    message.innerHTML = "Start transcoding";
+    await ffmpeg.write(name, webcamData);
+    await ffmpeg.transcode(name, "output.mp4");
+    message.innerHTML = "Complete transcoding";
+    const data = ffmpeg.read("output.mp4");
+
+    const video = document.getElementById("output-video");
+    video.src = URL.createObjectURL(
+      new Blob([data.buffer], { type: "video/mp4" })
+    );
+    dl.href = video.src;
+    dl.innerHTML = "download mp4";
+  };
+
+  fn().then(async ({ url, blob }) => {
+    transcode(new Uint8Array(await blob.arrayBuffer()));
+  });
+
+  function fn() {
+    var recordedChunks = [];
+
+    var time = 0;
+    var canvas = document.getElementById("canvas");
+
+    return new Promise(function (res, rej) {
+      var stream = canvas.captureStream(60);
+
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm; codecs=vp9",
+      });
+
+      mediaRecorder.start(time);
+
+      mediaRecorder.ondataavailable = function (e) {
+        recordedChunks.push(event.data);
+        // for demo, removed stop() call to capture more than one frame
+      };
+
+      mediaRecorder.onstop = function (event) {
+        var blob = new Blob(recordedChunks, {
+          type: "video/webm",
+        });
+        var url = URL.createObjectURL(blob);
+        res({ url, blob }); // resolve both blob and url in an object
+
+        myVideo.src = url;
+        // removed data url conversion for brevity
+      };
+      
+      // for demo, draw random lines and then stop recording
+    //   var i = 0,
+    //   tid = setInterval(() => {
+    //       if (currentFrame > timeLimit / (1 / fps)) {
+    //           // draw 20 lines
+    //           clearInterval(tid);
+    //           mediaRecorder.stop();
+    //       }
+    //       //   let canvas = document.querySelector("canvas");
+    //       //   let cx = canvas.getContext("2d");
+    //       //   cx.beginPath();
+    //       //   cx.strokeStyle = "green";
+    //       //   cx.moveTo(Math.random() * 600, Math.random() * 600);
+    //       //   cx.lineTo(Math.random() * 600, Math.random() * 600);
+    //       //   cx.stroke();
+
+    //       render_clear();
+    //       // Draw_Phyllotaxis(rotation + 3.1);
+    //       Draw_Phyllotaxis(rotation + 1.5);
+
+    //       rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+    //       currentFrame += 1; // was = i
+    //     }, 1000 / fps);
+    function render() {
+        if (currentFrame < timeLimit / (1 / fps)) {
+          setTimeout(() => {
+            render();
+            render_clear();
+
+            // Draw_Phyllotaxis(rotation + 3.1);
+            Draw_Phyllotaxis(rotation + 1.5);
+            console.log(rotation + 3.1);
+            // Draw_Phyllotaxis(rotation/5000);
+
+            // Draw_center(); //Debugging
+            // DrawBorder();
+          }, 1000 / fps);
+          rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+          currentFrame += 1; // was = i
+        }
+        else{
+            mediaRecorder.stop();
+        }
+      }
+
+      render();
+
+    });
+  }
+
+  function Draw_Phyllotaxis(angle) {
+    // colour1 = [255, 170, 0];
+    // colour2 = [255, 0, 221];
+    colour1 = [45, 129, 252];
+    colour2 = [252, 3, 98];
+
+    var c = 24; //something to do with width. but not width
+
+    for (let n = 0; n < 300; n += 1) {
+      ncolour = LerpRGB(colour1, colour2, Math.cos(rad(n / 2)));
+      var a = n * angle; //137.5;
+      var r = c * Math.sqrt(n);
+      var x = r * Math.cos(a) + centerX;
+      var y = r * Math.sin(a) + centerY;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, 2 * Math.PI);
+      ctx.fillStyle = colourToText(ncolour);
+      ctx.fill();
+    }
+  }
+  function rad(degrees) {
+    var pi = Math.PI;
+    return degrees * (pi / 180);
+  }
+
+  function LerpRGB(a, b, t) {
+    if (t < 0) {
+      t *= -1;
+    }
+    var newColor = [0, 0, 0];
+    newColor[0] = a[0] + (b[0] - a[0]) * t;
+    newColor[1] = a[1] + (b[1] - a[1]) * t;
+    newColor[2] = a[2] + (b[2] - a[2]) * t;
+    return newColor;
+  }
+
+  function colourToText(colour) {
+    return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")";
+  }
+
+  function render_clear() {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+</script>

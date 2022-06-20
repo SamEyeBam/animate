@@ -14,7 +14,7 @@
 
 
     let deg_per_sec = 30/5000;
-    let time = 120;
+    let time = 0.1;
     let fps = 60;
 
     centerX = ctx.canvas.width / 2;
@@ -31,7 +31,8 @@
           render();
           render_clear();
 
-          Draw_Phyllotaxis(rotation + 3.1);
+          // Draw_Phyllotaxis(rotation + 3.1);
+          Draw_Phyllotaxis(rotation + 1.5);
           console.log(rotation + 3.1)
           // Draw_Phyllotaxis(rotation/5000);
 
@@ -46,8 +47,10 @@
     render();
 
     function Draw_Phyllotaxis(angle) {
-      colour1 = [255, 170, 0];
-      colour2 = [255, 0, 221];
+      // colour1 = [255, 170, 0];
+      // colour2 = [255, 0, 221];
+      colour1 = [45, 129, 252];
+      colour2 = [252, 3, 98];
 
       var c = 24; //something to do with width. but not width
 
@@ -59,7 +62,7 @@
         var y = r * Math.sin(a) + centerY;
 
         ctx.beginPath();
-        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.arc(x, y, 8, 0, 2 * Math.PI);
         ctx.fillStyle = colourToText(ncolour);
         ctx.fill();
 
