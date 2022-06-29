@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+  <!-- ahhh -->
+
+  <body style="margin: 0; overflow: hidden">
+    <div style="display: none;">
+      <img id="polyA" src="polyA.svg" width="100" height="100"></img>
+      <img id="polyB" src="polyB.svg" width="100" height="100"></img>
+      <img id="polyC" src="polyC.svg" width="100" height="100"></img>
+    </div>
+    <canvas
+      id="myCanvas"
+      width="10"
+      height="10"
+      style="display: block; box-sizing: border-box"
+    >
+      Your browser does not support the HTML5 canvas tag.</canvas
+    >
+    <script>
+      const polyA = document.getElementById('polyA');
+      const polyB = document.getElementById('polyB');
+      const polyC = document.getElementById('polyC');
+      let c = document.getElementById("myCanvas");
+      let ctx = c.getContext("2d");
+      ctx.canvas.width = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
+
+      let deg_per_sec = 30;
+      let time = 120;
+      let fps = 60;
+
+      centerX = ctx.canvas.width / 2;
+      centerY = ctx.canvas.height / 2;
+
+      rotation = 0; //was = j = angle
+      currentFrame = 0; //was = i
+
+      let nPoly1 = {
+        colour1: [0, 255, 0],
+        colour2: [255, 0, 0],
+        speedMult: 0.20,
+        depth: 22,
+        width: 0,
+        widthMax: 400,
+        sides: 4,
+        rotation: 0,
+        duration: 90*0.2, //rotation
+        draw: function () {
+          DrawPolyTwistColour_width(
+            this.sides,
+            this.depth,
+            this.width,
+            -90,
+            this.rotation * this.speedMult,
+            this.colour1,
+            this.colour2
+          );
+        },
+      };
+
+      let nPoly2 = {
+        colour1: [0,0,0],
+        colour2: [110, 38, 255],
+        speedMult: 0.05,
+        depth: 100,
+        width: 0,
+        widthMax: 400,
+        sides: 8,
+        rotation: 0,
+        duration: 120 *0.05,
+        draw: function () {
+          DrawPolyTwistColour_width(
+            this.sides,
+            this.depth,
+            this.width,
+            -90,
+            this.rotation * this.speedMult,
+            this.colour1,
+            this.colour2
+          );
+          
+        },
+      };
+      let floralInv1 = {
+        colour1: [255, 0, 0],
+        speedMult: 1,
+        width: 0,
+        widthMax: 250,
+        sides: 5,
+        rotation: 0,
+        duration: deg_per_sec*10,
+        draw: function () {
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, centerX, centerY, 'red');
+        },
+      };
+      let floralInv2 = {
+        colour1: [255, 0, 0],
+        speedMult: 1,
+        width: 0,
+        widthMax: 250,
+        sides: 12,
+        rotation: 0,
+        duration: deg_per_sec*10,
+        draw: function () {
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red');
+        },
+      };
+      let floralInv3 = {
+        colour1: [255, 0, 0],
+        speedMult: 1,
+        width: 0,
+        widthMax: 225,
+        sides: 40,
+        rotation: 0,
+        duration: deg_per_sec*5,
+        draw: function () {
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red');
+        },
+      };
+      let floralAcc1 = {
+        colour1: [255, 0, 0],
+        speedMult: 1,
+        width: 0,
+        widthMax: 225,
+        sides: 3,
+        rotation: 0,
+        duration: deg_per_sec*5,
+        draw: function () {
+          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red')
+        },
+      };
+      let floralAcc2 = {
+        colour1: [255, 0, 0],
+        speedMult: 1,
+        width: 0,
+        widthMax: 225,
+        sides: 12,
+        rotation: 0,
+        duration: deg_per_sec*14,
+        draw: function () {
+          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red')
+        },
+      };
+      let nodal1 = {
+        colour1: [137, 54, 255],
+        colour2: [158, 255, 54],
+        width: 0, //expand
+        widthMax: 5, //expand
+        points: 10000,
+        speedMult: 1,
+        colourChange: 1,
+        lineWidth: 4,
+        rotation: 0,
+        duration: deg_per_sec*5,
+        draw: function () {
+          Draw_nodal_expanding(
+            this.width, 
+            this.points, 
+            this.rotation*this.speedMult +2000, 
+            0, 
+            this.colour1, 
+            this.colour2, 
+            this.colourChange, 
+            this.lineWidth)
+        },
+      };
+
+      let phyllo1 = {
+        colour1: [75, 226, 255],
+        colour2: [255, 115, 87],
+        speedMult: 1/5000,
+        width: 0,
+        widthMax: 24,
+        dots: 300,
+        dotWidth: 8,
+        rotation: 0,
+        duration: deg_per_sec*5 /5000,
+        draw: function () {
+          Draw_Phyllotaxis(
+            this.width,
+            this.rotation*this.speedMult ,
+            this.dots,
+            this.dotWidth,
+            this.colour1,
+            this.colour2);
+        },
+      };
+      let mathPoly = {
+        speedMult: 1,
+        width: 0,
+        widthMax: 500,
+        duration: deg_per_sec*20,
+        draw: function () {
+          Draw_Math_Node(100,this.file,this.width);
+        }
+      };
+      
+      let aniObj = [mathPoly,nodal1,floralAcc1,floralInv3,phyllo1,nPoly2];
+      let ind = 0;
+
+      function render() {
+        setTimeout(() => {
+          render();
+          render_clear();
+
+          if (aniObj[ind].width < aniObj[ind].widthMax && rotation <= aniObj[ind].duration/aniObj[ind].speedMult) {
+            aniObj[ind].width += aniObj[ind].widthMax/100
+          }
+
+          if(rotation >= aniObj[ind].duration/aniObj[ind].speedMult){
+            if(aniObj[ind].width <=0){
+              aniObj[ind].width = 0
+              ind +=1;
+              rotation = 0;
+              if (ind >= aniObj.length){
+                ind=0;
+              }
+            }
+            else{
+              aniObj[ind].width -= aniObj[ind].widthMax/100  
+            }
+          }
+
+          aniObj[ind].draw();
+          aniObj[ind].rotation = rotation;
+          
+
+        }, 1000 / fps);
+        rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+        currentFrame += 1; // was = i
+      }
+
+      render();
+
+      function Draw_Math_Node(width, file,width){
+
+        ctx.drawImage(polyA, centerX- (width-50)/2, centerY-(width-50)/2-200, width-50,width-50);
+        ctx.drawImage(polyB, centerX- width/2, centerY-width/2, width,width);
+        ctx.drawImage(polyC, centerX- width/2, centerY-width/2+200, width,width);
+      }
+
+      function Draw_Phyllotaxis(width, angle, dots, dotWidth, colour1, colour2) {
+        // colour1 = [45, 129, 252];
+        // colour2 = [252, 3, 98];
+
+        var c = width; //24, something to do with width. but not width
+
+        for (let n = 0; n < dots; n += 1) {
+          ncolour = LerpRGB(colour1, colour2, Math.cos(rad(n / 2)));
+          var a = n * (angle)//137.5;
+          var r = c * Math.sqrt(n);
+          var x = r * Math.cos(a) + centerX;
+          var y = r * Math.sin(a) + centerY;
+
+          ctx.beginPath();
+          ctx.arc(x, y, dotWidth, 0, 2 * Math.PI);
+          ctx.fillStyle = colourToText(ncolour);
+          ctx.fill();
+
+        }
+
+
+      }
+
+      function Draw_nodal_expanding(expand, points, step, rotate, colour1, colour2, colour_change, line_width) {
+        let angle = 360 / points * step
+
+        let start_angle = angle;
+        let done = false;
+        let total_moves = 1;
+        let length = expand;
+
+        for (let z = 1; z <= 100; z++) { //why specifically 2500
+          ctx.beginPath();
+          ncolour = LerpRGB(colour1, colour2, Math.cos(rad(z * colour_change)));
+
+          ctx.moveTo(
+            centerX + (Math.cos(rad(angle * (z - 1) + rotate)) * (length - expand)), 
+            centerY + (Math.sin(rad(angle * (z - 1) + rotate)) * (length - expand)));
+          ctx.lineTo(
+            centerX + (Math.cos(rad(angle * z + rotate)) * length), 
+            centerY + (Math.sin(rad(angle * z + rotate)) * length));
+          length += expand;
+          ctx.lineWidth = line_width;//try 1
+          ctx.strokeStyle = colourToText(ncolour);
+          ctx.stroke();
+        }
+
+
+      }
+
+      function Draw_Shape_accident(sides, radius, rotation, colour) {
+        let rot = Math.round((sides - 2) * 180 / sides * 2)
+        let piv = 360 / sides;
+        let stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
+        let end = 0;
+        let n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
+
+        for (let i = 1; i < sides + 1; i++) {
+          end = stt + rad(rot);
+
+          ctx.beginPath();
+          ctx.arc(
+            centerX + Math.cos(rad(90 + piv * i + rotation)) * radius,
+            centerY + Math.sin(rad(90 + piv * i + rotation)) * radius, 
+            radius, 
+            stt - (stt - end + rad(rotation)) / 2, 
+            end + rad(n), 
+            0);
+          ctx.strokeStyle = colour;
+          ctx.stroke();
+
+
+          ctx.beginPath();
+          ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * radius, centerY + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt, end - (end - stt - rad(rotation)) / 2 + rad(n), 0);
+          ctx.strokeStyle = colour;
+          ctx.stroke();
+
+
+          stt = end + -(rad(rot - piv)) //+rad(30);
+        }
+
+      }
+
+      function Draw_Spiral_Pattern(sides, radius, rotation, colour) {
+        let rot = Math.round((sides - 2) * 180 / sides * 2)
+        let piv = 360 / sides;
+        let stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
+        let end = 0;
+        let n = radius / ((radius / 10) * (radius / 10)) //pixel correction for mid leaf
+
+        for (let i = 1; i < sides + 1; i++) {
+          end = stt + rad(rot);
+
+          ctx.beginPath();
+          ctx.arc(
+            centerX + Math.cos(rad(90 + piv * i + rotation)) * radius, 
+            centerY + Math.sin(rad(90 + piv * i + rotation)) * radius, 
+            radius, 
+            stt + rad(rotation) - (stt - end) / 2, 
+            end + rad(rotation) + rad(n), 
+            0);
+          ctx.strokeStyle = colour;
+          ctx.stroke();
+
+
+          ctx.beginPath();
+          ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * radius, centerY + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt - rad(rotation), end - (end - stt) / 2 + rad(n) - rad(rotation), 0);
+          ctx.strokeStyle = colour;
+          ctx.stroke();
+
+
+          stt = end + -(rad(rot - piv)) //+rad(30);
+        }
+
+      }
+
+      function DrawPolyTwistColour_width(sides,depth, width, rotation,innerRotation, colour1,colour2){
+        let out_angle = 0
+        let innerAngle = 180 - ((sides-2) *180/sides);
+        let scopeAngle = innerRotation - (innerAngle*Math.floor(innerRotation/innerAngle));
+
+        if (scopeAngle < innerAngle/2) {
+          out_angle = innerAngle / (2 * Math.cos((2*Math.PI*scopeAngle)/(3*innerAngle))) - innerAngle/2
+        }
+        else {
+          out_angle = -innerAngle / (2 * Math.cos( ((2*Math.PI)/3) - ((2*Math.PI*scopeAngle)/(3*innerAngle))) ) + (innerAngle*3)/2
+        }
+        let minWidth = Math.sin(rad(innerAngle/2))*(0.5/Math.tan(rad(innerAngle/2)))*2;
+
+        let widthMultiplier = minWidth / Math.sin(Math.PI / 180 * (90+innerAngle/2 - out_angle + innerAngle * Math.floor(out_angle / innerAngle)))
+
+        for (let i = 0; i < depth; i++) {
+          let fraction = i/depth;
+          let ncolour = LerpRGB(colour1,colour2,fraction);
+          DrawPolygon(sides,width*widthMultiplier**i,out_angle*i+rotation, colourToText(ncolour))
+        } 
+      }
+
+      function DrawPolygon(sides, width, rotation, colour) {
+        ctx.beginPath();
+        ctx.moveTo (centerX +  width * Math.cos(rotation*Math.PI/180), centerY +  width *  Math.sin(rotation*Math.PI/180)); 
+
+        for (let i = 1; i <= sides; i += 1) {
+          ctx.lineTo(
+            centerX + width * Math.cos(i * 2 * Math.PI / sides + (rotation*Math.PI/180)),
+            centerY + width * Math.sin(i * 2 * Math.PI / sides + (rotation*Math.PI/180))
+          );
+        }
+
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+    
+
+    function rad(degrees) {
+      let pi = Math.PI;
+      return degrees * (pi / 180);
+    }
+
+    function colourToText(colour) {
+      return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")"
+    }
+
+    function LerpRGB(a, b, t) {
+      if (t < 0) {
+        t *= -1;
+      }
+      let newColor = [0, 0, 0];
+      newColor[0] = a[0] + (b[0] - a[0]) * t;
+      newColor[1] = a[1] + (b[1] - a[1]) * t;
+      newColor[2] = a[2] + (b[2] - a[2]) * t;
+      return newColor;
+    }
+
+      function render_clear() {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      }
+    </script>
+  </body>
+</html>
