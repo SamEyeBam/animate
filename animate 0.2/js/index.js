@@ -113,9 +113,9 @@ function main() {
   setTimeout(() => {
     main();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // drawStack[1].rotateAddX(1);
-    // drawStack[1].rotateAddY(1);
-    // drawStack[1].rotateAddZ(.2);
+    drawStack[1].rotateAddX(1);
+    drawStack[1].rotateAddY(1);
+    drawStack[1].rotateAddZ(.2);
     
     // for (let i = 0; i < drawStack.length; i++) {
     //   drawStack[i].rotateAddY(0.005*(i+1));

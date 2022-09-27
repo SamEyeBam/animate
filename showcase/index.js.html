@@ -38,15 +38,16 @@
       currentFrame = 0; //was = i
 
       let nPoly1 = {
-        colour1: [0, 255, 0],
-        colour2: [255, 0, 0],
+        colour1: [187,58,242],
+        colour2: [40,183,235],
         speedMult: 0.20,
         depth: 22,
         width: 0,
         widthMax: 400,
+        line_width:1,
         sides: 4,
         rotation: 0,
-        duration: 90*0.2, //rotation
+        duration: 90, //rotation
         draw: function () {
           DrawPolyTwistColour_width(
             this.sides,
@@ -55,7 +56,8 @@
             -90,
             this.rotation * this.speedMult,
             this.colour1,
-            this.colour2
+            this.colour2,
+            this.line_width
           );
         },
       };
@@ -67,9 +69,10 @@
         depth: 100,
         width: 0,
         widthMax: 400,
+        line_width: 1,
         sides: 8,
         rotation: 0,
-        duration: 120 *0.05,
+        duration: 960*0.05,
         draw: function () {
           DrawPolyTwistColour_width(
             this.sides,
@@ -78,7 +81,8 @@
             -90,
             this.rotation * this.speedMult,
             this.colour1,
-            this.colour2
+            this.colour2,
+            this.line_width
           );
           
         },
@@ -88,11 +92,12 @@
         speedMult: 1,
         width: 0,
         widthMax: 250,
+        line_width: 1,
         sides: 5,
         rotation: 0,
-        duration: deg_per_sec*10,
+        duration: deg_per_sec*20,
         draw: function () {
-          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, centerX, centerY, 'red');
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red',this.line_width);
         },
       };
       let floralInv2 = {
@@ -100,11 +105,12 @@
         speedMult: 1,
         width: 0,
         widthMax: 250,
+        line_width: 1,
         sides: 12,
         rotation: 0,
-        duration: deg_per_sec*10,
+        duration: deg_per_sec*20,
         draw: function () {
-          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red');
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red', this.line_width);
         },
       };
       let floralInv3 = {
@@ -112,11 +118,12 @@
         speedMult: 1,
         width: 0,
         widthMax: 225,
+        line_width: 1,
         sides: 40,
         rotation: 0,
-        duration: deg_per_sec*5,
+        duration: deg_per_sec*20,
         draw: function () {
-          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red');
+          Draw_Spiral_Pattern(this.sides, this.width, this.rotation*this.speedMult, 'red', this.line_width);
         },
       };
       let floralAcc1 = {
@@ -124,11 +131,12 @@
         speedMult: 1,
         width: 0,
         widthMax: 225,
+        line_width: 1,
         sides: 3,
         rotation: 0,
-        duration: deg_per_sec*5,
+        duration: deg_per_sec*20,
         draw: function () {
-          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red')
+          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red',this.line_width)
         },
       };
       let floralAcc2 = {
@@ -136,11 +144,12 @@
         speedMult: 1,
         width: 0,
         widthMax: 225,
+        line_width: 1,
         sides: 12,
         rotation: 0,
         duration: deg_per_sec*14,
         draw: function () {
-          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red')
+          Draw_Shape_accident(this.sides,this.width,this.rotation*this.speedMult,'red',this.line_width)
         },
       };
       let nodal1 = {
@@ -153,12 +162,12 @@
         colourChange: 1,
         lineWidth: 4,
         rotation: 0,
-        duration: deg_per_sec*5,
+        duration: deg_per_sec*330,
         draw: function () {
           Draw_nodal_expanding(
             this.width, 
             this.points, 
-            this.rotation*this.speedMult +2000, 
+            this.rotation*this.speedMult, 
             0, 
             this.colour1, 
             this.colour2, 
@@ -173,10 +182,11 @@
         speedMult: 1/5000,
         width: 0,
         widthMax: 24,
+        line_width: 1,
         dots: 300,
         dotWidth: 8,
         rotation: 0,
-        duration: deg_per_sec*5 /5000,
+        duration: deg_per_sec*522 /5000,
         draw: function () {
           Draw_Phyllotaxis(
             this.width,
@@ -184,27 +194,29 @@
             this.dots,
             this.dotWidth,
             this.colour1,
-            this.colour2);
+            this.colour2,
+            this.line_width);
         },
       };
       let mathPoly = {
         speedMult: 1,
         width: 0,
         widthMax: 500,
-        duration: deg_per_sec*20,
+        duration: deg_per_sec*10,
         draw: function () {
           Draw_Math_Node(100,this.file,this.width);
         }
       };
       
-      let aniObj = [mathPoly,nodal1,floralAcc1,floralInv3,phyllo1,nPoly2];
+      let aniObj = [mathPoly,nPoly1,nPoly2,floralInv1,floralInv2,floralInv3,floralAcc1,floralAcc2,nodal1,phyllo1];
+      // let aniObj = [phyllo1];
       let ind = 0;
 
       function render() {
         setTimeout(() => {
           render();
           render_clear();
-
+          console.log(aniObj[ind].duration/aniObj[ind].speedMult)
           if (aniObj[ind].width < aniObj[ind].widthMax && rotation <= aniObj[ind].duration/aniObj[ind].speedMult) {
             aniObj[ind].width += aniObj[ind].widthMax/100
           }
@@ -292,7 +304,7 @@
 
       }
 
-      function Draw_Shape_accident(sides, radius, rotation, colour) {
+      function Draw_Shape_accident(sides, radius, rotation, colour,line_width) {
         let rot = Math.round((sides - 2) * 180 / sides * 2)
         let piv = 360 / sides;
         let stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
@@ -315,6 +327,7 @@
 
 
           ctx.beginPath();
+          ctx.lineWidth = line_width;
           ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * radius, centerY + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt, end - (end - stt - rad(rotation)) / 2 + rad(n), 0);
           ctx.strokeStyle = colour;
           ctx.stroke();
@@ -325,7 +338,7 @@
 
       }
 
-      function Draw_Spiral_Pattern(sides, radius, rotation, colour) {
+      function Draw_Spiral_Pattern(sides, radius, rotation, colour,line_width) {
         let rot = Math.round((sides - 2) * 180 / sides * 2)
         let piv = 360 / sides;
         let stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
@@ -348,6 +361,7 @@
 
 
           ctx.beginPath();
+          ctx.lineWidth = line_width;
           ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * radius, centerY + Math.sin(rad(90 + piv * i - rotation)) * radius, radius, stt - rad(rotation), end - (end - stt) / 2 + rad(n) - rad(rotation), 0);
           ctx.strokeStyle = colour;
           ctx.stroke();
@@ -358,7 +372,7 @@
 
       }
 
-      function DrawPolyTwistColour_width(sides,depth, width, rotation,innerRotation, colour1,colour2){
+      function DrawPolyTwistColour_width(sides,depth, width, rotation,innerRotation, colour1,colour2,line_width){
         let out_angle = 0
         let innerAngle = 180 - ((sides-2) *180/sides);
         let scopeAngle = innerRotation - (innerAngle*Math.floor(innerRotation/innerAngle));
@@ -376,12 +390,13 @@
         for (let i = 0; i < depth; i++) {
           let fraction = i/depth;
           let ncolour = LerpRGB(colour1,colour2,fraction);
-          DrawPolygon(sides,width*widthMultiplier**i,out_angle*i+rotation, colourToText(ncolour))
+          DrawPolygon(sides,width*widthMultiplier**i,out_angle*i+rotation, colourToText(ncolour), line_width)
         } 
       }
 
-      function DrawPolygon(sides, width, rotation, colour) {
+      function DrawPolygon(sides, width, rotation, colour, line_width) {
         ctx.beginPath();
+        ctx.lineWidth = line_width;
         ctx.moveTo (centerX +  width * Math.cos(rotation*Math.PI/180), centerY +  width *  Math.sin(rotation*Math.PI/180)); 
 
         for (let i = 1; i <= sides; i += 1) {
@@ -392,7 +407,6 @@
         }
 
         ctx.strokeStyle = colour;
-        ctx.lineWidth = 1;
         ctx.stroke();
       }
 
