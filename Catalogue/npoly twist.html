@@ -22,7 +22,7 @@
     rotation = 0; //was = j = angle
     currentFrame = 0; //was = i
 
-    let depth = 20 //custom to npoly twist
+    let depth = 80 //custom to npoly twist
     
     function render() {
       if (currentFrame < time / (1 / fps)) {
@@ -33,7 +33,7 @@
           colour2 = [255, 0, 0];
           colour1 = [0, 0, 0];
 
-          DrawPolyTwistColour_angle(3,400,-90,rotation/20,colour1, colour2)
+          DrawPolyTwistColour_angle(8,400,-90,rotation/10,colour1, colour2)
           // DrawPolyTwist_angle(15,400,-90,rotation/20,"red")
           // DrawPolyTwistColour_width(4,400,-45,rotation/4,colour1,colour2)
           // DrawPolyTwist_width(10,400,-90,rotation/20,"red")
