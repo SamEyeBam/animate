@@ -31,9 +31,10 @@
           render();
           render_clear();
 
-          let colour1 = [137, 54, 255];
+          let colour1 = [0, 0, 255];
           let colour2 = [158, 255, 54];
-          Draw_nodal_expanding(5, 100000, rotation * 2 + 33000,0, colour1, colour2, 0.5, 2)
+          // Draw_nodal_expanding(5, 100000, rotation * 2 + 33000,0, colour1, colour2, 0.5, 2)
+          Draw_nodal_expanding(5, 100000, rotation * 2+30000,0, colour1, colour2, 0.5, 2)
           // Draw_nodal_expanding(5, 10000, rotation, 0, colour1, colour2, 1, 2)
           console.log(rotation)
         }, 1000 / fps);

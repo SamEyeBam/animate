@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<body style="margin:0;overflow: hidden;">
+    <canvas id="myCanvas" width="10" height="10" style="display: block;box-sizing: border-box;">
+        Your browser does not support the HTML5 canvas tag.</canvas>
+    <script>
+        let c = document.getElementById("myCanvas");
+        let ctx = c.getContext("2d");
+        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.height = window.innerHeight;
+
+
+
+        let deg_per_sec = 30 / 5000;
+        let time = 99999999;
+        let fps = 60;
+        let leafWidth = 120;
+        let leafHeight = 60;
+        centerX = ctx.canvas.width / 2;
+        centerY = ctx.canvas.height / 2;
+
+        rotation = 0; //was = j = angle
+        currentFrame = 0; //was = i
+
+
+
+        function render() {
+            if (currentFrame < time / (1 / fps)) {
+                setTimeout(() => {
+                    render();
+                    render_clear();
+
+                    // Draw_Phyllotaxis(rotation + 3.1);
+                    Draw_Phyllotaxis(rotation + 1.5);
+                    // Draw_Phyllotaxis(1.5);
+                    // console.log(rotation + 3.1)
+                    // Draw_Phyllotaxis(rotation/5000);
+
+                    // Draw_center(); //Debugging
+                    // DrawBorder();
+                }, 1000 / fps);
+                rotation += deg_per_sec / fps; // was = j = angle, now = rotation
+                currentFrame += 1; // was = i
+            }
+        }
+
+        render();
+
+        function Draw_Phyllotaxis(angle) {
+            // colour1 = [255, 170, 0];
+            // colour2 = [255, 0, 221];
+            colour1 = [45, 129, 252];
+            colour2 = [252, 3, 98];
+
+            var c = 24; //something to do with width. but not width
+
+            for (let n = 0; n < 300; n += 1) {
+                ncolour = LerpRGB(colour1, colour2, Math.cos(rad(n / 2)));
+                let a = n * (angle)//137.5;
+                let r = c * Math.sqrt(n);
+                let x = r * Math.cos(a) + centerX;
+                let y = r * Math.sin(a) + centerY;
+
+
+
+                drawEyelid(x, y);
+
+                // ctx.beginPath();
+                // ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                // ctx.fillStyle = colourToText(ncolour);
+                // ctx.fill();
+
+            }
+
+
+        }
+        function rad(degrees) {
+            var pi = Math.PI;
+            return degrees * (pi / 180);
+        }
+
+        function LerpRGB(a, b, t) {
+            if (t < 0) {
+                t *= -1;
+            }
+            var newColor = [0, 0, 0];
+            newColor[0] = a[0] + (b[0] - a[0]) * t;
+            newColor[1] = a[1] + (b[1] - a[1]) * t;
+            newColor[2] = a[2] + (b[2] - a[2]) * t;
+            return newColor;
+        }
+
+        function colourToText(colour) {
+            return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")"
+        }
+
+        function render_clear() {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
+
+        function drawEyelid(x1, y1) {
+            x1 -= centerX
+            y1 -= centerY
+            let angle = Math.atan(y1 / x1);
+            // if(angle >=Math.PI){
+            //     angle -=Math.PI
+            //     console.log("greater called")
+            // }
+            angle= Math.abs(angle)
+            console.log(angle)
+            let x2Old = 0 + leafWidth
+            let y2Old = 0
+
+
+            let x3Old = 0 + (leafWidth / 2);
+            let y3Old = 0 + (leafHeight / 2);
+
+            let x4Old = 0 + (leafWidth / 2);
+            let y4Old = 0 - (leafHeight / 2);
+
+            let x2 = x2Old * Math.cos(angle) - y2Old * Math.sin(angle)
+            let y2 = x2Old * Math.sin(angle) + y2Old * Math.cos(angle)
+
+            let x3 = x3Old * Math.cos(angle) - y3Old * Math.sin(angle)
+            let y3 = x3Old * Math.sin(angle) + y3Old * Math.cos(angle)
+           
+            let x4 = x4Old * Math.cos(angle) - y4Old * Math.sin(angle)
+            let y4 = x4Old * Math.sin(angle) + y4Old * Math.cos(angle)
+            
+            let oldx1 = x1
+            let oldy1 = y1
+
+            x1 += centerX// +x2/2
+            y1 += centerY// +x2/2
+            x2 += x1 
+            y2 += y1
+            x3 += x1 
+            y3 += y1 
+            x4 += x1 
+            y4 += y1 
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x3, y3, x2, y2)
+
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x4, y4, x2, y2)
+            ctx.fillStyle = 'black'
+            ctx.fill()
+
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x3, y3, x2, y2)
+
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x4, y4, x2, y2)
+            ctx.strokeStyle = 'orange'
+            ctx.stroke()
+        }
+        function drawEyelid2(x1, y1) {
+            x1 -= centerX
+            y1 -= centerY
+            let angle = Math.atan(y1 / x1);
+
+            let localLeafCenterX = -(leafWidth * Math.cos(Math.PI - angle)) / 2
+            let localLeafCenterY = (leafWidth * Math.sin(Math.PI - angle)) / 2
+
+            let x2 = x1 - (leafWidth * Math.cos(Math.PI - angle));
+            let y2 = y1 + (leafWidth * Math.sin(Math.PI - angle));
+
+            let alpha = Math.atan(leafHeight / (leafWidth / 2))
+            let x3 = x1 + localLeafCenterX + leafHeight * Math.sin(alpha);
+            let y3 = y1 + localLeafCenterY - leafHeight * Math.cos(alpha);
+
+            let x4 = x1 + localLeafCenterX - leafHeight * Math.sin(alpha);
+            let y4 = y1 + localLeafCenterY + leafHeight * Math.cos(alpha);
+
+            x1 += centerX
+            y1 += centerY
+            x2 += centerX
+            y2 += centerY
+            x3 += centerX
+            y3 += centerY
+            x4 += centerX
+            y4 += centerY
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x3, y3, x2, y2)
+
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x4, y4, x2, y2)
+            ctx.fillStyle = 'black'
+            ctx.fill()
+
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x3, y3, x2, y2)
+
+            ctx.moveTo(x1, y1)
+            ctx.quadraticCurveTo(x4, y4, x2, y2)
+            ctx.strokeStyle = 'orange'
+            ctx.stroke()
+        }
+
+    </script>
+</body>
+
+</html>
