@@ -28,7 +28,7 @@
           render();
           render_clear();
 
-          draw_floral(16, 200, rotation *0, centerX, centerY, "red");
+          draw_floral(8, 200, rotation *0, centerX, centerY, "red");
           
 
         }, 1000 / fps);
@@ -50,6 +50,7 @@
         ctx.beginPath();
         ctx.arc(x + Math.cos(rad(90 + piv * i + rotation)) * radius, y + Math.sin(rad(90 + piv * i + rotation)) * radius, radius, stt, end, 0);
         ctx.strokeStyle = colour;
+        ctx.lineWidth = 3;
         ctx.stroke();
 
         stt = end + -(rad(rot - piv)) //+rad(30);

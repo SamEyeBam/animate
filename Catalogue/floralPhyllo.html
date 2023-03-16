@@ -9,7 +9,7 @@
       height="10"
       style="display: block; box-sizing: border-box"
     >
-      Your browser does not support the HTML5 canvas tag.</canvas
+      Browser does not support the HTML5 canvas tag</canvas
     >
     <script>
       let c = document.getElementById("myCanvas");
@@ -18,7 +18,7 @@
       ctx.canvas.height = window.innerHeight;
 
       //increase deg_per_sec to rotation speed
-      let deg_per_sec = 1 /// 200;
+      let deg_per_sec = 1/200 /// 200;
       let time = 99999999; //set this to stop the animation after x seconds (stops it running in background)
       let fps = 60;
       let leafWidth = 200; //leaf height is just half width
@@ -49,9 +49,11 @@
             render();
             render_clear();
 
-            Draw_Phyllotaxis(Math.PI/4);
-            // Draw_Phyllotaxis(rotation + 4.8);
+            // Draw_Phyllotaxis(rotation);
+            Draw_Phyllotaxis(rotation+.5);
             // Draw_Phyllotaxis(rotation + 1.5);
+            // Draw_Phyllotaxis(rotation + 4.8);
+            // Draw_Phyllotaxis(Math.PI/4);
             // Draw_Phyllotaxis(1.5);
             // Draw_center(50); //Debugging
 
