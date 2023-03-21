@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+<head>
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body style="margin:0;">
+  <canvas id="myCanvas"
+    style="display: block;box-sizing: border-box;"></canvas>
+  <div id="toolbar">
+    <br>
+    <select id="shape-selector">
+      <option value="PolyTwistColourWidth">PolyTwistColourWidth</option>
+    <option value="FloralPhyllo">FloralPhyllo</option>
+    <option value="Spiral1">Spiral1</option>
+    </select>
+    <div id="custom"></div>
+    <br>
+    <p>Degrees Per Second</p>
+    <input type="text" id="inputDegPerSec" value="5" onchange="ChangeDegPerSec(this.value)">
+    <br>
+    <p>Controls</p>
+    <button id="resetButton" onclick="Reset()">Reset</button>
+    <div class="controls">
+      <button onclick="BackwardFrame()"><</button>
+      <button id="pauseButton" onclick="TogglePause()">Play</button>
+      <button onclick="ForwardFrame()">></button>
+    </div>
+  </div>
+</body>
+<script src="./js/helper.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./js/math.js" type="text/javascript"></script>
+<script src="./js/objects.js" type="text/javascript"></script>
+<script src="./js/index.js"></script>
+</html>
