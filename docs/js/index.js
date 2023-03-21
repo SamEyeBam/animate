@@ -21,6 +21,9 @@ function createInstance(className, args) {
     PolyTwistColourWidth: PolyTwistColourWidth,
     FloralPhyllo: FloralPhyllo,
     Spiral1: Spiral1,
+    FloralAccident: FloralAccident,
+    FloralPhyllo_Accident: FloralPhyllo_Accident,
+    Nodal_expanding: Nodal_expanding,
     // Add more class constructors here as needed
   };
 

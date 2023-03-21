@@ -120,3 +120,100 @@ class Spiral1 extends BaseShape {
   }
 }
 
+class FloralAccident extends BaseShape {
+  constructor(sides,width, colour) {
+    super();
+    this.sides = sides;
+    this.width = width;
+    this.colour = colour;
+  }
+
+  draw(rotation) {
+    var rot = Math.round((this.sides - 2) * 180 / this.sides * 2)
+    var piv = 360 / this.sides;
+    var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
+    var end = 0;
+    var n = this.width / ((this.width / 10) * (this.width / 10)) //pixel correction for mid leaf
+
+    for (let i = 1; i < this.sides + 1; i++) {
+      end = stt + rad(rot);
+
+      ctx.beginPath();
+      ctx.arc(centerX + Math.cos(rad(90 + piv * i + rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i + rotation)) * this.width, this.width, stt - (stt - end + rad(rotation)) / 2, end + rad(n), 0);
+      ctx.strokeStyle = this.colour;
+      ctx.stroke();
+
+
+      ctx.beginPath();
+      ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i - rotation)) * this.width, this.width, stt, end - (end - stt - rad(rotation)) / 2 + rad(n), 0);
+      ctx.strokeStyle = this.colour;
+      ctx.stroke();
+
+
+      stt = end + -(rad(rot - piv)) //+rad(30);
+    }
+
+  }
+}
+class FloralPhyllo_Accident extends BaseShape {
+  constructor(sides,width, colour1,colour2) {
+    super();
+    this.sides = sides;
+    this.width = width;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+  }
+
+  draw(angle) {
+
+    var c = 24; //something to do with width. but not width
+
+    for (let n = 0; n < 300; n += 1) {
+      let ncolour = LerpHex(this.colour1, this.colour2, Math.cos(rad(n / 2)));
+      let a = n * (angle/1000+100); //137.5;
+      let r = c * Math.sqrt(n);
+      let x = r * Math.cos(a) + centerX;
+      let y = r * Math.sin(a) + centerY;
+
+      drawEyelidAccident(x, y);
+
+    }
+  }
+}
+class Nodal_expanding extends BaseShape {
+  constructor(expand,points,line_width,colour1,colour2) {
+    super();
+    this.expand = expand;
+    this.points = points;
+    this.line_width = line_width;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+  }
+
+  draw(step) {
+    let colour_change = 0.5
+    var angle = 360 / this.points * step
+
+    var start_angle = angle;
+    var done = false;
+    var total_moves = 1;
+    var length = this.expand;
+
+    for (let z = 1; z <= 100; z++) { //why specifically 2500
+      ctx.beginPath();
+      let ncolour = LerpHex(this.colour1, this.colour2, Math.cos(rad(z * colour_change)));
+
+      ctx.moveTo(centerX + (Math.cos(rad(angle * (z - 1) + 0)) * (length - this.expand)), centerY + (Math.sin(rad(angle * (z - 1) + 0)) * (length - this.expand)));
+      ctx.lineTo(centerX + (Math.cos(rad(angle * z + 0)) * length), centerY + (Math.sin(rad(angle * z + 0)) * length));
+      length += this.expand;
+      ctx.lineWidth = this.line_width;//try 1
+      ctx.strokeStyle = ncolour;
+      // ctx.strokeStyle = colourToText(ncolour);
+      console.log(ncolour)
+      ctx.stroke();
+    }
+
+
+  }
+}
+
