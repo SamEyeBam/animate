@@ -181,17 +181,18 @@ class FloralPhyllo_Accident extends BaseShape {
   }
 }
 class Nodal_expanding extends BaseShape {
-  constructor(expand,points,line_width,colour1,colour2) {
+  constructor(expand,points,line_width,colour1,colour2,colour_change) {
     super();
     this.expand = expand;
     this.points = points;
     this.line_width = line_width;
     this.colour1 = colour1;
     this.colour2 = colour2;
+    this.colour_change = colour_change
   }
 
   draw(step) {
-    let colour_change = 0.5
+    let colour_change = this.colour_change/10
     var angle = 360 / this.points * step
 
     var start_angle = angle;
@@ -214,6 +215,130 @@ class Nodal_expanding extends BaseShape {
     }
 
 
+  }
+}
+class Nodal extends BaseShape {
+  constructor(width,points,line_width,step,colour) {
+    super();
+    this.width = width;
+    this.points = points;
+    this.line_width = line_width;
+    this.step = step;
+    this.colour = colour;
+  }
+// Draw_nodal(300, 100, 31, rotation, "blue");
+  draw(rotate) {
+    // console.log(rotate)
+    var angle = 360 / this.points * this.step
+    ctx.beginPath();
+    var start_angle = angle;
+    var done = false;
+    var total_moves = 1;
+    ctx.moveTo(centerX + (Math.cos(rad(angle + rotate)) * this.width), centerY + (Math.sin(rad(angle + rotate)) * this.width));
+
+    while (done != true) {
+      if ((total_moves * this.step) % this.points != 0) {
+        total_moves++
+      }
+      else {
+        total_moves++
+        done = true
+      }
+    }
+    for (let z = 1; z <= total_moves; z++) {
+      ctx.lineTo(centerX + (Math.cos(rad(angle * z + rotate)) * this.width), centerY + (Math.sin(rad(angle * z + rotate)) * this.width));
+    }
+    ctx.lineWidth = this.line_width;//try 1
+    ctx.strokeStyle = this.colour;
+    ctx.stroke();
+
+  }
+}
+class Phyllotaxis extends BaseShape {
+  constructor(width,nMax,colour1,colour2) {
+    super();
+    this.width = width;
+    this.nMax = nMax;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+  }
+// Draw_nodal(300, 100, 31, rotation, "blue");
+  draw(angle) {
+
+    for (let n = 0; n < this.nMax; n += 1) {
+      const ncolour = LerpHex(this.colour1, this.colour2, n/this.nMax);
+      // const ncolour = LerpHex(this.colour1, this.colour2, (n/this.nMax)**2);
+      const a = n * (angle/1000)//137.5;
+      const r = this.width * Math.sqrt(n);
+      const x = r * Math.cos(a) + centerX;
+      const y = r * Math.sin(a) + centerY;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, 2 * Math.PI);
+      ctx.fillStyle = ncolour;
+      // ctx.fillStyle = colourToText(ncolour);
+      ctx.fill();
+      // console.log(this.c)
+    }
+
+  }
+}
+class SquareTwist_angle extends BaseShape {
+  constructor(expand,points,line_width,colour1,colour2,colour_change) {
+    super();
+    this.expand = expand;
+    this.points = points;
+    this.line_width = line_width;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+    this.colour_change = colour_change
+  }
+  drawSquare(angle,size, colour) {
+    ctx.save();
+    ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
+    ctx.rotate(rad(angle + 180));
+    ctx.beginPath();
+    ctx.strokeStyle = colour;
+    ctx.rect(-size/2, -size/2, size, size);
+    ctx.stroke();
+    ctx.restore();
+    }
+    // DrawSquareTwist_angle(400,0,rotation,"red")
+  draw (width, rotation,innerRotation, colour){
+    let out_angle = innerRotation;
+    let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (130 - out_angle + 90 * Math.floor(out_angle / 90))))+0.5
+
+    for (let i = 0; i < 25; i++) {
+      drawSquare(innerRotation*i,width*widthMultiplier**i, colour)
+    } 
+
+  }
+}
+class rectangle_pattern1 extends BaseShape {
+  constructor(expand,points,line_width,colour1,colour2,colour_change) {
+    super();
+    this.expand = expand;
+    this.points = points;
+    this.line_width = line_width;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+    this.colour_change = colour_change
+  }
+  drawSquare(angle,size, colour) {
+    ctx.save();
+    ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
+    ctx.rotate(rad(angle + 180));
+    ctx.beginPath();
+    ctx.strokeStyle = colour;
+    ctx.rect(-size/2, -size/2, size, size);
+    ctx.stroke();
+    ctx.restore();
+    }
+    // Draw_rectangle_pattern1(rotation, squares, 200, "blue");
+  draw (rotation, squares, size, colour) {
+    for (let z = 0; z < 360; z += 360 / squares) {
+      drawSquare(z + rotation,size,colour);
+    }
   }
 }
 

@@ -24,6 +24,8 @@ function createInstance(className, args) {
     FloralAccident: FloralAccident,
     FloralPhyllo_Accident: FloralPhyllo_Accident,
     Nodal_expanding: Nodal_expanding,
+    Nodal: Nodal,
+    Phyllotaxis:Phyllotaxis
     // Add more class constructors here as needed
   };
 
@@ -75,6 +77,17 @@ document
 
 let toolbarShowing = true;
 document.addEventListener("keydown", toggleSettings);
+
+function manualToggleSettings(){
+  console.log("hi")
+  toolbarShowing = !toolbarShowing;
+  let tb = document.getElementById("toolbar");
+  if (toolbarShowing) {
+    tb.style.display = "flex";
+  } else {
+    tb.style.display = "none";
+  }
+}
 
 function toggleSettings(e) {
   if (e.key == "p") {

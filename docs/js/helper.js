@@ -43,6 +43,20 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
+      { type: "range", min: 0, max: 10, defaultValue: 5, property: "colour_change" },
+    ],
+    Nodal: [
+      { type: "range", min: 1, max: 1000, defaultValue: 400, property: "width" },
+      { type: "range", min: 1, max: 20, defaultValue: 10, property: "points" },
+      { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
+      { type: "range", min: 1, max: 20, defaultValue: 1, property: "step" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour" },
+    ],
+    Phyllotaxis: [
+      { type: "range", min: 1, max: 40, defaultValue: 24, property: "width" },
+      { type: "range", min: 1, max: 1000, defaultValue: 300, property: "nMax" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+      { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
   };
   return config[className];
