@@ -33,6 +33,12 @@ canvas {
   /* height: 100vh; */
   background-color: rgb(189, 189, 189);
 }
+.button{
+  display:block;
+  position: absolute;
+  right: 20px;
+  z-index: 100;
+}
 
 
 .controls{
