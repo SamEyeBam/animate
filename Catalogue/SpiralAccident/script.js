@@ -12,7 +12,7 @@ function setCanvasSize() {
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
 
-const degPerSec = 0.00000015;
+const degPerSec = 0.000001;
 const maxTime = 99999999;
 
 let startingRotation = 1;
@@ -53,7 +53,7 @@ function drawSpiral(angle) {
   for (let n = 0; n < maxIterations; n++) {
     const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
     
-    const nAngle = n * angle + Math.sin(angle * n * 3);
+    const nAngle = n * angle + Math.sin(angle * n * 2);
     const radius = distanceMultiplier * n;
     const xCoord = radius * Math.cos(nAngle) + centerX;
     const yCoord = radius * Math.sin(nAngle) + centerY;
