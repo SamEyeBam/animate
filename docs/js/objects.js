@@ -5,7 +5,7 @@ class BaseShape {
 
   initialise(config) {
     for (let item of config) {
-      const { element, listener } = addControl(item,this);
+      const { element, listener } = addControl(item, this);
       this.controls.push({ element, listener });
     }
   }
@@ -57,7 +57,7 @@ class PolyTwistColourWidth extends BaseShape {
     for (let i = 0; i < this.depth; i++) {
       const fraction = i / this.depth;
       const ncolour = LerpHex(this.colour1, this.colour2, fraction);
-      DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation , ncolour);
+      DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation, ncolour);
     }
   }
 }
@@ -75,7 +75,7 @@ class FloralPhyllo extends BaseShape {
     var c = 1; //something to do with width. but not width
     //dont make larger than 270 unless altering the number of colours in lerpedColours
     for (let n = 200; n > 0; n -= 1) {
-      const a = n * angle/1000; //137.5;
+      const a = n * angle / 1000; //137.5;
       const r = c * Math.sqrt(n);
       const x = r * Math.cos(a) + centerX;
       const y = r * Math.sin(a) + centerY;
@@ -85,7 +85,7 @@ class FloralPhyllo extends BaseShape {
   }
 }
 class Spiral1 extends BaseShape {
-  constructor(sides,width, colour) {
+  constructor(sides, width, colour) {
     super();
     this.sides = sides;
     this.width = width;
@@ -121,7 +121,7 @@ class Spiral1 extends BaseShape {
 }
 
 class FloralAccident extends BaseShape {
-  constructor(sides,width, colour) {
+  constructor(sides, width, colour) {
     super();
     this.sides = sides;
     this.width = width;
@@ -156,7 +156,7 @@ class FloralAccident extends BaseShape {
   }
 }
 class FloralPhyllo_Accident extends BaseShape {
-  constructor(sides,width, colour1,colour2) {
+  constructor(sides, width, colour1, colour2) {
     super();
     this.sides = sides;
     this.width = width;
@@ -170,7 +170,7 @@ class FloralPhyllo_Accident extends BaseShape {
 
     for (let n = 0; n < 300; n += 1) {
       let ncolour = LerpHex(this.colour1, this.colour2, Math.cos(rad(n / 2)));
-      let a = n * (angle/1000+100); //137.5;
+      let a = n * (angle / 1000 + 100); //137.5;
       let r = c * Math.sqrt(n);
       let x = r * Math.cos(a) + centerX;
       let y = r * Math.sin(a) + centerY;
@@ -181,7 +181,7 @@ class FloralPhyllo_Accident extends BaseShape {
   }
 }
 class Nodal_expanding extends BaseShape {
-  constructor(expand,points,line_width,colour1,colour2,colour_change) {
+  constructor(expand, points, line_width, colour1, colour2, colour_change) {
     super();
     this.expand = expand;
     this.points = points;
@@ -192,7 +192,7 @@ class Nodal_expanding extends BaseShape {
   }
 
   draw(step) {
-    let colour_change = this.colour_change/10
+    let colour_change = this.colour_change / 10
     var angle = 360 / this.points * step
 
     var start_angle = angle;
@@ -218,7 +218,7 @@ class Nodal_expanding extends BaseShape {
   }
 }
 class Nodal extends BaseShape {
-  constructor(width,points,line_width,step,colour) {
+  constructor(width, points, line_width, step, colour) {
     super();
     this.width = width;
     this.points = points;
@@ -226,7 +226,7 @@ class Nodal extends BaseShape {
     this.step = step;
     this.colour = colour;
   }
-// Draw_nodal(300, 100, 31, rotation, "blue");
+  // Draw_nodal(300, 100, 31, rotation, "blue");
   draw(rotate) {
     // console.log(rotate)
     var angle = 360 / this.points * this.step
@@ -255,20 +255,20 @@ class Nodal extends BaseShape {
   }
 }
 class Phyllotaxis extends BaseShape {
-  constructor(width,nMax,colour1,colour2) {
+  constructor(width, nMax, colour1, colour2) {
     super();
     this.width = width;
     this.nMax = nMax;
     this.colour1 = colour1;
     this.colour2 = colour2;
   }
-// Draw_nodal(300, 100, 31, rotation, "blue");
+  // Draw_nodal(300, 100, 31, rotation, "blue");
   draw(angle) {
 
     for (let n = 0; n < this.nMax; n += 1) {
-      const ncolour = LerpHex(this.colour1, this.colour2, n/this.nMax);
+      const ncolour = LerpHex(this.colour1, this.colour2, n / this.nMax);
       // const ncolour = LerpHex(this.colour1, this.colour2, (n/this.nMax)**2);
-      const a = n * (angle/1000)//137.5;
+      const a = n * (angle / 1000)//137.5;
       const r = this.width * Math.sqrt(n);
       const x = r * Math.cos(a) + centerX;
       const y = r * Math.sin(a) + centerY;
@@ -284,61 +284,166 @@ class Phyllotaxis extends BaseShape {
   }
 }
 class SquareTwist_angle extends BaseShape {
-  constructor(expand,points,line_width,colour1,colour2,colour_change) {
+  constructor(width, line_width, colour1) {
     super();
-    this.expand = expand;
-    this.points = points;
+    this.width = width;
     this.line_width = line_width;
     this.colour1 = colour1;
-    this.colour2 = colour2;
-    this.colour_change = colour_change
   }
-  drawSquare(angle,size, colour) {
+  drawSquare(angle, size, colour) {
     ctx.save();
     ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
     ctx.rotate(rad(angle + 180));
     ctx.beginPath();
     ctx.strokeStyle = colour;
-    ctx.rect(-size/2, -size/2, size, size);
+    ctx.lineWidth = this.line_width;
+    ctx.rect(-size / 2, -size / 2, size, size);
     ctx.stroke();
     ctx.restore();
-    }
-    // DrawSquareTwist_angle(400,0,rotation,"red")
-  draw (width, rotation,innerRotation, colour){
+  }
+  // DrawSquareTwist_angle(400,0,rotation,"red")
+  draw(innerRotation) {
     let out_angle = innerRotation;
-    let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (130 - out_angle + 90 * Math.floor(out_angle / 90))))+0.5
+    let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (130 - out_angle + 90 * Math.floor(out_angle / 90)))) + 0.5
 
     for (let i = 0; i < 25; i++) {
-      drawSquare(innerRotation*i,width*widthMultiplier**i, colour)
-    } 
+      this.drawSquare(innerRotation * i, this.width * widthMultiplier ** i, this.colour1)
+    }
 
   }
 }
 class rectangle_pattern1 extends BaseShape {
-  constructor(expand,points,line_width,colour1,colour2,colour_change) {
+  constructor(width, squares, line_width, colour1) {
     super();
-    this.expand = expand;
-    this.points = points;
+    this.width = width;
+    this.squares = squares;
     this.line_width = line_width;
     this.colour1 = colour1;
-    this.colour2 = colour2;
-    this.colour_change = colour_change
   }
-  drawSquare(angle,size, colour) {
+  drawSquare(angle, size, colour) {
     ctx.save();
     ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
     ctx.rotate(rad(angle + 180));
     ctx.beginPath();
     ctx.strokeStyle = colour;
-    ctx.rect(-size/2, -size/2, size, size);
+    ctx.lineWidth = this.line_width;
+    ctx.rect(-size / 2, -size / 2, size, size);
     ctx.stroke();
     ctx.restore();
+  }
+  // Draw_rectangle_pattern1(rotation, squares, 200, "blue");
+  draw(rotation) {
+    for (let z = 0; z < 360; z += 360 / this.squares) {
+      this.drawSquare(z + rotation, this.width, this.colour1);
     }
-    // Draw_rectangle_pattern1(rotation, squares, 200, "blue");
-  draw (rotation, squares, size, colour) {
-    for (let z = 0; z < 360; z += 360 / squares) {
-      drawSquare(z + rotation,size,colour);
+  }
+}
+class EyePrototype extends BaseShape {
+  constructor(width, line_width, colour1) {
+    super();
+    this.width = width;
+    this.line_width = line_width;
+    this.colour1 = colour1;
+    this.step = 0;
+    this.speed = 8;
+    this.opening = true;
+    this.counter = 0;
+    this.points = [
+      [50, 250],
+      [450, 250],
+    ];
+    this.cooldown = 0;
+  }
+  drawEyelid(step) {
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(this.points[0][0], this.points[0][1]);
+    ctx.quadraticCurveTo(250, 250 - step, this.points[1][0], this.points[0][1]);
+
+    ctx.moveTo(this.points[0][0], this.points[0][1]);
+    ctx.quadraticCurveTo(250, 250 + step, this.points[1][0], this.points[0][1]);
+    ctx.stroke();
+  }
+  eyelidCut(step) {
+    // ctx.lineWidth = 1;
+    let squarePath = new Path2D();
+    squarePath.moveTo(this.points[0][0], this.points[0][1]);
+    squarePath.quadraticCurveTo(250, 250 - step, this.points[1][0], this.points[0][1]);
+
+    squarePath.moveTo(this.points[0][0], this.points[0][1]);
+    squarePath.quadraticCurveTo(250, 250 + step, this.points[1][0], this.points[0][1]);
+
+    ctx.clip(squarePath);
+  }
+  drawGrowEye(step) {
+    console.log(step)
+    ctx.strokeStyle = "aqua";
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+    ctx.arc(250, 250, step, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.strokeStyle = "orange";
+  }
+  drawCircle(step) {
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+    ctx.arc(250, 250, step, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
+  stepFunc() {
+    if (this.cooldown != 0) {
+      this.cooldown--;
+    } else {
+      if (this.opening == true) {
+        if (this.step >= 200) {
+          this.cooldown = 200;
+          this.opening = false;
+          this.step -= this.speed;
+        } else {
+          this.step += this.speed;
+        }
+      } else {
+        if (this.step <= 0) {
+          this.opening = true;
+          this.step += this.speed;
+        } else {
+          this.step -= this.speed;
+        }
+      }
     }
+  }
+
+  draw(rotation) {
+    console.log(this.counter)
+    ctx.strokeStyle = "orange";
+    ctx.fillStyle = "black";
+    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    // ctx.fillRect(0, 0, 500, 500);
+
+    // let newPath = new Path2D();
+    // newPath.arc(150, 75, 75, 0, 2 * Math.PI);
+
+    ctx.beginPath();
+    ctx.rect(100, 100, 300, 300);
+    ctx.stroke();
+
+    this.drawEyelid(this.step);
+
+    ctx.save();
+    // squareCut();
+    this.eyelidCut(this.step);
+
+    if (this.counter % 100 == 0) {
+      this.counter = 0;
+    }
+    this.drawGrowEye(100 + this.counter);
+
+    this.drawCircle(100);
+
+    ctx.restore();
+
+    this.stepFunc();
+    this.counter++;
   }
 }
 

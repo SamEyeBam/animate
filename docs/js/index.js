@@ -25,7 +25,10 @@ function createInstance(className, args) {
     FloralPhyllo_Accident: FloralPhyllo_Accident,
     Nodal_expanding: Nodal_expanding,
     Nodal: Nodal,
-    Phyllotaxis:Phyllotaxis
+    Phyllotaxis:Phyllotaxis,
+    SquareTwist_angle:SquareTwist_angle,
+    rectangle_pattern1:rectangle_pattern1,
+    EyePrototype:EyePrototype,
     // Add more class constructors here as needed
   };
 

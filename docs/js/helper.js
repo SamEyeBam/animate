@@ -58,6 +58,23 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
+    SquareTwist_angle: [
+      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
+      { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+    ],
+    rectangle_pattern1: [
+      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
+      { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
+      { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+    ],
+    EyePrototype: [
+      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
+      { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
+      { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+    ],
   };
   return config[className];
 }
