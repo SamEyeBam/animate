@@ -1,0 +1,16 @@
+{
+    "PolyTwistColourWidth": [
+      { "type": "range", "min": 3, "max": 10, "defaultValue": 5, "property": "sides" },
+      { "type": "range", "min": 1, "max": 600, "defaultValue": 300, "property": "width" },
+      { "type": "range", "min": 1, "max": 100, "defaultValue": 50, "property": "depth" },
+      { "type": "range", "min": 0, "max": 360, "defaultValue": 180, "property": "rotation" },
+      { "type": "color", "defaultValue": "#4287f5", "property": "colour1" },
+      { "type": "color", "defaultValue": "#42f57b", "property": "colour2" }
+    ],
+    "FloralPhyllo": [
+        { "type": "range", "min": 1, "max": 600, "defaultValue": 300, "property": "width" },
+        { "type": "range", "min": 1, "max": 100, "defaultValue": 50, "property": "depth" },
+        { "type": "color", "defaultValue": "#4287f5", "property": "colour1" },
+        { "type": "color", "defaultValue": "#4287f5", "property": "colour2" }
+    ]
+  }

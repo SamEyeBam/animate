@@ -7,7 +7,7 @@ centerX = ctx.canvas.width / 2;
 centerY = ctx.canvas.height / 2;
 
 
-let deg_per_sec = 5;
+let deg_per_sec = 10;
 let targetFps = 60;
 let frameDuration = 1000 / targetFps;
 
@@ -39,6 +39,8 @@ function createInstance(className, args) {
   }
 }
 
+
+
 async function updateDrawObj() {
   const shapeSelector = document.getElementById("shape-selector");
   const selectedShape = shapeSelector.value;
@@ -52,6 +54,9 @@ async function updateDrawObj() {
     .map((item) => item.defaultValue);
 
   drawObj = createInstance(selectedShape, defaultValues);
+
+  // drawObj = await createShapeWithRandomProperties(813311281, config1);
+  console.log(drawObj)
   drawObj.initialise(config);
 }
 

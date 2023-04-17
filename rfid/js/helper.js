@@ -3,11 +3,9 @@ async function fetchConfig(className) {
   const config = {
     PolyTwistColourWidth: [
       { type: "range", min: 3, max: 10, defaultValue: 5, property: "sides" },
-      { type: "range", min: 400, max: 400, defaultValue: 400, property: "width" },
-      { type: "range", min: 2, max: 5, defaultValue: 5, property: "line_width" },
+      { type: "range", min: 1, max: 600, defaultValue: 400, property: "width" },
       { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
-      { type: "range", min: -180, max: 180, defaultValue: -90, property: "rotation", },
-      { type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier", },
+      { type: "range", min: -180, max: 180, defaultValue: -90, property: "rotation" },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
       { type: "color", defaultValue: "#42f57b", property: "colour2" },
     ],
@@ -76,7 +74,7 @@ async function fetchConfig(className) {
 }
 
 function addControl(item, instance) {
-  console.log(item);
+  // console.log(item);
   let parentDiv = document.getElementById("custom");
 
   let title = document.createElement("p");
@@ -215,7 +213,7 @@ function drawEyelidAccident(x1, y1) {
   ctx.stroke();
 }
 
-function DrawPolygon(sides, width, rotation, colour,line_width) {
+function DrawPolygon(sides, width, rotation, colour) {
   ctx.beginPath();
   ctx.moveTo(
     centerX + width * Math.cos((rotation * Math.PI) / 180),
@@ -232,7 +230,7 @@ function DrawPolygon(sides, width, rotation, colour,line_width) {
     );
   }
   ctx.strokeStyle = colour;
-  ctx.lineWidth = line_width;
+  ctx.lineWidth = 3;
   ctx.stroke();
 }
 
