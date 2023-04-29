@@ -67,7 +67,9 @@ async function fetchConfig(className) {
     ],
     EyePrototype: [
       { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
+      { type: "range", min: 1, max: 100, defaultValue: 10, property: "blink_speed" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_spiral" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_pupil" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
     ],
@@ -273,10 +275,22 @@ function LerpRGB(a, b, t) {
   return newColor;
 }
 
-function render_clear() {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+
+function drawCenter(width) {
+  console.log("center?")
+  ctx.strokeStyle = "pink";
+  ctx.lineWidth = 1
+  ctx.beginPath();
+  ctx.moveTo(centerX - width, centerY);
+  ctx.lineTo(centerX + width, centerY);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY - width);
+  ctx.lineTo(centerX, centerY + width);
+  ctx.closePath();
+  ctx.stroke();
 }
 
 function render_clear() {
@@ -284,3 +298,4 @@ function render_clear() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
+

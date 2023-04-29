@@ -9,7 +9,7 @@ class BaseShape {
       const { element, listener } = addControl(item, this);
       this.controls.push({ element, listener });
     }
-    
+
     const { element, listener } = addControl({ type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier", }, this);
     this.controls.push({ element, listener });
   }
@@ -34,7 +34,7 @@ class BaseShape {
 }
 
 class PolyTwistColourWidth extends BaseShape {
-  constructor(sides, width,line_width, depth, rotation, speedMultiplier,colour1, colour2) {
+  constructor(sides, width, line_width, depth, rotation, speedMultiplier, colour1, colour2) {
     super();
     this.sides = sides;
     this.width = width;
@@ -47,7 +47,7 @@ class PolyTwistColourWidth extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     let out_angle = 0;
     const innerAngle = 180 - ((this.sides - 2) * 180) / this.sides;
     const scopeAngle = rotation - (innerAngle * Math.floor(rotation / innerAngle));
@@ -64,7 +64,7 @@ class PolyTwistColourWidth extends BaseShape {
     for (let i = 0; i < this.depth; i++) {
       const fraction = i / this.depth;
       const ncolour = LerpHex(this.colour1, this.colour2, fraction);
-      DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation, ncolour,this.line_width);
+      DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation, ncolour, this.line_width);
     }
   }
 }
@@ -79,7 +79,7 @@ class FloralPhyllo extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     // var c = 24; //something to do with width. but not width
     var c = 1; //something to do with width. but not width
     //dont make larger than 270 unless altering the number of colours in lerpedColours
@@ -103,7 +103,7 @@ class Spiral1 extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     var rot = Math.round((this.sides - 2) * 180 / this.sides * 2)
     var piv = 360 / this.sides;
     var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
@@ -140,7 +140,7 @@ class FloralAccident extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     var rot = Math.round((this.sides - 2) * 180 / this.sides * 2)
     var piv = 360 / this.sides;
     var stt = 0.5 * Math.PI - rad(rot) //+ rad(rotation);
@@ -177,7 +177,7 @@ class FloralPhyllo_Accident extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     var c = 24; //something to do with width. but not width
 
     for (let n = 0; n < 300; n += 1) {
@@ -204,7 +204,7 @@ class Nodal_expanding extends BaseShape {
   }
 
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     let colour_change = this.colour_change / 8
     var angle = 360 / this.points * rotation
 
@@ -242,7 +242,7 @@ class Nodal extends BaseShape {
   }
   // Draw_nodal(300, 100, 31, rotation, "blue");
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     // console.log(rotate)
     var angle = 360 / this.points * this.step
     ctx.beginPath();
@@ -279,7 +279,7 @@ class Phyllotaxis extends BaseShape {
   }
   // Draw_nodal(300, 100, 31, rotation, "blue");
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     for (let n = 0; n < this.nMax; n += 1) {
       const ncolour = LerpHex(this.colour1, this.colour2, n / this.nMax);
       // const ncolour = LerpHex(this.colour1, this.colour2, (n/this.nMax)**2);
@@ -318,7 +318,7 @@ class SquareTwist_angle extends BaseShape {
   }
   // DrawSquareTwist_angle(400,0,rotation,"red")
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     let out_angle = rotation;
     let widthMultiplier = 1 / (2 * Math.sin(Math.PI / 180 * (130 - out_angle + 90 * Math.floor(out_angle / 90)))) + 0.5
 
@@ -349,63 +349,79 @@ class rectangle_pattern1 extends BaseShape {
   }
   // Draw_rectangle_pattern1(rotation, squares, 200, "blue");
   draw(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     for (let z = 0; z < 360; z += 360 / this.squares) {
       this.drawSquare(z + rotation, this.width, this.colour1);
     }
   }
 }
 class EyePrototype extends BaseShape {
-  constructor(width, line_width, colour1) {
+  constructor(width, blink_speed, draw_spiral, draw_pupil, line_width, colour1) {
     super();
     this.width = width;
     this.line_width = line_width;
     this.colour1 = colour1;
     this.step = 0;
-    this.speed = 8;
+    this.speed = blink_speed;
     this.opening = true;
     this.counter = 0;
-    this.points = [
-      [50, 250],
-      [450, 250],
-    ];
     this.cooldown = 0;
+    this.draw_spiral = draw_spiral;
+    this.draw_pupil = draw_pupil;
   }
   drawEyelid(rotation) {
-    rotation*=(this.speedMultiplier/100)
+    rotation *= (this.speedMultiplier / 100)
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(this.points[0][0], this.points[0][1]);
-    ctx.quadraticCurveTo(250, 250 - rotation, this.points[1][0], this.points[0][1]);
+    ctx.moveTo(centerX - this.width / 2, centerY);
+    ctx.quadraticCurveTo(centerX, centerY - rotation / 400 * this.width, centerX + this.width / 2, centerY);
 
-    ctx.moveTo(this.points[0][0], this.points[0][1]);
-    ctx.quadraticCurveTo(250, 250 + rotation, this.points[1][0], this.points[0][1]);
+    ctx.moveTo(centerX - this.width / 2, centerY);
+    ctx.quadraticCurveTo(centerX, centerY + rotation / 400 * this.width, centerX + this.width / 2, centerY);
     ctx.stroke();
   }
   eyelidCut(step) {
     // ctx.lineWidth = 1;
     let squarePath = new Path2D();
-    squarePath.moveTo(this.points[0][0], this.points[0][1]);
-    squarePath.quadraticCurveTo(250, 250 - step, this.points[1][0], this.points[0][1]);
+    squarePath.moveTo(centerX - this.width / 2, centerY);
+    squarePath.quadraticCurveTo(centerX, centerY - step / 400 * this.width, centerX + this.width / 2, centerY);
 
-    squarePath.moveTo(this.points[0][0], this.points[0][1]);
-    squarePath.quadraticCurveTo(250, 250 + step, this.points[1][0], this.points[0][1]);
+    squarePath.moveTo(centerX - this.width / 2, centerY);
+    squarePath.quadraticCurveTo(centerX, centerY + step / 400 * this.width, centerX + this.width / 2, centerY);
 
     ctx.clip(squarePath);
   }
   drawGrowEye(step) {
-    console.log(step)
+    // console.log(step)
     ctx.strokeStyle = "aqua";
     ctx.beginPath();
     ctx.lineWidth = 5;
-    ctx.arc(250, 250, step, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, step, 0, 2 * Math.PI);
     ctx.stroke();
-    ctx.strokeStyle = "orange";
+    ctx.strokeStyle = "red";
+    // ctx.strokeStyle = "orange";
   }
   drawCircle(step) {
     ctx.beginPath();
     ctx.lineWidth = 5;
-    ctx.arc(250, 250, step, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, step, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
+
+  drawSpiral(step) {
+    let a = 1
+    let b = 5
+    ctx.moveTo(centerX, centerY);
+    ctx.beginPath();
+    for (let i = 0; i < 400; i++) {
+      let angle = 0.1 * i;
+      let x = centerX + (a + b * angle) * Math.cos(angle + step / 2);
+      let y = centerY + (a + b * angle) * Math.sin(angle + step / 2);
+
+      ctx.lineTo(x, y);
+    }
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "red";
     ctx.stroke();
   }
   stepFunc() {
@@ -432,7 +448,7 @@ class EyePrototype extends BaseShape {
   }
 
   draw(rotation) {
-    console.log(this.counter)
+    // console.log(this.counter)
     ctx.strokeStyle = "orange";
     ctx.fillStyle = "black";
     // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -441,22 +457,26 @@ class EyePrototype extends BaseShape {
     // let newPath = new Path2D();
     // newPath.arc(150, 75, 75, 0, 2 * Math.PI);
 
-    ctx.beginPath();
-    ctx.rect(100, 100, 300, 300);
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.rect(centerX-300/2, centerY-300/2, 300, 300);
+    // ctx.stroke();
 
     this.drawEyelid(this.step);
 
     ctx.save();
     // squareCut();
     this.eyelidCut(this.step);
-
     if (this.counter % 100 == 0) {
       this.counter = 0;
     }
-    this.drawGrowEye(100 + this.counter);
+    // this.drawGrowEye(this.width/4 + this.counter);
 
-    this.drawCircle(100);
+    if(this.draw_spiral){
+    this.drawSpiral(rotation)
+    }
+    if(this.draw_pupil){
+      this.drawCircle(this.width/4);
+    }
 
     ctx.restore();
 

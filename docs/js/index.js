@@ -73,8 +73,8 @@ function render() {
       if (!paused) {
         rotation += deg_per_sec / targetFps;
       }
+      // drawCenter(300)
     });
-
     render();
   }, frameDuration);
 }
