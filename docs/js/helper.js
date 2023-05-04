@@ -70,8 +70,12 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 100, defaultValue: 10, property: "blink_speed" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_spiral" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_pupil" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_expand" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+      { type: "color", defaultValue: "#00fffb", property: "colourPupil" },
+      { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
+      { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
     ],
   };
   return config[className];
