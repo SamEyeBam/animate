@@ -78,9 +78,10 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
     ],
     CircleExpand: [
-      { type: "range", min: 1, max: 55, defaultValue: 55, property: "nCircles" },
-      { type: "range", min: 1, max: 50, defaultValue: 20, property: "gap" },
+      { type: "range", min: 1, max: 70, defaultValue: 70, property: "nCircles" },
+      { type: "range", min: 1, max: 70, defaultValue: 43, property: "gap" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "linear" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "heart" },
       { type: "color", defaultValue: "#fc03cf", property: "colour1" },
       { type: "color", defaultValue: "#00fffb", property: "colour2" },
     ],

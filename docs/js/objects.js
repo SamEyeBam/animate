@@ -357,11 +357,12 @@ class rectangle_pattern1 extends BaseShape {
 }
 
 class CircleExpand extends BaseShape {
-  constructor(nCircles, gap, linear, colour1, colour2) {
+  constructor(nCircles, gap, linear, heart, colour1, colour2) {
     super();
     this.nCircles = nCircles;
     this.gap = gap;
     this.linear = linear;
+    this.heart = heart;
     this.colour1 = colour1;
     this.colour2 = colour2
   }
@@ -386,8 +387,30 @@ class CircleExpand extends BaseShape {
     }
     return 0;
   }
+  drawHeart(w, colour) {
+    // var w = 200
+    ctx.strokeStyle = "black";
+    ctx.fillStyle = colour;
+    ctx.lineWidth = 1;
+    var x = centerX - w / 2;
+    let y = centerY - w / 2
+    ctx.beginPath();
+    ctx.moveTo(x, y + w / 4);
+    ctx.quadraticCurveTo(x, y, x + w / 4, y);
+    ctx.quadraticCurveTo(x + w / 2, y, x + w / 2, y + w / 5);
+    ctx.quadraticCurveTo(x + w / 2, y, x + w * 3 / 4, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + w / 4);
+    ctx.quadraticCurveTo(x + w, y + w / 2, x + w * 3 / 4, y + w * 3 / 4);
+    ctx.lineTo(x + w / 2, y + w);
+    ctx.lineTo(x + w / 4, y + w * 3 / 4);
+    ctx.quadraticCurveTo(x, y + w / 2, x, y + w / 4);
+    ctx.stroke();
+    ctx.fill();
+  }
 
   draw(rotation) {
+    ctx.strokeWeight = 1;
+    ctx.lineWidth = 1;
     let arrOfWidths = []
     let arrOfco = []
     let intRot;
@@ -407,16 +430,20 @@ class CircleExpand extends BaseShape {
     let newArr = arrOfWidths.sort(this.arraySort)
 
     for (let i = this.nCircles - 1; i >= 0; i--) {
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, newArr[i].r, 0, 2 * Math.PI);
       let newColour = this.lerpColor(this.colour1, this.colour2, newArr[i].c)
-      ctx.fillStyle = newColour;
-      ctx.fill();
 
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, newArr[i].r, 0, 2 * Math.PI);
-      ctx.stokeStyle = "black";
-      ctx.stroke();
+      if (this.heart) {
+        this.drawHeart(newArr[i].r, newColour)
+      }
+      else {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, newArr[i].r, 0, 2 * Math.PI);
+        ctx.fillStyle = newColour;
+        ctx.fill();
+        ctx.stokeStyle = "black";
+        ctx.stroke();
+
+      }
     }
 
   }
