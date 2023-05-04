@@ -357,35 +357,66 @@ class rectangle_pattern1 extends BaseShape {
 }
 
 class CircleExpand extends BaseShape {
-  constructor() {
+  constructor(nCircles, gap, linear, colour1, colour2) {
     super();
+    this.nCircles = nCircles;
+    this.gap = gap;
+    this.linear = linear;
+    this.colour1 = colour1;
+    this.colour2 = colour2
   }
-  lerpColor(a, b, amount) { 
+  lerpColor(a, b, amount) {
     var ah = +a.replace('#', '0x'),
-        ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
-        bh =  +b.replace('#', '0x'),
-        br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
-        rr = ar + amount * (br - ar),
-        rg = ag + amount * (bg - ag),
-        rb = ab + amount * (bb - ab);
+      ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+      bh = +b.replace('#', '0x'),
+      br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+      rr = ar + amount * (br - ar),
+      rg = ag + amount * (bg - ag),
+      rb = ab + amount * (bb - ab);
 
     return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
-}
+  }
+
+  arraySort(x, y) {
+    if (x.r > y.r) {
+      return 1;
+    }
+    if (x.r < y.r) {
+      return -1;
+    }
+    return 0;
+  }
 
   draw(rotation) {
-    const nbCircles = 55
-    const gap = 20;
-    for (let i = 0; i < nbCircles; i++) {
+    let arrOfWidths = []
+    let arrOfco = []
+    let intRot;
+    if (this.linear) {
+      intRot = Math.floor(rotation * 30) / 100
+    }
+    else {
+      intRot = Math.sin(rad(Math.floor(rotation * 30) / 4)) + rotation / 4
+    }
+
+    for (let i = 0; i < this.nCircles; i++) {
+      const width = this.gap * ((intRot + i) % this.nCircles);
+      const colour = (Math.sin(rad(i * (360 / this.nCircles) - 90)) + 1) / 2
+      arrOfWidths.push({ r: width, c: colour });
+    }
+
+    let newArr = arrOfWidths.sort(this.arraySort)
+
+    for (let i = this.nCircles - 1; i >= 0; i--) {
       ctx.beginPath();
-      let intRot = Math.floor(rotation*30)/100
-      ctx.arc(centerX, centerY,gap* ((intRot+i)%nbCircles) , 0, 2 * Math.PI);
-      // let colourPos = Math.sin((i*(360/nbCircles)-90)+1)/2
-      let colourPos = (Math.sin(rad(i*(360/nbCircles)-90))+1)/2
-      let newColour = this.lerpColor("#fc03cf","#03fcf0",colourPos)
-      console.log(colourPos)
-      ctx.strokeStyle = newColour;
+      ctx.arc(centerX, centerY, newArr[i].r, 0, 2 * Math.PI);
+      let newColour = this.lerpColor(this.colour1, this.colour2, newArr[i].c)
+      ctx.fillStyle = newColour;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, newArr[i].r, 0, 2 * Math.PI);
+      ctx.stokeStyle = "black";
       ctx.stroke();
-      
     }
 
   }
