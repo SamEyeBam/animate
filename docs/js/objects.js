@@ -448,6 +448,14 @@ class EyePrototype extends BaseShape {
   }
 
   draw(rotation) {
+    let speedMult = 50
+    let waitTime = 3
+    let cap = 200
+    let d = waitTime * speedMult * 10
+    let a = cap * 2 + d
+    let outputRotation = Math.min(Math.abs((Math.floor(rotation * speedMult) % a) - a / 2 - d / 2), cap)
+    // console.log("Rot: "+ rotation + " | " +Math.floor(rotation)%a)
+    console.log(outputRotation)
     // console.log(this.counter)
     ctx.strokeStyle = "orange";
     ctx.fillStyle = "black";
@@ -461,27 +469,28 @@ class EyePrototype extends BaseShape {
     // ctx.rect(centerX-300/2, centerY-300/2, 300, 300);
     // ctx.stroke();
 
-    this.drawEyelid(this.step);
+    // this.drawEyelid(this.step);
+    this.drawEyelid(outputRotation);
 
     ctx.save();
     // squareCut();
-    this.eyelidCut(this.step);
+    this.eyelidCut(outputRotation);
     if (this.counter % 100 == 0) {
       this.counter = 0;
     }
     // this.drawGrowEye(this.width/4 + this.counter);
 
-    if(this.draw_spiral){
-    this.drawSpiral(rotation)
+    if (this.draw_spiral) {
+      this.drawSpiral(rotation)
     }
-    if(this.draw_pupil){
-      this.drawCircle(this.width/4);
+    if (this.draw_pupil) {
+      this.drawCircle(this.width / 4);
     }
 
     ctx.restore();
 
-    this.stepFunc();
-    this.counter++;
+    // this.stepFunc();
+    // this.counter++;
   }
 }
 
