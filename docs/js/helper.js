@@ -77,6 +77,12 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
       { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
     ],
+    CircleExpand: [
+      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
+      { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
+      { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
+      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
+    ],
   };
   return config[className];
 }

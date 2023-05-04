@@ -29,6 +29,7 @@ function createInstance(className, args) {
     SquareTwist_angle:SquareTwist_angle,
     rectangle_pattern1:rectangle_pattern1,
     EyePrototype:EyePrototype,
+    CircleExpand:CircleExpand,
     // Add more class constructors here as needed
   };
 
