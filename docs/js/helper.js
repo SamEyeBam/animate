@@ -15,7 +15,7 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 600, defaultValue: 300, property: "width" },
       { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
-      { type: "color", defaultValue: "#4287f5", property: "colour2" },
+      { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
     Spiral1: [
       { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
@@ -66,24 +66,37 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
     ],
     EyePrototype: [
+      { type: "range", min: -400, max: 400, defaultValue: 0, property: "x" },
+      { type: "range", min: -400, max: 400, defaultValue: 0, property: "y" },
+      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate" },
       { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
       { type: "range", min: 1, max: 100, defaultValue: 10, property: "blink_speed" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_spiral" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_pupil" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_expand" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#00fffb", property: "colourPupil" },
       { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
       { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
     ],
     CircleExpand: [
-      { type: "range", min: 1, max: 70, defaultValue: 70, property: "nCircles" },
-      { type: "range", min: 1, max: 70, defaultValue: 43, property: "gap" },
+      { type: "range", min: 1, max: 70, defaultValue: 21, property: "nCircles" },
+      { type: "range", min: 50, max: 150, defaultValue: 150, property: "gap" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "linear" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "heart" },
       { type: "color", defaultValue: "#fc03cf", property: "colour1" },
       { type: "color", defaultValue: "#00fffb", property: "colour2" },
+    ],
+    MaryFace: [
+      { type: "range", min: -400, max: 400, defaultValue: -100, property: "x1" },
+      { type: "range", min: -400, max: 400, defaultValue: -150, property: "y1" },
+      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate1" },
+      { type: "range", min: 0, max: 400, defaultValue: 160, property: "width1" },
+      { type: "range", min: -400, max: 400, defaultValue: 200, property: "x2" },
+      { type: "range", min: -400, max: 400, defaultValue: -30, property: "y2" },
+      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate2" },
+      { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
     ],
   };
   return config[className];
@@ -256,6 +269,12 @@ function rad(degrees) {
 
 function colourToText(colour) {
   return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")";
+}
+
+
+function waveNormal(x,max){
+  let val = Math.sin((x/max)* Math.PI*2-max*(Math.PI/(max*2)))/2+0.5
+  return val
 }
 
 function LerpHex(a, b, amount) {

@@ -30,6 +30,7 @@ function createInstance(className, args) {
     rectangle_pattern1:rectangle_pattern1,
     EyePrototype:EyePrototype,
     CircleExpand:CircleExpand,
+    MaryFace:MaryFace,
     // Add more class constructors here as needed
   };
 

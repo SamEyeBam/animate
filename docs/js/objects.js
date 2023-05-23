@@ -83,8 +83,10 @@ class FloralPhyllo extends BaseShape {
     // var c = 24; //something to do with width. but not width
     var c = 1; //something to do with width. but not width
     //dont make larger than 270 unless altering the number of colours in lerpedColours
+    let max = 200;
     for (let n = 200; n > 0; n -= 1) {
-      // let ncolour = LerpHex(this.colour1, this.colour2, n);
+      let colVal = waveNormal(n, max)
+      let ncolour = LerpHex(this.colour1, this.colour2, n / max);
       const a = n * rotation / 1000; //137.5;
       const r = c * Math.sqrt(n);
       const x = r * Math.cos(a) + centerX;
@@ -451,8 +453,11 @@ class CircleExpand extends BaseShape {
 
 
 class EyePrototype extends BaseShape {
-  constructor(width, blink_speed, draw_spiral, draw_pupil, draw_expand, line_width, colourPupil, colourSpiral, colourExpand) {
+  constructor(x, y, rotate, width, blink_speed, draw_spiral, draw_pupil, draw_expand, line_width, colourPupil, colourSpiral, colourExpand) {
     super();
+    this.x = x;
+    this.y = y;
+    this.rotate = rotate;
     this.width = width;
     this.line_width = line_width;
     this.step = 0;
@@ -472,21 +477,21 @@ class EyePrototype extends BaseShape {
     rotation *= (this.speedMultiplier / 100)
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(centerX - this.width / 2, centerY);
-    ctx.quadraticCurveTo(centerX, centerY - rotation / 400 * this.width, centerX + this.width / 2, centerY);
+    ctx.moveTo(centerX + this.x - this.width / 2, centerY + this.y);
+    ctx.quadraticCurveTo(centerX + this.x, centerY + this.y - rotation / 400 * this.width, centerX + this.x + this.width / 2, centerY + this.y);
 
-    ctx.moveTo(centerX - this.width / 2, centerY);
-    ctx.quadraticCurveTo(centerX, centerY + rotation / 400 * this.width, centerX + this.width / 2, centerY);
+    ctx.moveTo(centerX + this.x - this.width / 2, centerY + this.y);
+    ctx.quadraticCurveTo(centerX + this.x, centerY + this.y + rotation / 400 * this.width, centerX + this.x + this.width / 2, centerY + this.y);
     ctx.stroke();
   }
   eyelidCut(step) {
     // ctx.lineWidth = 1;
     let squarePath = new Path2D();
-    squarePath.moveTo(centerX - this.width / 2, centerY);
-    squarePath.quadraticCurveTo(centerX, centerY - step / 400 * this.width, centerX + this.width / 2, centerY);
+    squarePath.moveTo(centerX + this.x - this.width / 2, centerY + this.y);
+    squarePath.quadraticCurveTo(centerX + this.x, centerY + this.y - step / 400 * this.width, centerX + this.x + this.width / 2, centerY + this.y);
 
-    squarePath.moveTo(centerX - this.width / 2, centerY);
-    squarePath.quadraticCurveTo(centerX, centerY + step / 400 * this.width, centerX + this.width / 2, centerY);
+    squarePath.moveTo(centerX + this.x - this.width / 2, centerY + this.y);
+    squarePath.quadraticCurveTo(centerX + this.x, centerY + this.y + step / 400 * this.width, centerX + this.x + this.width / 2, centerY + this.y);
 
     ctx.clip(squarePath);
   }
@@ -495,14 +500,14 @@ class EyePrototype extends BaseShape {
     ctx.strokeStyle = this.colourExpand
     ctx.beginPath();
     ctx.lineWidth = 5;
-    ctx.arc(centerX, centerY, step, 0, 2 * Math.PI);
+    ctx.arc(centerX + this.x, centerY + this.y, step, 0, 2 * Math.PI);
     ctx.stroke();
   }
   drawCircle(step) {
     ctx.strokeStyle = this.colourPupil
     ctx.beginPath();
     ctx.lineWidth = 5;
-    ctx.arc(centerX, centerY, step, 0, 2 * Math.PI);
+    ctx.arc(centerX + this.x, centerY + this.y, step, 0, 2 * Math.PI);
     ctx.stroke();
   }
 
@@ -517,7 +522,7 @@ class EyePrototype extends BaseShape {
       let x = centerX + (a + b * angle) * Math.cos(angle + step / 2);
       let y = centerY + (a + b * angle) * Math.sin(angle + step / 2);
 
-      ctx.lineTo(x, y);
+      ctx.lineTo(x + this.x, y + this.y);
     }
     ctx.lineWidth = 3;
     ctx.stroke();
@@ -568,15 +573,17 @@ class EyePrototype extends BaseShape {
     // ctx.stroke();
 
     // this.drawEyelid(this.step);
-    this.drawEyelid(outputRotation);
-
+    
     ctx.save();
+    this.drawEyelid(outputRotation);
     // squareCut();
     this.eyelidCut(outputRotation);
     if (this.counter % 100 == 0) {
       this.counter = 0;
     }
-    if (this.drawGrowEye) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(this.x-this.width/2 +centerX,0 , this.width, ctx.canvas.height);
+    if (this.draw_expand) {
       this.drawGrowEye(this.width / 4 + this.counter);
     }
 
@@ -591,6 +598,30 @@ class EyePrototype extends BaseShape {
 
     this.stepFunc();
     this.counter++;
+  }
+}
+class MaryFace extends BaseShape {
+  constructor(x1, y1, rotate1, width1, x2, y2, rotate2, width2) {
+    super();
+    this.x1 = x1;
+    this.y1 = y1;
+    this.rotate1 = rotate1;
+    this.width1 = width1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.rotate2 = rotate2;
+    this.width2 = width2;
+    this.eye1 = new EyePrototype(x1, y1, rotate1, width1, 10, 1, 1, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+    this.eye2 = new EyePrototype(x2, y2, rotate2, width2, 10, 1, 1, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+  }
+
+  draw(rotation) {
+    let img = new Image();
+    img.src = "maryFace.png";
+
+    ctx.drawImage(img, centerX - img.width / 2, centerY - img.height / 2);
+    this.eye1.draw(rotation);
+    this.eye2.draw(rotation);
   }
 }
 
