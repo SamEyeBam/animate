@@ -26,7 +26,6 @@ function createInstance(className, args) {
     Nodal_expanding: Nodal_expanding,
     Phyllotaxis:Phyllotaxis,
     SquareTwist_angle:SquareTwist_angle,
-    rectangle_pattern1:rectangle_pattern1,
     EyePrototype:EyePrototype,
     CircleExpand:CircleExpand,
     MaryFace:MaryFace,

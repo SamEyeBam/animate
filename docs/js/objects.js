@@ -349,33 +349,6 @@ class SquareTwist_angle extends BaseShape {
 
   }
 }
-class rectangle_pattern1 extends BaseShape {
-  constructor(width, squares, line_width, colour1) {
-    super();
-    this.width = width;
-    this.squares = squares;
-    this.line_width = line_width;
-    this.colour1 = colour1;
-  }
-  drawSquare(angle, size, colour) {
-    ctx.save();
-    ctx.translate(centerX, centerY)//-(Math.sin(rad(angle)) *centerX));
-    ctx.rotate(rad(angle + 180));
-    ctx.beginPath();
-    ctx.strokeStyle = colour;
-    ctx.lineWidth = this.line_width;
-    ctx.rect(-size / 2, -size / 2, size, size);
-    ctx.stroke();
-    ctx.restore();
-  }
-  // Draw_rectangle_pattern1(rotation, squares, 200, "blue");
-  draw(rotation) {
-    rotation *= (this.speedMultiplier / 100)
-    for (let z = 0; z < 360; z += 360 / this.squares) {
-      this.drawSquare(z + rotation, this.width, this.colour1);
-    }
-  }
-}
 
 class CircleExpand extends BaseShape {
   constructor(nCircles, gap, linear, heart, colour1, colour2) {

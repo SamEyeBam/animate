@@ -3,7 +3,7 @@ async function fetchConfig(className) {
   const config = {
     PolyTwistColourWidth: [
       { type: "range", min: 3, max: 10, defaultValue: 5, property: "sides" },
-      { type: "range", min: 400, max: 400, defaultValue: 400, property: "width" },
+      { type: "range", min: 400, max: 2000, defaultValue: 400, property: "width" },
       { type: "range", min: 2, max: 5, defaultValue: 5, property: "line_width" },
       { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
       { type: "range", min: -180, max: 180, defaultValue: -90, property: "rotation", },
@@ -53,12 +53,6 @@ async function fetchConfig(className) {
     ],
     SquareTwist_angle: [
       { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-    ],
-    rectangle_pattern1: [
-      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
     ],
