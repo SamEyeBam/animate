@@ -24,7 +24,6 @@ function createInstance(className, args) {
     FloralAccident: FloralAccident,
     FloralPhyllo_Accident: FloralPhyllo_Accident,
     Nodal_expanding: Nodal_expanding,
-    Nodal: Nodal,
     Phyllotaxis:Phyllotaxis,
     SquareTwist_angle:SquareTwist_angle,
     rectangle_pattern1:rectangle_pattern1,

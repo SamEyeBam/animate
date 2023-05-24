@@ -13,7 +13,8 @@ async function fetchConfig(className) {
     ],
     FloralPhyllo: [
       { type: "range", min: 1, max: 600, defaultValue: 300, property: "width" },
-      { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
+      { type: "range", min: 1, max: 300, defaultValue: 150, property: "depth" },
+      { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
@@ -35,22 +36,18 @@ async function fetchConfig(className) {
     ],
     Nodal_expanding: [
       { type: "range", min: 1, max: 100, defaultValue: 5, property: "expand" },
-      { type: "range", min: 1, max: 100000, defaultValue: 100000, property: "points" },
-      { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
+      { type: "range", min: 1, max: 1000, defaultValue: 150, property: "points" },
+      { type: "range", min: 1, max: 360, defaultValue: 0, property: "start" },
+      { type: "range", min: 1, max: 10, defaultValue: 6, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
       { type: "range", min: 0, max: 10, defaultValue: 5, property: "colour_change" },
     ],
-    Nodal: [
-      { type: "range", min: 1, max: 1000, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 20, defaultValue: 10, property: "points" },
-      { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
-      { type: "range", min: 1, max: 20, defaultValue: 1, property: "step" },
-      { type: "color", defaultValue: "#2D81FC", property: "colour" },
-    ],
     Phyllotaxis: [
       { type: "range", min: 1, max: 40, defaultValue: 24, property: "width" },
+      { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
       { type: "range", min: 1, max: 1000, defaultValue: 300, property: "nMax" },
+      { type: "range", min: 0, max: 2, defaultValue: 0, property: "wave" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
@@ -89,13 +86,13 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#00fffb", property: "colour2" },
     ],
     MaryFace: [
-      { type: "range", min: -400, max: 400, defaultValue: -100, property: "x1" },
-      { type: "range", min: -400, max: 400, defaultValue: -150, property: "y1" },
-      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate1" },
+      { type: "range", min: -400, max: 400, defaultValue: -110, property: "x1" },
+      { type: "range", min: -400, max: 400, defaultValue: -140, property: "y1" },
+      { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate1" },
       { type: "range", min: 0, max: 400, defaultValue: 160, property: "width1" },
-      { type: "range", min: -400, max: 400, defaultValue: 200, property: "x2" },
+      { type: "range", min: -400, max: 400, defaultValue: 195, property: "x2" },
       { type: "range", min: -400, max: 400, defaultValue: -30, property: "y2" },
-      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate2" },
+      { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate2" },
       { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
     ],
   };
@@ -242,7 +239,7 @@ function drawEyelidAccident(x1, y1) {
   ctx.stroke();
 }
 
-function DrawPolygon(sides, width, rotation, colour,line_width) {
+function DrawPolygon(sides, width, rotation, colour, line_width) {
   ctx.beginPath();
   ctx.moveTo(
     centerX + width * Math.cos((rotation * Math.PI) / 180),
@@ -272,8 +269,8 @@ function colourToText(colour) {
 }
 
 
-function waveNormal(x,max){
-  let val = Math.sin((x/max)* Math.PI*2-max*(Math.PI/(max*2)))/2+0.5
+function waveNormal(x, max) {
+  let val = Math.sin((x / max) * Math.PI * 2 - max * (Math.PI / (max * 2))) / 2 + 0.5
   return val
 }
 
@@ -306,6 +303,13 @@ function LerpRGB(a, b, t) {
   return newColor;
 }
 
+function lerpRGB(a, b, t) {
+  const result = [0, 0, 0];
+  for (let i = 0; i < 3; i++) {
+    result[i] = (1 - t) * a[i] + t * b[i];
+  }
+  return result;
+}
 
 
 function drawCenter(width) {
@@ -330,3 +334,31 @@ function render_clear() {
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
+function rotatePointTmp(x, y, centerXX, centerYY, rotation) {
+  let xFromC = x - centerXX;
+  let yFromC = y - centerYY;
+  let d = (xFromC ** 2 + yFromC ** 2) ** 0.5
+  // let orgAngle = Math.atan2(yFromC/xFromC)
+  let orgAngle = Math.atan2(xFromC, yFromC)
+  let tmp = Math.cos(rad(orgAngle - rotation)) * d
+  // console.log(Math.cos((-90)*(Math.PI/180)))
+  console.log(orgAngle)
+  console.log(rad(rotation))
+  console.log(Math.cos(orgAngle - rad(rotation)) * d)
+  console.log(d)
+  // console.log(d)
+  let newPointX = Math.cos(orgAngle - rad(rotation+90)) * d + centerXX;
+  let newPointY = Math.sin(orgAngle - rad(rotation+90)) * d + centerYY;
+  return [newPointX, newPointY]
+}
+
+function rotatePoint(x,y,rotation){
+  let nCos = Math.cos(rad(rotation))
+  // console.log(nCos*(180/Math.PI))
+  // console.log(rad(rotation))
+  let nSin = Math.sin(rad(rotation))
+  console.log(nSin)
+  let newX = x*nCos - y*nSin
+  let newY = y*nCos + x*nSin
+  return [newX,newY]
+}
