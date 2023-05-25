@@ -85,10 +85,9 @@ class FloralPhyllo extends BaseShape {
     // var c = 24; //something to do with width. but not width
     var c = 1; //something to do with width. but not width
     //dont make larger than 270 unless altering the number of colours in lerpedColours
-    let max = this.depth;
     for (let n = this.depth; n > 0; n -= 1) {
-      let colVal = waveNormal(n, max)
-      let ncolour = LerpHex(this.colour1, this.colour2, n / max);
+      let colVal = waveNormal(n, this.depth)
+      let ncolour = LerpHex(this.colour1, this.colour2, n / this.depth);
       const a = n * rotation / 1000; //137.5;
       const r = c * Math.sqrt(n);
       const x = r * Math.cos(a) + centerX;
@@ -210,12 +209,8 @@ class Nodal_expanding extends BaseShape {
 
   draw(rotation) {
     rotation *= (this.speedMultiplier / 1000)
-    let colour_change = this.colour_change / 8
     var angle = (360 / 3000 * rotation) + this.start //2000 controls speed
 
-    var start_angle = angle;
-    var done = false;
-    var total_moves = 1;
     var length = this.expand;
 
     for (let z = 1; z <= this.points; z++) { //why specifically 2500
@@ -274,15 +269,15 @@ class Phyllotaxis extends BaseShape {
     const endColor = [252, 3, 98];
     const distanceMultiplier = 2;
     const maxIterations = 1000;
-  
+
     for (let n = 0; n < maxIterations; n++) {
       const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
-      
+
       const nAngle = n * angle + Math.sin(angle * n * 2);
       const radius = distanceMultiplier * n;
       const xCoord = radius * Math.cos(nAngle) + centerX;
       const yCoord = radius * Math.sin(nAngle) + centerY;
-  
+
       ctx.beginPath();
       ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
       ctx.fillStyle = colourToText(nColor);
@@ -294,10 +289,10 @@ class Phyllotaxis extends BaseShape {
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
-    if (this.wave===1) {
+    if (this.wave === 1) {
       this.drawWave(rotation)
     }
-    else if(this.wave ===2){
+    else if (this.wave === 2) {
       this.drawSpiral(rotation)
     }
     else {
@@ -403,6 +398,7 @@ class CircleExpand extends BaseShape {
   }
 
   draw(rotation) {
+    rotation *= (0.9)
     ctx.strokeWeight = 1;
     ctx.lineWidth = 1;
     let arrOfWidths = []
@@ -445,24 +441,28 @@ class CircleExpand extends BaseShape {
 
 
 class EyePrototype extends BaseShape {
-  constructor(x, y, rotate, width, blink_speed, draw_spiral, draw_pupil, draw_expand, line_width, colourPupil, colourSpiral, colourExpand) {
+  constructor(x, y, rotate, flip, width, blink_speed, draw_spiral, spiral_full, draw_pupil, draw_expand, draw_hypno, line_width, colourPupil, colourSpiral, colourExpand) {
     super();
     this.x = x;
     this.y = y;
     this.rotate = rotate;
+    this.flip = flip
     this.width = width;
+    this.blink_speed = blink_speed;
     this.line_width = line_width;
     this.step = 0;
-    this.speed = blink_speed;
     this.opening = true;
     this.counter = 0;
     this.cooldown = 0;
     this.draw_spiral = draw_spiral;
+    this.spiral_full = spiral_full;
     this.draw_pupil = draw_pupil;
     this.draw_expand = draw_expand;
+    this.draw_hypno = draw_hypno;
     this.colourPupil = colourPupil;
     this.colourSpiral = colourSpiral;
     this.colourExpand = colourExpand;
+    this.centerPulse = new CircleExpand(10, 30, 1, 0, "#2D81FC", "#FC0362")
   }
   drawEyelid(rotation) {
     ctx.strokeStyle = "orange";
@@ -473,17 +473,17 @@ class EyePrototype extends BaseShape {
     ctx.beginPath();
     let newPoint = 0
     let newPoint1 = 0
-
-    newPoint = rotatePoint(- this.width / 2, 0, this.rotate)
+    let addedRotate = this.flip ? 90 : 0
+    newPoint = rotatePoint(- this.width / 2, 0, this.rotate + addedRotate)
     ctx.moveTo(relCenterX + newPoint[0], relCenterY + newPoint[1]);
-    newPoint = rotatePoint(0, - rotation / 400 * this.width, this.rotate)
-    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(0, - rotation / 400 * this.width, this.rotate + addedRotate)
+    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate + addedRotate)
     ctx.quadraticCurveTo(relCenterX + newPoint[0], relCenterY + newPoint[1], relCenterX + newPoint1[0], relCenterY + newPoint1[1]);
 
-    newPoint = rotatePoint(- this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(- this.width / 2, 0, this.rotate + addedRotate)
     ctx.moveTo(relCenterX + newPoint[0], relCenterY + newPoint[1]);
-    newPoint = rotatePoint(0, + rotation / 400 * this.width, this.rotate)
-    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(0, + rotation / 400 * this.width, this.rotate + addedRotate)
+    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate + addedRotate)
     ctx.quadraticCurveTo(relCenterX + newPoint[0], relCenterY + newPoint[1], relCenterX + newPoint1[0], relCenterY + newPoint1[1]);
     ctx.stroke();
   }
@@ -492,18 +492,19 @@ class EyePrototype extends BaseShape {
     let relCenterY = centerY + this.y;
     let newPoint = 0
     let newPoint1 = 0
+    let addedRotate = this.flip ? 90 : 0
     // ctx.lineWidth = 1;
     let squarePath = new Path2D();
-    newPoint = rotatePoint(- this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(- this.width / 2, 0, this.rotate + addedRotate)
     squarePath.moveTo(relCenterX + newPoint[0], relCenterY + newPoint[1]);
-    newPoint = rotatePoint(0, - rotation / 400 * this.width, this.rotate)
-    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(0, - rotation / 400 * this.width, this.rotate + addedRotate)
+    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate + addedRotate)
     squarePath.quadraticCurveTo(relCenterX + newPoint[0], relCenterY + newPoint[1], relCenterX + newPoint1[0], relCenterY + newPoint1[1]);
 
-    newPoint = rotatePoint(- this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(- this.width / 2, 0, this.rotate + addedRotate)
     squarePath.moveTo(relCenterX + newPoint[0], relCenterY + newPoint[1]);
-    newPoint = rotatePoint(0, + rotation / 400 * this.width, this.rotate)
-    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate)
+    newPoint = rotatePoint(0, + rotation / 400 * this.width, this.rotate + addedRotate)
+    newPoint1 = rotatePoint(this.width / 2, 0, this.rotate + addedRotate)
     squarePath.quadraticCurveTo(relCenterX + newPoint[0], relCenterY + newPoint[1], relCenterX + newPoint1[0], relCenterY + newPoint1[1]);
 
     ctx.clip(squarePath);
@@ -530,7 +531,8 @@ class EyePrototype extends BaseShape {
     let b = 5
     ctx.moveTo(centerX, centerY);
     ctx.beginPath();
-    for (let i = 0; i < 400; i++) {
+    let max = this.spiral_full ? this.width : this.width / 2
+    for (let i = 0; i < max; i++) {
       let angle = 0.1 * i;
       let x = centerX + (a + b * angle) * Math.cos(angle + step / 2);
       let y = centerY + (a + b * angle) * Math.sin(angle + step / 2);
@@ -548,16 +550,16 @@ class EyePrototype extends BaseShape {
         if (this.step >= 200) {
           this.cooldown = 200;
           this.opening = false;
-          this.step -= this.speed;
+          this.step -= this.blink_speed;
         } else {
-          this.step += this.speed;
+          this.step += this.blink_speed;
         }
       } else {
         if (this.step <= 0) {
           this.opening = true;
-          this.step += this.speed;
+          this.step += this.blink_speed;
         } else {
-          this.step -= this.speed;
+          this.step -= this.blink_speed;
         }
       }
     }
@@ -565,33 +567,20 @@ class EyePrototype extends BaseShape {
 
   draw(rotation) {
     let speedMult = 50
-    let waitTime = 3
+    console.log(this.blink_speed)
+    let waitTime = this.blink_speed
     let cap = 200
     let d = waitTime * speedMult * 10
     let a = cap * 2 + d
     let outputRotation = Math.min(Math.abs((Math.floor(rotation * speedMult) % a) - a / 2 - d / 2), cap)
-    // console.log("Rot: "+ rotation + " | " +Math.floor(rotation)%a)
-    // console.log(outputRotation)
-    // console.log(this.counter)
 
     ctx.fillStyle = "black";
-    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    // ctx.fillRect(0, 0, 500, 500);
-
-    // let newPath = new Path2D();
-    // newPath.arc(150, 75, 75, 0, 2 * Math.PI);
-
-    // ctx.beginPath();
-    // ctx.rect(centerX-300/2, centerY-300/2, 300, 300);
-    // ctx.stroke();
-
-    // this.drawEyelid(this.step);
-
     ctx.save();
     this.drawEyelid(outputRotation);
     // squareCut();
     this.eyelidCut(outputRotation);
-    if (this.counter % 100 == 0) {
+    // console.log(Math.floor(this.counter % this.width / 2))
+    if (Math.floor(this.counter % (this.width / 4)) === 0) {
       this.counter = 0;
     }
     ctx.fillStyle = "black";
@@ -600,6 +589,9 @@ class EyePrototype extends BaseShape {
       this.drawGrowEye(this.width / 4 + this.counter);
     }
 
+    if (this.draw_hypno) {
+      this.centerPulse.draw(rotation)
+    }
     if (this.draw_spiral) {
       this.drawSpiral(rotation)
     }
@@ -624,8 +616,10 @@ class MaryFace extends BaseShape {
     this.y2 = y2;
     this.rotate2 = rotate2;
     this.width2 = width2;
-    this.eye1 = new EyePrototype(x1, y1, rotate1, width1, 10,1, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
-    this.eye2 = new EyePrototype(x2, y2, rotate2, width2, 10, 1, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+    this.eye1 = new EyePrototype(x1, y1, rotate1, 0, width1, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+    this.eye2 = new EyePrototype(x2, y2, rotate2, 0, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+    // this.eye3 = new EyePrototype(112, -280, rotate2+2,1, width2, 10, 1, 1, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
+    this.eye3 = new EyePrototype(110, -280, rotate2 + 2, 1, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")//maybe
   }
 
   draw(rotation) {
@@ -635,6 +629,7 @@ class MaryFace extends BaseShape {
     ctx.drawImage(img, centerX - img.width / 2, centerY - img.height / 2);
     this.eye1.draw(rotation);
     this.eye2.draw(rotation);
+    this.eye3.draw(rotation);
   }
 }
 

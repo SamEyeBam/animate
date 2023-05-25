@@ -60,11 +60,14 @@ async function fetchConfig(className) {
       { type: "range", min: -400, max: 400, defaultValue: 0, property: "x" },
       { type: "range", min: -400, max: 400, defaultValue: 0, property: "y" },
       { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "flip" },
       { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 100, defaultValue: 10, property: "blink_speed" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_spiral" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_pupil" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_expand" },
+      { type: "range", min: 1, max: 100, defaultValue: 5, property: "blink_speed" },
+      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_spiral" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "spiral_full" },
+      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_pupil" },
+      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_expand" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_hypno" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#00fffb", property: "colourPupil" },
       { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
@@ -351,7 +354,6 @@ function rotatePoint(x,y,rotation){
   // console.log(nCos*(180/Math.PI))
   // console.log(rad(rotation))
   let nSin = Math.sin(rad(rotation))
-  console.log(nSin)
   let newX = x*nCos - y*nSin
   let newY = y*nCos + x*nSin
   return [newX,newY]
