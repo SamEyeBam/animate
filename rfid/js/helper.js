@@ -70,7 +70,13 @@ async function fetchConfig(className) {
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
     ],
   };
-  return config[className];
+
+  if (className === undefined) {
+    return config
+  } else {
+    return config[className];
+
+  }
 }
 
 function addControl(item, instance) {

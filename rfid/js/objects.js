@@ -71,9 +71,7 @@ class FloralPhyllo extends BaseShape {
   }
 
   draw(angle) {
-    // var c = 24; //something to do with width. but not width
     var c = 1; //something to do with width. but not width
-    //dont make larger than 270 unless altering the number of colours in lerpedColours
     for (let n = 200; n > 0; n -= 1) {
       const a = n * angle / 1000; //137.5;
       const r = c * Math.sqrt(n);
@@ -169,7 +167,6 @@ class FloralPhyllo_Accident extends BaseShape {
     var c = 24; //something to do with width. but not width
 
     for (let n = 0; n < 300; n += 1) {
-      let ncolour = LerpHex(this.colour1, this.colour2, Math.cos(rad(n / 2)));
       let a = n * (angle / 1000 + 100); //137.5;
       let r = c * Math.sqrt(n);
       let x = r * Math.cos(a) + centerX;
@@ -195,9 +192,6 @@ class Nodal_expanding extends BaseShape {
     let colour_change = this.colour_change / 10
     var angle = 360 / this.points * step
 
-    var start_angle = angle;
-    var done = false;
-    var total_moves = 1;
     var length = this.expand;
 
     for (let z = 1; z <= 100; z++) { //why specifically 2500
@@ -210,7 +204,6 @@ class Nodal_expanding extends BaseShape {
       ctx.lineWidth = this.line_width;//try 1
       ctx.strokeStyle = ncolour;
       // ctx.strokeStyle = colourToText(ncolour);
-      console.log(ncolour)
       ctx.stroke();
     }
 

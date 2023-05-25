@@ -2,7 +2,7 @@
 var seed = cyrb128("813311281");
 var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
-var gateway = `ws://192.168.20.16/ws`;
+var gateway = `ws://192.168.20.13/ws`;
 var websocket;
 window.addEventListener('load', onLoad);
 function initWebSocket() {
@@ -32,8 +32,8 @@ function onLoad(event) {
   initWebSocket();
 }
 
-function setSeed(val){
-  seed = cyrb128(val+"1");
+function setSeed(val) {
+  seed = cyrb128(val + "1");
   rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 }
 
@@ -123,6 +123,7 @@ function PRNGinRange(min = 0, max = 100) {
 
 async function createShapeWithRandomProperties(inputNumber, shapeConfig) {
 
+  console.log(shapeConfig)
   // const shapeName = Object.keys(shapeConfig)[PRNGinRange(0, Object.keys(shapeConfig).length - 1)];
   const shapeName = Object.keys(shapeConfig)[PRNGinRange(0, Object.keys(shapeConfig).length - 1)];
   const ShapeClass = classMap[shapeName];
@@ -155,88 +156,13 @@ async function updateDrawObj() {
 
 
   // drawObj = createInstance(selectedShape, defaultValues);
-  drawObj = await createShapeWithRandomProperties(813311281, config1);
+  drawObj = await createShapeWithRandomProperties(813311281, await fetchConfig());
   console.log(drawObj)
   drawObj.initialise(configControls);
 }
 
 updateDrawObj();
-const config1 = {
-  PolyTwistColourWidth: [
-    { type: "range", min: 3, max: 10, defaultValue: 5, property: "sides" },
-    { type: "range", min: 1, max: 600, defaultValue: 400, property: "width" },
-    { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
-    {
-      type: "range",
-      min: -180,
-      max: 180,
-      defaultValue: -90,
-      property: "rotation",
-    },
-    { type: "color", defaultValue: "#4287f5", property: "colour1" },
-    { type: "color", defaultValue: "#42f57b", property: "colour2" },
-  ],
-  FloralPhyllo: [
-    { type: "range", min: 1, max: 600, defaultValue: 300, property: "width" },
-    { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
-    { type: "color", defaultValue: "#4287f5", property: "colour1" },
-    { type: "color", defaultValue: "#4287f5", property: "colour2" },
-  ],
-  Spiral1: [
-    { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-    { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
-    { type: "color", defaultValue: "#4287f5", property: "colour" },
-  ],
-  FloralAccident: [
-    { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-    { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
-    { type: "color", defaultValue: "#4287f5", property: "colour" },
-  ],
-  FloralPhyllo_Accident: [
-    { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-    { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-    { type: "color", defaultValue: "#FC0362", property: "colour2" },
-  ],
-  Nodal_expanding: [
-    { type: "range", min: 1, max: 100, defaultValue: 5, property: "expand" },
-    { type: "range", min: 1, max: 100000, defaultValue: 100000, property: "points" },
-    { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-    { type: "color", defaultValue: "#FC0362", property: "colour2" },
-    { type: "range", min: 0, max: 10, defaultValue: 5, property: "colour_change" },
-  ],
-  Nodal: [
-    { type: "range", min: 1, max: 1000, defaultValue: 400, property: "width" },
-    { type: "range", min: 1, max: 20, defaultValue: 10, property: "points" },
-    { type: "range", min: 1, max: 10, defaultValue: 3, property: "line_width" },
-    { type: "range", min: 1, max: 20, defaultValue: 1, property: "step" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour" },
-  ],
-  Phyllotaxis: [
-    { type: "range", min: 1, max: 40, defaultValue: 24, property: "width" },
-    { type: "range", min: 1, max: 1000, defaultValue: 300, property: "nMax" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-    { type: "color", defaultValue: "#FC0362", property: "colour2" },
-  ],
-  SquareTwist_angle: [
-    { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-    { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-  ],
-  rectangle_pattern1: [
-    { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-    { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
-    { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-  ],
-  EyePrototype: [
-    { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-    { type: "range", min: 1, max: 100, defaultValue: 10, property: "squares" },
-    { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-    { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-  ],
-};
+
 function render() {
   setTimeout(() => {
     requestAnimationFrame(() => {
