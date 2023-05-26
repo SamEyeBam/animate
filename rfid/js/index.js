@@ -2,7 +2,8 @@
 var seed = cyrb128("813311281");
 var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
-var gateway = `ws://192.168.20.13/ws`;
+// var gateway = `ws://192.168.1.184/ws`;
+var gateway = `ws://192.168.4.1/ws`;
 var websocket;
 window.addEventListener('load', onLoad);
 function initWebSocket() {
@@ -50,7 +51,7 @@ let targetFps = 60;
 let frameDuration = 1000 / targetFps;
 
 let rotation = 0; //was = j = angle
-let paused = true;
+let paused = false;
 render_clear();
 
 let drawObj = null;
@@ -61,11 +62,11 @@ const classMap = {
   FloralAccident: FloralAccident,
   FloralPhyllo_Accident: FloralPhyllo_Accident,
   Nodal_expanding: Nodal_expanding,
-  Nodal: Nodal,
-  Phyllotaxis: Phyllotaxis,
-  SquareTwist_angle: SquareTwist_angle,
-  rectangle_pattern1: rectangle_pattern1,
-  EyePrototype: EyePrototype,
+  Phyllotaxis:Phyllotaxis,
+  SquareTwist_angle:SquareTwist_angle,
+  EyePrototype:EyePrototype,
+  CircleExpand:CircleExpand,
+  MaryFace:MaryFace,
   // Add more class constructors here as needed
 };
 function createInstance(className, args) {
@@ -197,6 +198,7 @@ function manualToggleSettings() {
     tb.style.display = "none";
   }
 }
+manualToggleSettings()//force closed at start
 
 function toggleSettings(e) {
   if (e.key == "p") {
