@@ -4,14 +4,8 @@ class BaseShape {
     this.speedMultiplier = 100;
   }
 
-  initialise(config) {
-    for (let item of config) {
-      const { element, listener } = addControl(item, this);
-      this.controls.push({ element, listener });
-    }
+  initialise() {
 
-    const { element, listener } = addControl({ type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier", }, this);
-    this.controls.push({ element, listener });
   }
 
   remove() {
@@ -34,14 +28,13 @@ class BaseShape {
 }
 
 class PolyTwistColourWidth extends BaseShape {
-  constructor(sides, width, line_width, depth, rotation, speedMultiplier, colour1, colour2) {
+  constructor(sides, width, line_width, depth, rotation, colour1, colour2) {
     super();
     this.sides = sides;
     this.width = width;
     this.line_width = line_width;
-    this.depth = depth;
+    this.depth = sides * 5;
     this.rotation = rotation;
-    this.speedMultiplier = speedMultiplier;
     this.colour1 = colour1;
     this.colour2 = colour2;
   }
@@ -98,11 +91,11 @@ class FloralPhyllo extends BaseShape {
   }
 }
 class Spiral1 extends BaseShape {
-  constructor(sides, width, colour) {
+  constructor(sides, width, colour1) {
     super();
     this.sides = sides;
     this.width = width;
-    this.colour = colour;
+    this.colour = colour1;
   }
 
   draw(rotation) {
@@ -135,11 +128,11 @@ class Spiral1 extends BaseShape {
 }
 
 class FloralAccident extends BaseShape {
-  constructor(sides, width, colour) {
+  constructor(sides, width, colour1) {
     super();
     this.sides = sides;
     this.width = width;
-    this.colour = colour;
+    this.colour = colour1;
   }
 
   draw(rotation) {
@@ -150,18 +143,19 @@ class FloralAccident extends BaseShape {
     var end = 0;
     var n = this.width / ((this.width / 10) * (this.width / 10)) //pixel correction for mid leaf
 
+    ctx.lineWidth =4;
+    ctx.strokeStyle = this.colour;
     for (let i = 1; i < this.sides + 1; i++) {
       end = stt + rad(rot);
 
       ctx.beginPath();
       ctx.arc(centerX + Math.cos(rad(90 + piv * i + rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i + rotation)) * this.width, this.width, stt - (stt - end + rad(rotation)) / 2, end + rad(n), 0);
-      ctx.strokeStyle = this.colour;
       ctx.stroke();
 
 
       ctx.beginPath();
       ctx.arc(centerX + Math.cos(rad(90 + piv * i - rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i - rotation)) * this.width, this.width, stt, end - (end - stt - rad(rotation)) / 2 + rad(n), 0);
-      ctx.strokeStyle = this.colour;
+      // ctx.strokeStyle = this.colour;
       ctx.stroke();
 
 
@@ -209,7 +203,7 @@ class Nodal_expanding extends BaseShape {
 
   draw(rotation) {
     rotation *= (this.speedMultiplier / 1000)
-    var angle = (360 / 3000 * rotation) + this.start //2000 controls speed
+    var angle = (360 / 2000 * rotation) + this.start //2000 controls speed
 
     var length = this.expand;
 
@@ -441,7 +435,7 @@ class CircleExpand extends BaseShape {
 
 
 class EyePrototype extends BaseShape {
-  constructor(x, y, rotate, flip, width, blink_speed, draw_spiral, spiral_full, draw_pupil, draw_expand, draw_hypno, line_width, colourPupil, colourSpiral, colourExpand) {
+  constructor(x, y, rotate, flip, width, blink_speed, mode, line_width, colour1,colour2) {
     super();
     this.x = x;
     this.y = y;
@@ -449,20 +443,38 @@ class EyePrototype extends BaseShape {
     this.flip = flip
     this.width = width;
     this.blink_speed = blink_speed;
+    this.mode = mode;
     this.line_width = line_width;
     this.step = 0;
     this.opening = true;
     this.counter = 0;
     this.cooldown = 0;
-    this.draw_spiral = draw_spiral;
-    this.spiral_full = spiral_full;
-    this.draw_pupil = draw_pupil;
-    this.draw_expand = draw_expand;
-    this.draw_hypno = draw_hypno;
-    this.colourPupil = colourPupil;
-    this.colourSpiral = colourSpiral;
-    this.colourExpand = colourExpand;
-    this.centerPulse = new CircleExpand(10, 30, 1, 0, "#2D81FC", "#FC0362")
+    this.draw_spiral = 0;
+    this.spiral_full = 0;
+    this.draw_pupil = 0;
+    this.draw_expand = 0;
+    this.draw_hypno = 0;
+    this.colourPupil = colour1;
+    this.colourSpiral = colour2;
+    this.colourExpand = colour2;
+    this.centerPulse = new CircleExpand(13, 30, 1, 0, "#2D81FC", "#FC0362")
+  }
+  initialise() {
+    if(this.mode===0){
+      this.draw_spiral = 1
+      this.draw_pupil = 1
+    }
+    if(this.mode===1){
+      this.draw_spiral = 1
+      this.spiral_full = 1
+    }
+    if(this.mode===2){
+      this.draw_expand = 1
+      this.draw_pupil = 1
+    }
+    if(this.mode===3){
+      this.draw_hypno= 1
+    }
   }
   drawEyelid(rotation) {
     ctx.strokeStyle = "orange";
@@ -605,6 +617,34 @@ class EyePrototype extends BaseShape {
     this.counter++;
   }
 }
+class RickRoll extends BaseShape {
+  constructor() {
+    super();
+    this.counter = 0
+  }
+
+  draw(rotation) {
+    let img = new Image();
+    let newString = ""
+    if (this.counter < 10) {
+      newString = "00" + this.counter
+    }
+    else if (this.counter < 100) {
+      newString = "0" + this.counter
+    }
+    else {
+      newString = this.counter;
+    }
+
+    img.src = "rickRoll/frame_" + newString + ".png";
+
+    ctx.drawImage(img, centerX - img.width / 2, centerY - img.height / 2);
+    this.counter += 1;
+    if (this.counter > 146) {
+      this.counter = 0
+    }
+  }
+}
 class MaryFace extends BaseShape {
   constructor(x1, y1, rotate1, width1, x2, y2, rotate2, width2) {
     super();
@@ -616,10 +656,15 @@ class MaryFace extends BaseShape {
     this.y2 = y2;
     this.rotate2 = rotate2;
     this.width2 = width2;
-    this.eye1 = new EyePrototype(x1, y1, rotate1, 0, width1, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
-    this.eye2 = new EyePrototype(x2, y2, rotate2, 0, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
-    // this.eye3 = new EyePrototype(112, -280, rotate2+2,1, width2, 10, 1, 1, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")
-    this.eye3 = new EyePrototype(110, -280, rotate2 + 2, 1, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb")//maybe
+    this.eye1 = new EyePrototype(x1, y1, rotate1, 0, width1, 10, 1, 1, "#00fffb", "#00fffb")
+    this.eye2 = new EyePrototype(x2, y2, rotate2, 0, width2, 10, 1, 1, "#00fffb", "#00fffb")
+    // this.eye3 = new EyePrototype(112, -280, rotate2+2,1, width2, 10, 1, 1, 0, 0, 1, "#00fffb", "#00fffb")
+    this.eye3 = new EyePrototype(110, -280, rotate2 + 2, 1, width2, 10, 1, 1, "#00fffb", "#00fffb")//maybe
+  }
+  initialise(){
+    this.eye1.initialise()
+    this.eye2.initialise()
+    this.eye3.initialise()
   }
 
   draw(rotation) {
