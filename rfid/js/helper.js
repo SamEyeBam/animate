@@ -2,96 +2,89 @@ async function fetchConfig(className) {
   //   const config = await $.getJSON("config.json");
   const config = {
     PolyTwistColourWidth: [
-      { type: "range", min: 3, max: 10, defaultValue: 5, property: "sides" },
-      { type: "range", min: 400, max: 2000, defaultValue: 400, property: "width" },
-      { type: "range", min: 2, max: 5, defaultValue: 5, property: "line_width" },
-      { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
+      { type: "range", min: 3, max: 6, defaultValue: 5, property: "sides" },
+      { type: "range", min: 380, max: 380, defaultValue: 380, property: "width" },
+      { type: "range", min: 5, max: 5, defaultValue: 5, property: "line_width" },
+      { type: "range", min: 10, max: 50, defaultValue: 50, property: "depth" },
       { type: "range", min: -180, max: 180, defaultValue: -90, property: "rotation", },
-      { type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier", },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
       { type: "color", defaultValue: "#42f57b", property: "colour2" },
     ],
     FloralPhyllo: [
-      { type: "range", min: 1, max: 600, defaultValue: 300, property: "width" },
-      { type: "range", min: 1, max: 300, defaultValue: 150, property: "depth" },
+      { type: "range", min: 300, max: 300, defaultValue: 300, property: "width" },
+      { type: "range", min: 150, max: 150, defaultValue: 150, property: "depth" },
       { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
     Spiral1: [
       { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-      { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
-      { type: "color", defaultValue: "#4287f5", property: "colour" },
+      { type: "range", min: 240, max: 240, defaultValue: 240, property: "width" },
+      { type: "color", defaultValue: "#4287f5", property: "colour1" },
     ],
     FloralAccident: [
-      { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-      { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
-      { type: "color", defaultValue: "#4287f5", property: "colour" },
+      { type: "range", min: 4, max: 10, defaultValue: 20, property: "sides" },
+      { type: "range", min: 240, max: 240, defaultValue: 240, property: "width" },
+      { type: "color", defaultValue: "#4287f5", property: "colour1" },
     ],
     FloralPhyllo_Accident: [
       { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-      { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
+      { type: "range", min: 240, max: 240, defaultValue: 240, property: "width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
     Nodal_expanding: [
-      { type: "range", min: 1, max: 100, defaultValue: 5, property: "expand" },
-      { type: "range", min: 1, max: 1000, defaultValue: 150, property: "points" },
+      { type: "range", min: 10, max: 10, defaultValue: 10, property: "expand" },
+      { type: "range", min: 100, max: 100, defaultValue: 100, property: "points" },
       { type: "range", min: 1, max: 360, defaultValue: 0, property: "start" },
-      { type: "range", min: 1, max: 10, defaultValue: 6, property: "line_width" },
+      { type: "range", min: 4, max: 6, defaultValue: 6, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
       { type: "range", min: 0, max: 10, defaultValue: 5, property: "colour_change" },
     ],
     Phyllotaxis: [
-      { type: "range", min: 1, max: 40, defaultValue: 24, property: "width" },
+      { type: "range", min: 24, max: 24, defaultValue: 24, property: "width" },
       { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
-      { type: "range", min: 1, max: 1000, defaultValue: 300, property: "nMax" },
+      { type: "range", min: 300, max: 300, defaultValue: 300, property: "nMax" },
       { type: "range", min: 0, max: 2, defaultValue: 0, property: "wave" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
     SquareTwist_angle: [
-      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
+      { type: "range", min: 400, max: 400, defaultValue: 400, property: "width" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
     ],
     EyePrototype: [
       { type: "range", min: 0, max: 0, defaultValue: 0, property: "x" },
       { type: "range", min: 0, max: 0, defaultValue: 0, property: "y" },
-      { type: "range", min: -180, max: 180, defaultValue: 0, property: "rotate" },
+      { type: "range", min: 0, max: 0, defaultValue: 0, property: "rotate" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "flip" },
-      { type: "range", min: 1, max: 800, defaultValue: 400, property: "width" },
-      { type: "range", min: 1, max: 20, defaultValue: 5, property: "blink_speed" },
-      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_spiral" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "spiral_full" },
-      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_pupil" },
-      { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_expand" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_hypno" },
+      { type: "range", min: 700, max: 700, defaultValue: 600, property: "width" },
+      { type: "range", min: 3, max: 20, defaultValue: 5, property: "blink_speed" },
+      { type: "range", min: 0, max: 3, defaultValue: 0, property: "mode" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
-      { type: "color", defaultValue: "#00fffb", property: "colourPupil" },
-      { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
-      { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
+      { type: "color", defaultValue: "#00fffb", property: "colour1" },
+      { type: "color", defaultValue: "#ff0000", property: "colour2" },
     ],
     CircleExpand: [
       { type: "range", min: 1, max: 70, defaultValue: 21, property: "nCircles" },
       { type: "range", min: 50, max: 150, defaultValue: 150, property: "gap" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "linear" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "heart" },
+      { type: "range", min: 0, max: 0, defaultValue: 0, property: "heart" },
       { type: "color", defaultValue: "#fc03cf", property: "colour1" },
       { type: "color", defaultValue: "#00fffb", property: "colour2" },
     ],
-    MaryFace: [
-      { type: "range", min: -400, max: 400, defaultValue: -110, property: "x1" },
-      { type: "range", min: -400, max: 400, defaultValue: -140, property: "y1" },
-      { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate1" },
-      { type: "range", min: 0, max: 400, defaultValue: 160, property: "width1" },
-      { type: "range", min: -400, max: 400, defaultValue: 195, property: "x2" },
-      { type: "range", min: -400, max: 400, defaultValue: -30, property: "y2" },
-      { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate2" },
-      { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
-    ],
+    // MaryFace: [
+    //   { type: "range", min: -400, max: 400, defaultValue: -110, property: "x1" },
+    //   { type: "range", min: -400, max: 400, defaultValue: -140, property: "y1" },
+    //   { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate1" },
+    //   { type: "range", min: 0, max: 400, defaultValue: 160, property: "width1" },
+    //   { type: "range", min: -400, max: 400, defaultValue: 195, property: "x2" },
+    //   { type: "range", min: -400, max: 400, defaultValue: -30, property: "y2" },
+    //   { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate2" },
+    //   { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
+    // ],
   };
   if (className === undefined) {
     return config
@@ -100,6 +93,19 @@ async function fetchConfig(className) {
 
   }
 }
+
+let colourPairs = [
+  ["#2D81FC", "#FC0362"],
+  ["#fc03cf", "#00fffb"],
+  ["#D4D4D4", "#FFD300"],
+  ["#e52165", "#0d1137"],
+  ["#ff6e40", "#1e847f"],
+  ["#77c593", "#ed3572"],
+
+  // ["#fc0", "#00fffb"],
+  // ["#fc0", "#00fffb"],//last never picked?
+]
+
 
 function addControl(item, instance) {
   console.log(item);
@@ -349,17 +355,17 @@ function rotatePointTmp(x, y, centerXX, centerYY, rotation) {
   console.log(Math.cos(orgAngle - rad(rotation)) * d)
   console.log(d)
   // console.log(d)
-  let newPointX = Math.cos(orgAngle - rad(rotation+90)) * d + centerXX;
-  let newPointY = Math.sin(orgAngle - rad(rotation+90)) * d + centerYY;
+  let newPointX = Math.cos(orgAngle - rad(rotation + 90)) * d + centerXX;
+  let newPointY = Math.sin(orgAngle - rad(rotation + 90)) * d + centerYY;
   return [newPointX, newPointY]
 }
 
-function rotatePoint(x,y,rotation){
+function rotatePoint(x, y, rotation) {
   let nCos = Math.cos(rad(rotation))
   // console.log(nCos*(180/Math.PI))
   // console.log(rad(rotation))
   let nSin = Math.sin(rad(rotation))
-  let newX = x*nCos - y*nSin
-  let newY = y*nCos + x*nSin
-  return [newX,newY]
+  let newX = x * nCos - y * nSin
+  let newY = y * nCos + x * nSin
+  return [newX, newY]
 }

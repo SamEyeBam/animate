@@ -20,12 +20,13 @@ function onClose(event) {
   console.log('Connection closed');
   setTimeout(initWebSocket, 2000);
 }
+
 function onMessage(event) {
   console.log(event.data)
   console.log("--")
   setSeed(event.data)
   Reset()
-  updateDrawObj()
+  updateDrawObj(event.data)
   // TogglePause()
 }
 
@@ -62,11 +63,11 @@ const classMap = {
   FloralAccident: FloralAccident,
   FloralPhyllo_Accident: FloralPhyllo_Accident,
   Nodal_expanding: Nodal_expanding,
-  Phyllotaxis:Phyllotaxis,
-  SquareTwist_angle:SquareTwist_angle,
-  EyePrototype:EyePrototype,
-  CircleExpand:CircleExpand,
-  MaryFace:MaryFace,
+  Phyllotaxis: Phyllotaxis,
+  SquareTwist_angle: SquareTwist_angle,
+  EyePrototype: EyePrototype,
+  CircleExpand: CircleExpand,
+  MaryFace: MaryFace,
   // Add more class constructors here as needed
 };
 function createInstance(className, args) {
@@ -122,44 +123,67 @@ function PRNGinRange(min = 0, max = 100) {
   return randTmp;
 }
 
-async function createShapeWithRandomProperties(inputNumber, shapeConfig) {
-
-  console.log(shapeConfig)
-  // const shapeName = Object.keys(shapeConfig)[PRNGinRange(0, Object.keys(shapeConfig).length - 1)];
+async function createShapeWithRandomProperties() {
+  let shapeConfig = await fetchConfig()
   const shapeName = Object.keys(shapeConfig)[PRNGinRange(0, Object.keys(shapeConfig).length - 1)];
   const ShapeClass = classMap[shapeName];
   const config = await fetchConfig(shapeName);
   const properties = {};
   console.log(config)
 
+  const colours = colourPairs[PRNGinRange(0, 6)]
+  const colour1 = colours[0]
+  const colour2 = colours[1]
+  console.log(colours)
+
   config.forEach((item, index) => {
     const min = item.min || 0;
-    const max = item.max || 1;
+    const max = (item.max+1) || 1;
+    // console.log(item)
     const randomValue = PRNGinRange(min, max);
-    // console.log(PRNGinRange(1, 100))
-    properties[item.property] = item.type === "color" ? "#4287f5" : Math.round(randomValue);
+    if (item.type === "color") {
+      if (item.property === "colour1") {
+        properties[item.property] = colour1;
+      }
+      else {
+        properties[item.property] = colour2;
+      }
+    }
+    else {
+      properties[item.property] = randomValue;
+    }
   });
 
   return new ShapeClass(...Object.values(properties));
 }
 
-async function updateDrawObj() {
-  const shapeSelector = document.getElementById("shape-selector");
-  const selectedShape = shapeSelector.value;
-  const configControls = await fetchConfig(selectedShape);
+async function updateDrawObj(tagId) {
   if (drawObj) {
     drawObj.remove(); // Remove the previous instance
   }
-  // Extract default values from the configuration
-  const defaultValues = configControls
-    // .filter((item) => item.type !== "color") // Exclude color inputs
-    .map((item) => item.defaultValue);
+
+  const heartTags = ["6624821687","26721587","3421222587","1143021587","662721587"]
+  const faceTags = ["22622221287","226123187","11423322187","22610621287","9825523787"]
+  const rickTags = ["2424722587","1942721587","1144921087","17822321287","22617222487"]
+
+  console.log(heartTags)
+  console.log(tagId)
+  if(heartTags.includes(tagId)){
+    drawObj = new CircleExpand(14,150,1,1,"#fc03cf","#00fffb");
+  }
+  else if(faceTags.includes(tagId)){
+    drawObj = new MaryFace(-110,-140,18,160,195,-30,18,160);
+  }
+  else if(rickTags.includes(tagId)){
+    drawObj = new RickRoll();
+  }
+  else{
+    drawObj = await createShapeWithRandomProperties();
+  }
+  drawObj.initialise();
 
 
-  // drawObj = createInstance(selectedShape, defaultValues);
-  drawObj = await createShapeWithRandomProperties(813311281, await fetchConfig());
   console.log(drawObj)
-  drawObj.initialise(configControls);
 }
 
 updateDrawObj();
@@ -189,7 +213,7 @@ let toolbarShowing = true;
 document.addEventListener("keydown", toggleSettings);
 
 function manualToggleSettings() {
-  console.log("hi")
+
   toolbarShowing = !toolbarShowing;
   let tb = document.getElementById("toolbar");
   if (toolbarShowing) {
