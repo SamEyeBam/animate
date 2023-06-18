@@ -1,0 +1,112 @@
+body {
+  -webkit-box-sizing: border-box;
+  /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;
+  /* Firefox, other Gecko */
+  box-sizing: border-box;
+  /* Opera/IE 8+ */
+  height: 100%
+}
+
+p {
+  margin: 0px;
+}
+
+canvas {
+  position: absolute;
+}
+
+#toolbar {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  position: absolute;
+  padding: 0px 20px 0px 20px;
+  width: 500px;
+  height: 100vh;
+  overflow-y: scroll;
+  background-color: rgb(189, 189, 189);
+}
+
+#custom {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  /* position: absolute; */
+  padding: 0px 20px 0px 20px;
+  /* width: 500px; */
+  /* height: 100vh; */
+  background-color: rgb(189, 189, 189);
+}
+
+.button {
+  display: block;
+  position: absolute;
+  right: 20px;
+  z-index: 100;
+}
+
+
+.controls {
+  display: flex;
+  margin: 8px 0px;
+}
+
+.controlFrameButton {
+  width: 8%;
+}
+.controlPauseButton {
+  width: 80%;
+  margin: auto;
+}
+/* <!-- HTML !-->
+<button class="button-8" role="button">Button 8</button> */
+
+/* CSS */
+.button-8 {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #1f3f55;
+  cursor: pointer;
+  display: inline-block;
+  /* font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif; */
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  /* margin: 0; */
+  outline: none;
+  padding: 8px .8em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.button-8:hover,
+.button-8:focus {
+  background-color: #b3d3ea;
+  color: #2c5777;
+}
+
+.button-8:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.button-8:active {
+  background-color: #a0c7e4;
+  box-shadow: none;
+  color: #2c5777;
+}
+
+.buttonReset{
+  background-color: #f4e1e1;
+}
