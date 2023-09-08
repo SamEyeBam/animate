@@ -56,7 +56,7 @@ function drawSpiral(angle) {
     ctx.moveTo(cX, cY);
     const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
 
-    const nAngle = n * angle + Math.sin(angle * (n - angle * 100) * 3);
+    const nAngle = n * angle + Math.sin(angle * (n - angle * 100) * 2);
     const radius = distanceMultiplier * n;
     const xCoord = radius * Math.cos(nAngle) + centerX;
     const yCoord = radius * Math.sin(nAngle) + centerY;

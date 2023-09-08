@@ -31,7 +31,7 @@
           render();
           render_clear();
 
-          Draw_nodal(300, 100, 31, rotation, "blue");
+          Draw_nodal(300, 13, 4, rotation, "#FFD700");
 
 
           // Draw_center(); //Debugging
@@ -65,6 +65,7 @@
         ctx.lineTo(centerX + (Math.cos(rad(angle * z + rotate)) * radius), centerY + (Math.sin(rad(angle * z + rotate)) * radius));
       }
       ctx.strokeStyle = colour;
+      ctx.lineWidth = 8
       ctx.stroke();
 
     }

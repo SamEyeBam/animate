@@ -270,6 +270,7 @@ class Phyllotaxis extends BaseShape {
     const distanceMultiplier = 2;
     const maxIterations = 1000;
 
+
     for (let n = 0; n < maxIterations; n++) {
       const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
 
@@ -289,6 +290,7 @@ class Phyllotaxis extends BaseShape {
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
+    const sizeMultiplier = this.nMax/(5-3)
     if (this.wave === 1) {
       this.drawWave(rotation)
     }
@@ -305,7 +307,7 @@ class Phyllotaxis extends BaseShape {
         const y = r * Math.sin(a) + centerY;
 
         ctx.beginPath();
-        ctx.arc(x, y, 8, 0, 2 * Math.PI);
+        ctx.arc(x, y, (n/sizeMultiplier)+3, 0, 2 * Math.PI);
         ctx.fillStyle = ncolour;
         // ctx.fillStyle = colourToText(ncolour);
         ctx.fill();
