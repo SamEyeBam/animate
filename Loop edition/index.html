@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<!-- ahhh -->
+
+<head>
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body style="margin:0;">
+  <canvas id="myCanvas" style="display: block;box-sizing: border-box;"></canvas>
+  <div id="toolbar">
+    <br>
+    <select id="shape-selector">
+      <option value="EyePrototype">EyePrototype</option>
+      <option value="Nodal_expanding">Nodal_expanding</option>
+      <option value="MaryFace">MaryFace</option>
+      <option value="CircleExpand">CircleExpand</option>
+      <option value="PolyTwistColourWidth">PolyTwistColourWidth</option>
+      <option value="FloralPhyllo">FloralPhyllo</option>
+      <option value="FloralPhyllo_Accident">FloralPhyllo_Accident</option>
+      <option value="Spiral1">Spiral1</option>
+      <option value="FloralAccident">FloralAccident</option>
+      <option value="Phyllotaxis">Phyllotaxis</option>
+      <option value="SquareTwist_angle">SquareTwist_angle</option>
+    </select>
+    <div id="custom"></div>
+    <br>
+    <p>Controls:</p>
+    <p>
+      Press "Space" to pause and start the animation
+    </p>
+    <p>
+      Press "P" to show/hide the control panel
+    </p>
+    <br>
+    <p>Speed</p>
+    <input type="text" id="inputDegPerSec" value="10" onchange="ChangeDegPerSec(this.value)">
+    <br>
+    <p>Controls</p>
+    <div class="controls">
+      <button class="controlFrameButton button-8" onclick="BackwardFrame()"><</button>
+          <button class="controlPauseButton button-8" id="pauseButton" onclick="TogglePause()">Play</button>
+          <button class="controlFrameButton button-8" onclick="ForwardFrame()">></button>
+    </div>
+    <button class="buttonReset button-8" id="resetButton" onclick="Reset()">Reset Rotation</button>
+  </div>
+  <div>
+    <button onclick="manualToggleSettings()" class="button">Show/hide</button>
+  </div>
+</body>
+<script src="./js/helper.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./js/math.js" type="text/javascript"></script>
+<script src="./js/objects.js" type="text/javascript"></script>
+<script src="./js/index.js"></script>
+
+</html>
