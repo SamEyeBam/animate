@@ -21,6 +21,7 @@ async function fetchConfig(className) {
     Spiral1: [
       { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
       { type: "range", min: 1, max: 600, defaultValue: 240, property: "width" },
+      { type: "range", min: 1, max: 10, defaultValue: 2, property: "lineWidth" },
       { type: "color", defaultValue: "#4287f5", property: "colour" },
     ],
     FloralAccident: [
@@ -68,11 +69,12 @@ async function fetchConfig(className) {
       { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_pupil" },
       { type: "range", min: 0, max: 1, defaultValue: 0, property: "draw_expand" },
       { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_hypno" },
+      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
       { type: "range", min: 1, max: 10, defaultValue: 1, property: "line_width" },
       { type: "color", defaultValue: "#00fffb", property: "colourPupil" },
       { type: "color", defaultValue: "#ff0000", property: "colourSpiral" },
       { type: "color", defaultValue: "#00fffb", property: "colourExpand" },
-      { type: "range", min: 0, max: 1, defaultValue: 1, property: "draw_eyelid" },
+      { type: "color", defaultValue: "#00fffb", property: "colourEyelid" },
     ],
     CircleExpand: [
       { type: "range", min: 1, max: 70, defaultValue: 21, property: "nCircles" },
@@ -176,7 +178,7 @@ function drawEyelid(width, x1, y1, colour) {
   ctx.stroke();
 }
 
-function drawEyelidAccident(x1, y1) {
+function drawEyelidAccident(x1, y1, colour) {
   let leafWidth = 120;
   let leafHeight = 60;
   x1 -= centerX;
@@ -232,7 +234,7 @@ function drawEyelidAccident(x1, y1) {
 
   ctx.moveTo(x1, y1);
   ctx.quadraticCurveTo(x4, y4, x2, y2);
-  ctx.strokeStyle = "orange";
+  ctx.strokeStyle = colour;
   ctx.stroke();
 }
 

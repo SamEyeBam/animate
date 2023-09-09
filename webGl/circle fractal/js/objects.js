@@ -71,11 +71,11 @@ class EyePrototype extends BaseShape {
         vec3 colour = vec3(1.0, 1.5, 2.0);
         vec3 colour2 = vec3(0.2, 0.2, 1.0);
         float pi = 3.1415926;
-        float pie = iVal1/10.0;
+        float val1Div = iVal1/10.0;
         
     
         for (float i = 0.0; i < 2.0; i++) {
-            uv = fract(uv * pie) - 0.5;
+            uv = fract(uv * val1Div) - 0.5;
             float distance = length(uv);
     
             distance = sin(distance * pi * 5.0 - iTime) / (pi * 5.0);

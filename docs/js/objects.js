@@ -115,7 +115,7 @@ class Spiral1 extends BaseShape {
 
     for (let i = 1; i < this.sides + 1; i++) {
       end = stt + rad(rot);
-
+      ctx.lineWidth = 5
       ctx.beginPath();
       ctx.arc(centerX + Math.cos(rad(90 + piv * i + rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i + rotation)) * this.width, this.width, stt + rad(rotation) - (stt - end) / 2, end + rad(rotation) + rad(n), 0);
       ctx.strokeStyle = this.colour;

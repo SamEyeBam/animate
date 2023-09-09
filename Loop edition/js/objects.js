@@ -98,10 +98,11 @@ class FloralPhyllo extends BaseShape {
   }
 }
 class Spiral1 extends BaseShape {
-  constructor(sides, width, colour) {
+  constructor(sides, width, lineWidth, colour) {
     super();
     this.sides = sides;
     this.width = width;
+    this.lineWidth = lineWidth;
     this.colour = colour;
   }
 
@@ -115,7 +116,7 @@ class Spiral1 extends BaseShape {
 
     for (let i = 1; i < this.sides + 1; i++) {
       end = stt + rad(rot);
-
+      ctx.lineWidth = this.lineWidth;
       ctx.beginPath();
       ctx.arc(centerX + Math.cos(rad(90 + piv * i + rotation)) * this.width, centerY + Math.sin(rad(90 + piv * i + rotation)) * this.width, this.width, stt + rad(rotation) - (stt - end) / 2, end + rad(rotation) + rad(n), 0);
       ctx.strokeStyle = this.colour;
@@ -190,7 +191,7 @@ class FloralPhyllo_Accident extends BaseShape {
       let x = r * Math.cos(a) + centerX;
       let y = r * Math.sin(a) + centerY;
 
-      drawEyelidAccident(x, y);
+      drawEyelidAccident(x, y, this.colour1);
 
     }
   }
@@ -246,11 +247,12 @@ class Phyllotaxis extends BaseShape {
     const startColor = [45, 129, 252];
     const endColor = [252, 3, 98];
     const distanceMultiplier = 3;
-    const maxIterations = 200;
+    const maxIterations = this.nMax;
     //   angle=0;
     for (let n = 0; n < maxIterations; n++) {
       ctx.beginPath();
-      const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
+      // const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
+      const nColor = LerpHex(this.colour1, this.colour2, n / this.nMax);
 
       // const nAngle = n* angle ;
       // const nAngle = n*angle+ Math.sin(rad(n*1+angle*4000))/1 ;
@@ -259,20 +261,23 @@ class Phyllotaxis extends BaseShape {
       const xCoord = radius * Math.cos(nAngle) + centerX;
       const yCoord = radius * Math.sin(nAngle) + centerY;
       ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
-      ctx.fillStyle = colourToText(nColor);
+      // ctx.fillStyle = colourToText(nColor);
+      ctx.fillStyle = nColor;
       ctx.fill();
     }
   }
   drawSpiral(angle) {
     angle /= 5000
-    const startColor = [45, 129, 252];
-    const endColor = [252, 3, 98];
+    const startColor = [224, 186, 16];
+    const endColor = [224, 16, 68];
     const distanceMultiplier = 2;
-    const maxIterations = 1000;
+    const maxIterations = this.nMax;
 
 
     for (let n = 0; n < maxIterations; n++) {
       const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
+      // const nColor = lerpHex(this.colour1, this.colour2, Math.cos(rad(n / 2)));
+      // const nColor = LerpHex(this.colour1, this.colour2, n / this.nMax);
 
       const nAngle = n * angle + Math.sin(angle * n * 2);
       const radius = distanceMultiplier * n;
@@ -281,6 +286,7 @@ class Phyllotaxis extends BaseShape {
 
       ctx.beginPath();
       ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
+      // ctx.fillStyle = nColor;
       ctx.fillStyle = colourToText(nColor);
       ctx.fill();
     }
@@ -290,7 +296,7 @@ class Phyllotaxis extends BaseShape {
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
-    const sizeMultiplier = this.nMax/(5-3)
+    const sizeMultiplier = this.nMax / (5 - 3)
     if (this.wave === 1) {
       this.drawWave(rotation)
     }
@@ -307,7 +313,7 @@ class Phyllotaxis extends BaseShape {
         const y = r * Math.sin(a) + centerY;
 
         ctx.beginPath();
-        ctx.arc(x, y, (n/sizeMultiplier)+3, 0, 2 * Math.PI);
+        ctx.arc(x, y, (n / sizeMultiplier) + 3, 0, 2 * Math.PI);
         ctx.fillStyle = ncolour;
         // ctx.fillStyle = colourToText(ncolour);
         ctx.fill();
@@ -443,7 +449,7 @@ class CircleExpand extends BaseShape {
 
 
 class EyePrototype extends BaseShape {
-  constructor(x, y, rotate, flip, width, blink_speed, draw_spiral, spiral_full, draw_pupil, draw_expand, draw_hypno, line_width, colourPupil, colourSpiral, colourExpand) {
+  constructor(x, y, rotate, flip, width, blink_speed, draw_spiral, spiral_full, draw_pupil, draw_expand, draw_hypno, draw_eyelid, line_width, colourPupil, colourSpiral, colourExpand, colourEyelid) {
     super();
     this.x = x;
     this.y = y;
@@ -461,13 +467,15 @@ class EyePrototype extends BaseShape {
     this.draw_pupil = draw_pupil;
     this.draw_expand = draw_expand;
     this.draw_hypno = draw_hypno;
+    this.draw_eyelid = draw_eyelid;
     this.colourPupil = colourPupil;
     this.colourSpiral = colourSpiral;
     this.colourExpand = colourExpand;
-    this.centerPulse = new CircleExpand(10, 30, 1, 0, "#2D81FC", "#FC0362")
+    this.colourEyelid = colourEyelid;
+    this.centerPulse = new CircleExpand(20, 40, 0, 0, "#2D81FC", "#FC0362")
   }
   drawEyelid(rotation) {
-    ctx.strokeStyle = "orange";
+    ctx.strokeStyle = this.colourEyelid;
     let relCenterX = centerX + this.x;
     let relCenterY = centerY + this.y;
     rotation *= (this.speedMultiplier / 100)
@@ -578,7 +586,9 @@ class EyePrototype extends BaseShape {
 
     ctx.fillStyle = "black";
     ctx.save();
-    this.drawEyelid(outputRotation);
+    if (this.draw_eyelid) {
+      this.drawEyelid(outputRotation);
+    }
     // squareCut();
     this.eyelidCut(outputRotation);
     // console.log(Math.floor(this.counter % this.width / 2))
