@@ -92,12 +92,19 @@ async function fetchConfig(className) {
       { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate2" },
       { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
     ],
+    NewWave: [
+      { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
+      { type: "range", min: 2, max: 40, defaultValue: 4, property: "sides" },
+      { type: "range", min: 1, max: 100, defaultValue: 1, property: "step" },
+      { type: "range", min: 1, max: 10, defaultValue: 4, property: "lineWidth" },
+      { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
+    ],
   };
   return config[className];
 }
 
 function addControl(item, instance) {
-  console.log(item);
+  // console.log(item);
   let parentDiv = document.getElementById("custom");
 
   let title = document.createElement("p");

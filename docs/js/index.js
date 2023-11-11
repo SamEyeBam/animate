@@ -18,6 +18,7 @@ render_clear();
 let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
+    NewWave: NewWave,
     PolyTwistColourWidth: PolyTwistColourWidth,
     FloralPhyllo: FloralPhyllo,
     Spiral1: Spiral1,

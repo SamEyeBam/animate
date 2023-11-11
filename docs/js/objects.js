@@ -290,7 +290,7 @@ class Phyllotaxis extends BaseShape {
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
-    const sizeMultiplier = this.nMax/(5-3)
+    const sizeMultiplier = this.nMax / (5 - 3)
     if (this.wave === 1) {
       this.drawWave(rotation)
     }
@@ -307,7 +307,7 @@ class Phyllotaxis extends BaseShape {
         const y = r * Math.sin(a) + centerY;
 
         ctx.beginPath();
-        ctx.arc(x, y, (n/sizeMultiplier)+3, 0, 2 * Math.PI);
+        ctx.arc(x, y, (n / sizeMultiplier) + 3, 0, 2 * Math.PI);
         ctx.fillStyle = ncolour;
         // ctx.fillStyle = colourToText(ncolour);
         ctx.fill();
@@ -632,6 +632,43 @@ class MaryFace extends BaseShape {
     this.eye1.draw(rotation);
     this.eye2.draw(rotation);
     this.eye3.draw(rotation);
+  }
+}
+class NewWave extends BaseShape {
+  constructor(width,sides,step,lineWidth,limiter) {
+    super();
+    this.width = width
+    this.sides = sides;
+    this.step = step;
+    this.lineWidth = lineWidth;
+    this.limiter = limiter;
+  }
+
+  draw(rotation) {
+    rotation *= this.speedMultiplier/400
+    ctx.lineWidth = this.lineWidth
+    for (let j = 0; j < this.sides; j++) {
+      const radRotation = rad(360/this.sides*j)
+      const inverter = 1-(j%2)*2
+      let lastX = centerX
+      let lastY = centerY
+      for (let i = 0; i < this.width; i += this.step) {
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.strokeStyle = colourToText(lerpRGB([255,51,170],[51,170,255],i/this.width))
+        const x = i
+        const y = (Math.sin(-i*inverter / 30 + rotation*inverter) * i/(this.limiter/100))
+
+        const xRotated = x * Math.cos(radRotation) - y * Math.sin(radRotation)
+        const yRotated = x * Math.sin(radRotation) + y * Math.cos(radRotation)
+        lastX= centerX + xRotated;
+        lastY= centerY + yRotated;
+        ctx.lineTo(centerX + xRotated, centerY + yRotated);
+        ctx.stroke();
+      }
+    }
+
   }
 }
 
