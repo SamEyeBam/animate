@@ -27,11 +27,12 @@ async function fetchConfig(className) {
       { type: "range", min: 240, max: 240, defaultValue: 240, property: "width" },
       { type: "color", defaultValue: "#4287f5", property: "colour1" },
     ],
-    FloralPhyllo_Accident: [
-      { type: "range", min: 1, max: 50, defaultValue: 20, property: "sides" },
-      { type: "range", min: 240, max: 240, defaultValue: 240, property: "width" },
-      { type: "color", defaultValue: "#2D81FC", property: "colour1" },
-      { type: "color", defaultValue: "#FC0362", property: "colour2" },
+    NewWave: [
+      { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
+      { type: "range", min: 2, max: 40, defaultValue: 4, property: "sides" },
+      { type: "range", min: 1, max: 100, defaultValue: 1, property: "step" },
+      { type: "range", min: 3, max: 5, defaultValue: 4, property: "lineWidth" },
+      { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
     ],
     Nodal_expanding: [
       { type: "range", min: 10, max: 10, defaultValue: 10, property: "expand" },
