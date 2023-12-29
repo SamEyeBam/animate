@@ -1,5 +1,5 @@
 //jshint esversion:8
-var seed = cyrb128("813311281");
+var seed = cyrb128("813311293");
 var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
 // var gateway = `ws://192.168.1.184/ws`;
@@ -68,6 +68,7 @@ const classMap = {
   EyePrototype: EyePrototype,
   CircleExpand: CircleExpand,
   MaryFace: MaryFace,
+  NewWave:NewWave,
   // Add more class constructors here as needed
 };
 function createInstance(className, args) {
