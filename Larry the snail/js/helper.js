@@ -7,7 +7,8 @@ async function fetchConfig(className) {
         min: 1,
         max: 5,
         defaultValue: 1,
-        property: "magnitude"
+        property: "magnitude",
+        callback: (instance, newValue) => instance.setMagnitude(newValue)
       },
       // Dropdown control to select food
       {
@@ -126,6 +127,14 @@ async function fetchConfig(className) {
   return config[className];
 }
 
+const hatConfig = {
+  cap: { x: 3.5, y: -13 },
+  top_hat: { x: 2, y: -20 },
+  center_box_full: { x: 0, y: 0 },
+  center_box_hollow: { x: 0, y: 0 },
+  // Add more hats with their specific offsets here
+};
+
 
 function addControl(item, instance) {
   let parentDiv = document.getElementById("custom");
@@ -143,9 +152,13 @@ function addControl(item, instance) {
     control.max = item.max;
     control.value = item.defaultValue;
     control.addEventListener("input", (event) => {
-      const newValue = event.target.value;
-      instance[item.property] = parseInt(newValue, 10);
+      const newValue = parseInt(event.target.value, 10);
+      instance[item.property] = newValue;
       title.innerText = item.property + ": " + newValue;
+
+      if (item.callback) {
+        item.callback(instance, newValue);
+      }
     });
   } else if (item.type === "button") {
     control = document.createElement("button");

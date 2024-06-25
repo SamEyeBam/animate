@@ -74,6 +74,9 @@ class Larry extends BaseShape {
     this.hatImage.src = '';
     this.shellImage.src = '';
     this.backgroundImage.src = '';
+
+    this.hatXoffset = 0;
+    this.hatYoffset = 0;
   }
 
   draw(timestamp) {
@@ -81,7 +84,8 @@ class Larry extends BaseShape {
     // Draw background
     if (this.backgroundImage.src) {
       console.log("drawing background: " + this.backgroundImage.src)
-      ctx.drawImage(this.backgroundImage, centerX- (this.backgroundImage.width), centerY -this.backgroundImage.height,this.backgroundImage.width*2,this.backgroundImage.height*2);
+
+      ctx.drawImage(this.backgroundImage, centerX - (this.backgroundImage.width), centerY - this.backgroundImage.height, this.backgroundImage.width * 2, this.backgroundImage.height * 2);
     }
 
     // Draw body at its anchor point (center-bottom)
@@ -92,8 +96,8 @@ class Larry extends BaseShape {
     // Draw head aligned with body
     // const headX = bodyX + this.headOffsetX;
     // let headY = bodyY + this.headOffsetY - this.headHeight;
-    const headX = bodyX + (54 * this.magnitude - this.headWidth * this.magnitude / 2);
-    let headY = bodyY + (this.bodyHeight * this.magnitude - 7* this.magnitude) - this.headHeight * this.magnitude;
+    const headX = bodyX + (53.5 * this.magnitude - this.headWidth * this.magnitude / 2);
+    let headY = bodyY + (this.bodyHeight * this.magnitude - 7 * this.magnitude) - this.headHeight * this.magnitude;
 
     if (this.isEating === true) {
       const eatMaxHeight = 20;
@@ -104,14 +108,9 @@ class Larry extends BaseShape {
 
     // Draw hat if any
     if (this.hatImage.src) {
-      let hatXoffset = (this.headWidth*this.magnitude)/2 -(this.hatImage.width*this.magnitude)/2 + (2*this.magnitude);
-      let hatYoffset = (this.headHeight*this.magnitude) - (this.hatImage.height*this.magnitude) + (-11 * this.magnitude);
-      if(document.getElementById('elselectedHat').value === "cap"){
-        hatXoffset += this.magnitude*1.5
-      }
-      this.drawCrosshair(headX,headY,20)
-      ctx.drawImage(this.hatImage, headX + hatXoffset, headY + hatYoffset,this.hatImage.width*this.magnitude,this.hatImage.height*this.magnitude);
-    }  
+      this.drawCrosshair(headX, headY, 20);
+      ctx.drawImage(this.hatImage, headX + this.hatXoffset, headY + this.hatYoffset, this.hatImage.width * this.magnitude, this.hatImage.height * this.magnitude);
+    }
 
     // Draw shell if any
     if (this.shellImage.src) {
@@ -119,14 +118,16 @@ class Larry extends BaseShape {
     }
   }
 
-  drawCrosshair(x,y,size){
+  drawCrosshair(x, y, size) {
+    ctx.strokeStyle = "pink";
+    ctx.lineWidth = 1
     ctx.beginPath();
-    ctx.moveTo(x-size,y);
-    ctx.lineTo(x+size,y);
+    ctx.moveTo(x - size, y);
+    ctx.lineTo(x + size, y);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(x,y-size);
-    ctx.lineTo(x,y+size);
+    ctx.moveTo(x, y - size);
+    ctx.lineTo(x, y + size);
     ctx.stroke();
   }
 
@@ -144,9 +145,27 @@ class Larry extends BaseShape {
     const hatSelection = document.getElementById('elselectedHat').value;
     if (hatSelection === "") {
       this.hatImage.src = ``;
-    }
-    else {
+      this.hatXoffset = 0;
+      this.hatYoffset = 0;
+    } else {
       this.hatImage.src = `larry_photos/hats/${hatSelection}.png`;
+      const offsets = hatConfig[hatSelection] || { x: 0, y: 0 };
+
+      this.hatImage.onload = () => {
+        this.recalculateHatOffsets(offsets);
+      };
+    }
+  }
+  recalculateHatOffsets(offsets) {
+    this.hatXoffset = (this.headWidth * this.magnitude) / 2 - (this.hatImage.width * this.magnitude) / 2 + (offsets.x * this.magnitude);
+    this.hatYoffset = (this.headHeight * this.magnitude) - (this.hatImage.height/2 * this.magnitude) + (offsets.y * this.magnitude);
+  }
+  setMagnitude(newMagnitude) {
+    this.magnitude = newMagnitude;
+    const hatSelection = document.getElementById('elselectedHat').value;
+    if (hatSelection !== "") {
+      const offsets = hatConfig[hatSelection] || { x: 0, y: 0 };
+      this.recalculateHatOffsets(offsets);
     }
   }
 
