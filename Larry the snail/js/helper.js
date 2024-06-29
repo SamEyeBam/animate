@@ -131,8 +131,12 @@ const hatConfig = {
   cap: { x: 3.5, y: -13 },
   top_hat: { x: 2, y: -20 },
   center_box_full: { x: 0, y: 0 },
-  center_box_hollow: { x: 0, y: 0 },
-  // Add more hats with their specific offsets here
+  center_box_hollow: { x: 0, y: 0 }
+};
+
+const foodConfig = {
+  apple: { sizeMult: 3.5, n: 4 },
+  nothing: { sizeMult: 2, n: 5 },
 };
 
 

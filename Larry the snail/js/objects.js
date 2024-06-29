@@ -60,18 +60,20 @@ class Larry extends BaseShape {
     this.speedMultiplier = 100;
 
     this.isEating = false;
-    this.eatEndTimestamp= 0;
+    this.eatEndTimestamp = 0;
     this.eatDuration = eatDuration;
     this.eatSpeed = eatSpeed;
 
     this.bodyImage = new Image();
     this.headImage = new Image();
+    this.foodImage = new Image();
     this.hatImage = new Image();
     this.shellImage = new Image();
     this.backgroundImage = new Image();
 
     this.bodyImage.src = 'larry_photos/body.png';
     this.headImage.src = 'larry_photos/head.png';
+    this.foodImage.src = 'larry_photos/';
     this.hatImage.src = '';
     this.shellImage.src = '';
     this.backgroundImage.src = '';
@@ -102,15 +104,23 @@ class Larry extends BaseShape {
     // let headY = bodyY + this.headOffsetY - this.headHeight;
     const headX = bodyX + (53.5 * this.magnitude - this.headWidth * this.magnitude / 2);
     let headY = bodyY + (this.bodyHeight * this.magnitude - 7 * this.magnitude) - this.headHeight * this.magnitude;
-    
+
+    //eating
     if (timestamp < this.eatEndTimestamp) {
       console.log("eating")
-       const adjustedTimestamp = timestamp -this.eatEndTimestamp + parseInt(this.eatDuration)/(1000/60);
-       console.log(adjustedTimestamp)
+      const adjustedTimestamp = this.eatEndTimestamp - timestamp + parseInt(this.eatDuration) / (1000 / 60);
+
       const eatMaxHeight = 20;
       // const eatingYOffset = ((Math.cos((adjustedTimestamp -Math.PI/2+  0.5 * Math.PI) * (this.eatSpeed/100)*0.1 - Math.PI / 2) + 1) / 2) * eatMaxHeight;
-      const eatingYOffset = ((Math.sin((adjustedTimestamp * 2 * Math.PI * this.eatSpeed/100 * 0.1) - Math.PI / 2) + 1) / 2) * eatMaxHeight;
+      const eatingYOffset = ((Math.sin((adjustedTimestamp * 2 * Math.PI * this.eatSpeed / 100 * 0.1) - Math.PI / 2) + 1) / 2) * eatMaxHeight;
       headY -= eatingYOffset;
+      const n = this.eatDuration
+      console.log(adjustedTimestamp)
+      console.log((-adjustedTimestamp + 10 * n) / 10)
+      console.log(Math.floor((-adjustedTimestamp + (10/(this.eatSpeed/100)) * n) / (10/(this.eatSpeed/100))))
+      const frame = Math.floor((-adjustedTimestamp + (10/(this.eatSpeed/100)) * n) / (10/(this.eatSpeed/100)))
+      this.foodImage.src = "larry_photos/foods/" + document.getElementById('elselectedFood').value+ frame + ".png";
+      ctx.drawImage(this.foodImage, centerX, centerY,200,226.5)
     }
     ctx.drawImage(this.headImage, headX, headY, this.headWidth * this.magnitude, this.headHeight * this.magnitude);
 
@@ -141,8 +151,9 @@ class Larry extends BaseShape {
 
   startEating() {
     console.log("Larry starts eating");
+    this.foodImage.src = document.getElementById('elselectedFood').value
     this.isEating = true;
-    this.eatEndTimestamp = this.lastTimestamp + (parseInt(this.eatDuration)/3)*1000/(1000/60);
+    this.eatEndTimestamp = this.lastTimestamp + (parseInt(this.eatDuration)/(6*(this.eatSpeed/100))) * 1000 / (1000 / 60);
     console.log(this.eatEndTimestamp)
     // setTimeout(() => {
     //   this.isEating = false;
@@ -167,7 +178,7 @@ class Larry extends BaseShape {
   }
   recalculateHatOffsets(offsets) {
     this.hatXoffset = (this.headWidth * this.magnitude) / 2 - (this.hatImage.width * this.magnitude) / 2 + (offsets.x * this.magnitude);
-    this.hatYoffset = (this.headHeight * this.magnitude) - (this.hatImage.height/2 * this.magnitude) + (offsets.y * this.magnitude);
+    this.hatYoffset = (this.headHeight * this.magnitude) - (this.hatImage.height / 2 * this.magnitude) + (offsets.y * this.magnitude);
   }
   setMagnitude(newMagnitude) {
     this.magnitude = newMagnitude;
