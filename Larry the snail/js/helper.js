@@ -24,15 +24,15 @@ async function fetchConfig(className) {
       {
         type: "range",
         min: 0,
-        max: 20,
-        defaultValue: 2,
+        max: 100,
+        defaultValue: 50,
         property: "eatSpeed"
       },
       {
         type: "range",
         min: 0,
-        max: 10000,
-        defaultValue: 3000,
+        max: 10,
+        defaultValue: 1,
         property: "eatDuration"
       },
       // Button control to start eating

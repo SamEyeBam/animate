@@ -8,7 +8,7 @@ centerY = ctx.canvas.height / 2;
 ctx.imageSmoothingEnabled = false;
 
 
-let deg_per_sec = 10;
+let deg_per_sec = 60;
 let targetFps = 60;
 let frameDuration = 1000 / targetFps;
 

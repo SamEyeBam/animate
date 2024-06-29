@@ -60,6 +60,7 @@ class Larry extends BaseShape {
     this.speedMultiplier = 100;
 
     this.isEating = false;
+    this.eatEndTimestamp= 0;
     this.eatDuration = eatDuration;
     this.eatSpeed = eatSpeed;
 
@@ -77,13 +78,16 @@ class Larry extends BaseShape {
 
     this.hatXoffset = 0;
     this.hatYoffset = 0;
+    this.lastTimestamp = 0;
   }
 
   draw(timestamp) {
     timestamp *= (this.speedMultiplier / 100);
+    // console.log(timestamp - this.lastTimestamp)
+    this.lastTimestamp = timestamp;
     // Draw background
     if (this.backgroundImage.src) {
-      console.log("drawing background: " + this.backgroundImage.src)
+      // console.log("drawing background: " + this.backgroundImage.src)
 
       ctx.drawImage(this.backgroundImage, centerX - (this.backgroundImage.width), centerY - this.backgroundImage.height, this.backgroundImage.width * 2, this.backgroundImage.height * 2);
     }
@@ -98,10 +102,14 @@ class Larry extends BaseShape {
     // let headY = bodyY + this.headOffsetY - this.headHeight;
     const headX = bodyX + (53.5 * this.magnitude - this.headWidth * this.magnitude / 2);
     let headY = bodyY + (this.bodyHeight * this.magnitude - 7 * this.magnitude) - this.headHeight * this.magnitude;
-
-    if (this.isEating === true) {
+    
+    if (timestamp < this.eatEndTimestamp) {
+      console.log("eating")
+       const adjustedTimestamp = timestamp -this.eatEndTimestamp + parseInt(this.eatDuration)/(1000/60);
+       console.log(adjustedTimestamp)
       const eatMaxHeight = 20;
-      const eatingYOffset = ((Math.sin((timestamp * 2 * Math.PI * this.eatSpeed * 0.1) - Math.PI / 2) + 1) / 2) * eatMaxHeight;
+      // const eatingYOffset = ((Math.cos((adjustedTimestamp -Math.PI/2+  0.5 * Math.PI) * (this.eatSpeed/100)*0.1 - Math.PI / 2) + 1) / 2) * eatMaxHeight;
+      const eatingYOffset = ((Math.sin((adjustedTimestamp * 2 * Math.PI * this.eatSpeed/100 * 0.1) - Math.PI / 2) + 1) / 2) * eatMaxHeight;
       headY -= eatingYOffset;
     }
     ctx.drawImage(this.headImage, headX, headY, this.headWidth * this.magnitude, this.headHeight * this.magnitude);
@@ -133,12 +141,13 @@ class Larry extends BaseShape {
 
   startEating() {
     console.log("Larry starts eating");
-    console.log(this.eatDuration)
     this.isEating = true;
-    setTimeout(() => {
-      this.isEating = false;
-      console.log("Larry stops eating");
-    }, this.eatDuration); // Adjust duration as needed
+    this.eatEndTimestamp = this.lastTimestamp + (parseInt(this.eatDuration)/3)*1000/(1000/60);
+    console.log(this.eatEndTimestamp)
+    // setTimeout(() => {
+    //   this.isEating = false;
+    //   console.log("Larry stops eating");
+    // }, this.eatDuration); // Adjust duration as needed
   }
 
   applyHat() {
