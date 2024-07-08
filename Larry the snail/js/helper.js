@@ -135,7 +135,7 @@ const hatConfig = {
 };
 
 const foodConfig = {
-  apple: { sizeMult: 3.5, n: 4 },
+  apple: { sizeMult: 0.25, n: 4 },
   nothing: { sizeMult: 2, n: 5 },
 };
 

@@ -20,18 +20,7 @@ let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
     Larry: Larry,
-    NewWave: NewWave,
-    PolyTwistColourWidth: PolyTwistColourWidth,
-    FloralPhyllo: FloralPhyllo,
-    Spiral1: Spiral1,
-    FloralAccident: FloralAccident,
-    FloralPhyllo_Accident: FloralPhyllo_Accident,
-    Nodal_expanding: Nodal_expanding,
-    Phyllotaxis:Phyllotaxis,
-    SquareTwist_angle:SquareTwist_angle,
-    EyePrototype:EyePrototype,
-    CircleExpand:CircleExpand,
-    MaryFace:MaryFace,
+    
     // Add more class constructors here as needed
   };
 
