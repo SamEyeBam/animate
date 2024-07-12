@@ -11,16 +11,18 @@ ctx.imageSmoothingEnabled = false;
 let deg_per_sec = 60;
 let targetFps = 60;
 let frameDuration = 1000 / targetFps;
+let lastTimestamp = 0;
+let trueTimestamp = 0;
 
 let rotation = 0; //was = j = angle
-let paused = true;
+let paused = false;
 render_clear();
 
 let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
     Larry: Larry,
-    
+
     // Add more class constructors here as needed
   };
 
@@ -63,15 +65,26 @@ updateDrawObj();
 
 function render() {
   setTimeout(() => {
-    requestAnimationFrame(() => {
+    requestAnimationFrame((timestamp) => {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const elapsed = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+
       render_clear();
       if (drawObj) {
-        drawObj.draw(rotation);
+        // drawObj.draw(rotation);
+        
+        drawObj.draw(elapsed,trueTimestamp);
+        
       }
 
       if (!paused) {
         rotation += deg_per_sec / targetFps;
+        trueTimestamp += elapsed;
       }
+      ctx.font = "48px serif";
+      ctx.fillStyle = "white"
+      ctx.fillText( Math.floor(trueTimestamp) + "ms", centerX-150, centerY+400);
       // drawCenter(300)
     });
     render();
@@ -85,7 +98,7 @@ document
 let toolbarShowing = true;
 document.addEventListener("keydown", toggleSettings);
 
-function manualToggleSettings(){
+function manualToggleSettings() {
   console.log("hi")
   toolbarShowing = !toolbarShowing;
   let tb = document.getElementById("toolbar");
