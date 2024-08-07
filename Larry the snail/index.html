@@ -12,17 +12,16 @@
   <div id="toolbar">
     <br>
     <select id="shape-selector">
+      <option value="TestParent">Test Parent</option>
+      <option value="PolyTwistColourWidth">PolyTwistColourWidth</option>
       <option value="Larry">Larry</option>
+      <option value="Larry">Snails</option>
+      <option value="Larry">Background</option>
     </select>
-    <div id="custom"></div>
+    <div id="custom">
+    </div>
     <br>
-    <p>Controls:</p>
-    <p>
-      Press "Space" to pause and start the animation
-    </p>
-    <p>
-      Press "P" to show/hide the control panel
-    </p>
+    
     <br>
     <p>Speed</p>
     <input type="text" id="inputDegPerSec" value="10" onchange="ChangeDegPerSec(this.value)">
@@ -30,8 +29,8 @@
     <p>Controls</p>
     <div class="controls">
       <button class="controlFrameButton button-8" onclick="BackwardFrame()"><</button>
-          <button class="controlPauseButton button-8" id="pauseButton" onclick="TogglePause()">Play</button>
-          <button class="controlFrameButton button-8" onclick="ForwardFrame()">></button>
+          <button class="controlPauseButton button-8" id="pauseButton" onclick="TogglePause()">Pause</button>
+          <button class="controlFrameButton button-8" onclick="ForwardFrame(event)">></button>
     </div>
     <button class="buttonReset button-8" id="resetButton" onclick="Reset()">Reset Rotation</button>
   </div>

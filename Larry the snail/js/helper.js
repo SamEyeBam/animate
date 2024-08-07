@@ -5,12 +5,15 @@ async function fetchConfig(className) {
       {
         type: "range",
         min: 1,
-        max: 5,
-        defaultValue: 1,
+        max: 10,
+        defaultValue: 5,
         property: "magnitude",
         callback: (instance, newValue) => instance.setMagnitude(newValue)
       },
-      // Dropdown control to select food
+      {
+        type: "header",
+        text: "---Food---"
+      },
       {
         type: "dropdown",
         property: "selectedFood",
@@ -24,8 +27,8 @@ async function fetchConfig(className) {
       {
         type: "range",
         min: 0,
-        max: 100,
-        defaultValue: 50,
+        max: 200,
+        defaultValue: 100,
         property: "eatSpeed"
       },
       {
@@ -40,6 +43,41 @@ async function fetchConfig(className) {
         type: "button",
         label: "Start Eating",
         method: "startEating",
+      },
+      {
+        type: "header",
+        text: "---Movement---"
+      },
+      // Movement controls
+      {
+        type: "range",
+        min: -360,
+        max: 360,
+        defaultValue: 90,
+        property: "moveDirection"
+      },
+      {
+        type: "range",
+        min: 1,
+        max: 100,
+        defaultValue: 10,
+        property: "moveDistance"
+      },
+      {
+        type: "range",
+        min: 1,
+        max: 10,
+        defaultValue: 5,
+        property: "moveSpeed"
+      },
+      {
+        type: "button",
+        label: "Wander",
+        method: "wander"
+      },
+      {
+        type: "header",
+        text: "---Appearance---"
       },
       // Dropdown control to select hat
       {
@@ -59,34 +97,6 @@ async function fetchConfig(className) {
         type: "button",
         label: "Apply Hat",
         method: "applyHat"
-      },
-      // Movement controls
-      {
-        type: "range",
-        min: 0,
-        max: 360,
-        defaultValue: 0,
-        property: "moveDirection"
-      },
-      {
-        type: "range",
-        min: 1,
-        max: 100,
-        defaultValue: 10,
-        property: "moveDistance"
-      },
-      {
-        type: "range",
-        min: 1,
-        max: 10,
-        defaultValue: 5,
-        property: "moveSpeed"
-      },
-
-      {
-        type: "button",
-        label: "Wander",
-        method: "wander"
       },
       // Appearance controls
       {
@@ -122,6 +132,32 @@ async function fetchConfig(className) {
         method: "applyBackground"
       }
     ],
+    PolyTwistColourWidth: [
+      { type: "range", min: 1, max: 10, defaultValue: 5, property: "sides" },
+      { type: "range", min: -180, max: 2000, defaultValue: 300, property: "width" },
+      { type: "range", min: 2, max: 5, defaultValue: 5, property: "line_width" },
+      { type: "range", min: 1, max: 100, defaultValue: 50, property: "depth" },
+      { type: "range", min: -180, max: 180, defaultValue: -20, property: "rotation"},
+      { type: "color", defaultValue: "#4287f5", property: "colour1" },
+      { type: "color", defaultValue: "#42f57b", property: "colour2" },
+    ],
+    TestParent: [
+      {
+        type: "button",
+        label: "Add Child",
+        method: "addChild"
+      },
+      {
+        type: "dropdown",
+        property: "selectedChild",
+        callback: (instance, newValue) => instance.setSelectedChild(newValue),
+        defaultValue: "",
+        options: [
+          { value: "", label: "None" },
+          { value: "0", label: "None" },
+        ]
+      },
+    ],
     // Add other shape configurations here
   };
   return config[className];
@@ -136,6 +172,7 @@ const hatConfig = {
 
 const foodConfig = {
   apple: { sizeMult: 0.25, n: 4 },
+  carrot: { sizeMult: 0.25, n: 6 },
   nothing: { sizeMult: 2, n: 5 },
 };
 
@@ -183,13 +220,38 @@ function addControl(item, instance) {
       const newValue = event.target.value;
       instance[item.property] = newValue;
       title.innerText = item.property + ": " + newValue;
+
+      if (item.callback) {
+        item.callback(instance, newValue);
+      }
     });
+  } else if (item.type === "header") {
+    control = document.createElement("p");
+    control.innerText = item.text;
+    control.className = "header";
+    control.id = "elHeader" + item.text.replace(/\s+/g, '');
+  }
+  else if (item.type === "color") {
+    control = document.createElement("input");
+    control.type = item.type;
+    control.value = item.defaultValue;
+    control.id = "el" + item.property;
+    control.addEventListener("input", (event) => {
+      const newValue = event.target.value;
+      instance[item.property] = newValue;
+      title.innerText = item.property + ": " + newValue;
+    })
+
   }
 
-  control.className = "control";
-  control.id = "el" + item.property;
+  if (item.type != "header") {
+    control.className = "control";
+    control.id = "el" + item.property;
+  }
 
-  parentDiv.appendChild(title);
+  if (item.type != "button" && item.type != "header") {
+    parentDiv.appendChild(title);
+  }
   parentDiv.appendChild(control);
 
   return { element: control };
@@ -301,6 +363,7 @@ function drawEyelidAccident(x1, y1) {
 }
 
 function DrawPolygon(sides, width, rotation, colour, line_width) {
+  console.log("drawing polygon")
   ctx.beginPath();
   ctx.moveTo(
     centerX + width * Math.cos((rotation * Math.PI) / 180),
@@ -318,6 +381,29 @@ function DrawPolygon(sides, width, rotation, colour, line_width) {
   }
   ctx.strokeStyle = colour;
   ctx.lineWidth = line_width;
+
+  ctx.stroke();
+}
+function DrawPolygonPosition(sides, width, rotation,x,y, colour, line_width) {
+  console.log("drawing polygon")
+  ctx.beginPath();
+  ctx.moveTo(
+    x + width * Math.cos((rotation * Math.PI) / 180),
+    y + width * Math.sin((rotation * Math.PI) / 180)
+  );
+
+  for (var i = 1; i <= sides; i += 1) {
+    ctx.lineTo(
+      x +
+      width *
+      Math.cos((i * 2 * Math.PI) / sides + (rotation * Math.PI) / 180),
+      y +
+      width * Math.sin((i * 2 * Math.PI) / sides + (rotation * Math.PI) / 180)
+    );
+  }
+  ctx.strokeStyle = colour;
+  ctx.lineWidth = line_width;
+
   ctx.stroke();
 }
 

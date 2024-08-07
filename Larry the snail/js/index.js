@@ -22,6 +22,9 @@ let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
     Larry: Larry,
+    PolyTwistColourWidth: PolyTwistColourWidth,
+    TestParent: TestParent,
+    TestChild: TestChild,
 
     // Add more class constructors here as needed
   };
@@ -34,7 +37,7 @@ function createInstance(className, args) {
 }
 
 
-
+//recreate this for child objects?
 async function updateDrawObj() {
   const shapeSelector = document.getElementById("shape-selector");
   const selectedShape = shapeSelector.value;
@@ -51,9 +54,15 @@ async function updateDrawObj() {
 
   // Update instance properties based on control values
   config.forEach(item => {
-    if (item.type === "range" || item.type === "dropdown") {
+    if (item.type === "range" || item.type === "dropdown" || item.type === "color") {
       const control = document.getElementById("el" + item.property);
-      drawObj[item.property] = control.value;
+      if (item.type === "range") {
+        drawObj[item.property] = parseInt(control.value);
+      }
+      else {
+        drawObj[item.property] = control.value;
+      }
+
     }
   });
 
@@ -73,9 +82,9 @@ function render() {
       render_clear();
       if (drawObj) {
         // drawObj.draw(rotation);
-        
-        drawObj.draw(elapsed,trueTimestamp);
-        
+
+        drawObj.draw(elapsed, trueTimestamp);
+
       }
 
       if (!paused) {
@@ -84,7 +93,7 @@ function render() {
       }
       ctx.font = "48px serif";
       ctx.fillStyle = "white"
-      ctx.fillText( Math.floor(trueTimestamp) + "ms", centerX-150, centerY+400);
+      ctx.fillText(Math.floor(trueTimestamp) + "ms", centerX - 100, centerY + 400);
       // drawCenter(300)
     });
     render();
@@ -97,6 +106,16 @@ document
 
 let toolbarShowing = true;
 document.addEventListener("keydown", toggleSettings);
+
+
+window.addEventListener("resize", () => {
+    resizeCooledDown = false;
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    centerX = ctx.canvas.width / 2;
+    centerY = ctx.canvas.height / 2;
+    
+})
 
 function manualToggleSettings() {
   console.log("hi")
@@ -140,9 +159,12 @@ function Reset() {
   currentFrame = 0;
 }
 
-function ForwardFrame() {
-  rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
-  currentFrame += 1; // was = i
+function ForwardFrame(event) {
+  rotation += deg_per_sec / 60; // was = j = innerRotation, now = rotation
+  trueTimestamp += event.offsetX * 10
+  console.log(event)
+  console.log(event.clientX)
+  console.log(event.x)
 }
 function BackwardFrame() {
   rotation -= deg_per_sec / fps; // was = j = innerRotation, now = rotation

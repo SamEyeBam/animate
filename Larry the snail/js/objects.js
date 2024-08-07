@@ -15,7 +15,7 @@ class BaseShape {
     const { element, listener } = addControl({
       type: "range",
       min: 1,
-      max: 500,
+      max: 1000,
       defaultValue: 100,
       property: "speedMultiplier",
     }, this);
@@ -26,6 +26,7 @@ class BaseShape {
     this.controls.forEach(({ element, listener }) => {
       if (element && listener) {
         element.removeEventListener("input", listener);
+        element.removeEventListener("click", listener);
       }
       if (element && element.parentElement) {
         element.parentElement.removeChild(element);
@@ -118,7 +119,7 @@ class Larry extends BaseShape {
       const eatMaxHeight = 20;
       // const eatingYOffset = ((Math.cos((adjustedTimestamp -Math.PI/2+  0.5 * Math.PI) * (this.eatSpeed/100)*0.1 - Math.PI / 2) + 1) / 2) * eatMaxHeight;
       // const eatingYOffset = ((Math.sin((adjustedTimestamp/1000 * 2 * Math.PI * this.eatSpeed / 100 * 0.1) - Math.PI / 2) + 1) / 2) * eatMaxHeight;
-      const eatingYOffset = (Math.sin(((adjustedTimestamp/1000)* (this.eatSpeed/100))* Math.PI * 2 - (Math.PI/2))*0.5+0.5) * eatMaxHeight;
+      const eatingYOffset = (Math.sin(((adjustedTimestamp / 1000) * (this.eatSpeed / 100)) * Math.PI * 2 - (Math.PI / 2)) * 0.5 + 0.5) * eatMaxHeight;
       headY -= eatingYOffset;
       const n = this.eatDuration
       // console.log(adjustedTimestamp)
@@ -226,3 +227,96 @@ class Larry extends BaseShape {
   }
 }
 
+class PolyTwistColourWidth extends BaseShape {
+  // constructor(sides, width, line_width, depth, rotation, speedMultiplier, colour1, colour2) {
+  constructor(sides, width, line_width, depth, rotation, colour1, colour2) {
+    super();
+    this.sides = sides;
+    this.width = width;
+    this.line_width = line_width;
+    this.depth = depth;
+    this.rotation = rotation;
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+  }
+
+  draw(elapsed, timestamp) {
+    // rotation *= (this.speedMultiplier / 100)
+    timestamp /= 1000
+    timestamp *= (this.speedMultiplier / 100)
+    let out_angle = 0;
+    const innerAngle = 180 - ((this.sides - 2) * 180) / this.sides;
+    const scopeAngle = timestamp - (innerAngle * Math.floor(timestamp / innerAngle));
+
+    if (scopeAngle < innerAngle / 2) {
+      out_angle = innerAngle / (2 * Math.cos((2 * Math.PI * scopeAngle) / (3 * innerAngle))) - innerAngle / 2;
+    } else {
+      out_angle = -innerAngle / (2 * Math.cos(((2 * Math.PI) / 3) - ((2 * Math.PI * scopeAngle) / (3 * innerAngle)))) + (innerAngle * 3) / 2;
+    }
+    let minWidth = Math.sin(rad(innerAngle / 2)) * (0.5 / Math.tan(rad(innerAngle / 2))) * 2;
+
+    let widthMultiplier = minWidth / Math.sin(Math.PI / 180 * (90 + innerAngle / 2 - out_angle + innerAngle * Math.floor(out_angle / innerAngle)));
+
+    for (let i = 0; i < this.depth; i++) {
+      const fraction = i / this.depth;
+      const ncolour = LerpHex(this.colour1, this.colour2, fraction);
+      DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation, ncolour, this.line_width);
+
+    }
+  }
+}
+
+class TestParent extends BaseShape {
+  constructor() {
+    super();
+    this.children = []
+    this.selectedChild = ""
+  }
+
+  draw(elapsed, timestamp) {
+    // rotation *= (this.speedMultiplier / 100)
+    timestamp /= 1000
+    timestamp *= (this.speedMultiplier / 100)
+
+    // console.log(this.selectedChild)
+
+    for (let i = 0; i < this.children.length; i++) {
+      this.children[i].draw()
+      
+    }
+  }
+
+  setSelectedChild(SelectedChild){
+    console.log(this.selectedChild)
+  }
+
+  addChild() {
+    let x = Math.random()*1920
+    let y = Math.random()*1080
+    let r = Math.random()*360
+    let w = Math.random()*200+100
+    let s = Math.floor(Math.random()*10)+3
+    let newChild = new TestChild(s,w,x,y,r)
+    this.children.push(newChild)
+    console.log(this.children)
+  }
+}
+class TestChild extends BaseShape {
+  constructor(sides, width, x, y,rotation) {
+    super();
+    this.sides = sides;
+    this.width = width;
+    this.x = x;
+    this.y = y;
+    this.rotation = rotation;
+  }
+
+  draw(elapsed, timestamp) {
+    // rotation *= (this.speedMultiplier / 100)
+    timestamp /= 1000
+    timestamp *= (this.speedMultiplier / 100)
+
+    DrawPolygonPosition(this.sides, this.width, this.rotation,this.x,this.y, "#4287f5", 3);
+
+  }
+}
