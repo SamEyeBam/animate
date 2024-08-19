@@ -47,18 +47,18 @@ class BaseShape {
 class Larry extends BaseShape {
   constructor(eatSpeed, eatDuration) {
     super();
-    this.magnitude = 1;
     this.bodyWidth = 64;
     this.bodyHeight = 64;
     this.headWidth = 21;
     this.headHeight = 24;
     this.headOffsetX = 54 - this.headWidth * this.magnitude / 2;
     this.headOffsetY = this.bodyHeight * this.magnitude - 7; // Bottom of the body minus 7 pixels
-    this.globalX = Math.random() * 1000 + 600;
-    this.globalY = centerY;
+    this.globalX = Math.random() * 1500 + 400;
+    this.globalY = Math.random()*centerY + centerY ;
     this.localX = 0;
     this.localY = 0;
     this.speedMultiplier = 100;
+    this.magnitude = (this.globalY - centerY)/centerY;
 
     this.isEating = false;
     this.eatEndTimestamp = 0;
@@ -86,9 +86,12 @@ class Larry extends BaseShape {
     this.foodYoffset = 0;
     this.foodSizeMuliplier = 0;
     this.lastTimestamp = 0;
+
+    this.moveDirection =1
   }
 
   draw(elapsed, timestamp) {
+    // this.magnitude = ((this.globalY - centerY)/centerY)*3 +1;
     timestamp *= (this.speedMultiplier / 100);
     // console.log(timestamp - this.lastTimestamp)
     this.lastTimestamp = timestamp;
@@ -98,11 +101,11 @@ class Larry extends BaseShape {
 
       ctx.drawImage(this.backgroundImage, centerX - (this.backgroundImage.width), centerY - this.backgroundImage.height, this.backgroundImage.width * 2, this.backgroundImage.height * 2);
     }
-
     // Draw body at its anchor point (center-bottom)
     const bodyX = this.globalX - (this.bodyWidth * this.magnitude / 2);
     const bodyY = this.globalY - this.bodyHeight * this.magnitude;
-    ctx.drawImage(this.bodyImage, bodyX, bodyY, this.bodyWidth * this.magnitude, this.bodyHeight * this.magnitude);
+    // ctx.drawImage(this.bodyImage, bodyX, bodyY, this.bodyWidth * this.magnitude, this.bodyHeight * this.magnitude);
+    this.drawImage(this.bodyImage,bodyX,bodyY,this.bodyWidth*this.magnitude,this.bodyHeight*this.magnitude,undefined,true)
 
     // Draw head aligned with body
     // const headX = bodyX + this.headOffsetX;
@@ -127,12 +130,16 @@ class Larry extends BaseShape {
       // console.log(Math.floor((-adjustedTimestamp + (10 / (this.eatSpeed / 100)) * n) / (10 / (this.eatSpeed / 100))))
       const frame = Math.floor((adjustedTimestamp / 1000) * (this.eatSpeed / 100))
       this.foodImage.src = "larry_photos/foods/" + document.getElementById('elselectedFood').value + frame + ".png";
-      this.drawCrosshair(bodyX + this.foodXoffset, bodyY + this.foodYoffset, 30)
-      ctx.drawImage(this.foodImage, bodyX + this.foodXoffset, bodyY + this.foodYoffset, this.foodImage.width * this.foodSizeMuliplier, this.foodImage.height * this.foodSizeMuliplier)
+      this.drawCrosshair(this.globalX +this.foodXoffset,this.globalY-(16*this.magnitude/2), 30)
+      this.drawCrosshair(this.globalX +this.foodXoffset,this.foodYoffset - this.foodImage.height*this.foodSizeMuliplier, 30)
+      this.drawCrosshair(this.globalX +this.foodXoffset,this.foodYoffset - this.foodImage.height*this.foodSizeMuliplier+this.foodImage.height*this.foodSizeMuliplier, 30)
+      let tmp = this.globalY-this.foodYoffset
+      ctx.drawImage(this.foodImage, this.globalX +this.foodXoffset, tmp, this.foodImage.width * this.foodSizeMuliplier, this.foodImage.height * this.foodSizeMuliplier)
+      // ctx.drawImage(this.foodImage, bodyX + this.foodXoffset, bodyY + this.foodYoffset, this.foodImage.width * this.foodSizeMuliplier, this.foodImage.height * this.foodSizeMuliplier)
     }
 
     ctx.drawImage(this.headImage, headX, headY, this.headWidth * this.magnitude, this.headHeight * this.magnitude);
-
+    this.drawImage(this.headImage,headX,headY, this.headWidth * this.magnitude, this.headHeight * this.magnitude,undefined,true)
     // Draw hat if any
     if (this.hatImage.src) {
       this.drawCrosshair(headX, headY, 20);
@@ -163,24 +170,41 @@ class Larry extends BaseShape {
     const foodSelection = document.getElementById('elselectedFood').value
     this.isEating = true;
     // this.eatEndTimestamp = this.lastTimestamp + (parseInt(this.eatDuration) / (6 * (this.eatSpeed / 100))) * 1000 / (1000 / 60);
-    this.eatEndTimestamp = trueTimestamp + parseInt(this.eatDuration * 1000) / (this.eatSpeed / 100);
-    console.log("start:" + trueTimestamp + " end: " + this.eatEndTimestamp)
+    const bodyY = this.globalY - this.bodyHeight * this.magnitude;
     if (foodSelection === "") {
       this.foodXoffset = 0;
       this.foodYoffset = 0;
     } else {
       this.foodImage.src = "larry_photos/foods/" + document.getElementById('elselectedFood').value + 0 + ".png";
       const offsets = foodConfig[foodSelection] || { sizeMult: 0, n: 0 };
+      this.eatDuration = offsets.n
       this.foodSizeMuliplier = offsets.sizeMult;
-      this.foodXoffset = (this.bodyWidth * this.magnitude);
-      this.foodYoffset = bodyY + (this.bodyHeight * this.magnitude - 7 * this.magnitude) - this.headHeight * this.magnitude - (this.foodImage.height / 2);
+      this.foodXoffset =  ((this.bodyWidth+16)*this.magnitude/2)
+      this.foodYoffset = (16*this.magnitude/2)+this.foodImage.height*this.foodSizeMuliplier/2
+      // this.foodYoffset = bodyY + (this.bodyHeight * this.magnitude - 7 * this.magnitude) - this.headHeight * this.magnitude - (this.foodImage.height / 2);
 
     }
-    console.log(this.eatEndTimestamp)
+    
+     this.eatEndTimestamp = trueTimestamp + parseInt(this.eatDuration * 1000) / (this.eatSpeed / 100);
+    // console.log("start:" + trueTimestamp + " end: " + this.eatEndTimestamp)
+    // console.log(this.eatEndTimestamp)
     // setTimeout(() => {
     //   this.isEating = false;
     //   console.log("Larry stops eating");
     // }, this.eatDuration); // Adjust duration as needed
+  }
+
+  flipDirection(){
+
+  }
+
+  applyFood(selectedFood){
+    const foodSelection = document.getElementById('elselectedFood').value
+    const offsets = foodConfig[foodSelection] || { sizeMult: 0, n: 0 };
+    let eatDurationElement = document.getElementById('eleatDuration')
+    eatDurationElement.value = offsets.n
+    const event = new Event('input', { bubbles: true });
+    eatDurationElement.dispatchEvent(event)
   }
 
   applyHat() {
@@ -213,7 +237,6 @@ class Larry extends BaseShape {
 
   wander() {
     console.log("Larry starts wandering");
-    // Implement wandering logic here
   }
 
   applyShell() {
@@ -225,6 +248,38 @@ class Larry extends BaseShape {
     const backgroundSelection = document.getElementById('elselectedBackground').value;
     this.backgroundImage.src = `larry_photos/backgrounds/${backgroundSelection}.png`;
   }
+  drawImage(img, x, y, width, height, deg, flip, flop, center) {
+
+    ctx.save();
+    
+    if(typeof width === "undefined") width = img.width;
+    if(typeof height === "undefined") height = img.height;
+    if(typeof center === "undefined") center = false;
+    
+    // Set rotation point to center of image, instead of top/left
+    if(center) {
+        x -= width/2;
+        y -= height/2;
+    }
+    
+    // Set the origin to the center of the image
+    ctx.translate(x + width/2, y + height/2);
+    
+    // Rotate the canvas around the origin
+    var rad = 2 * Math.PI - deg * Math.PI / 180;    
+    ctx.rotate(rad);
+    
+    let flipScale,flopScale;
+    // Flip/flop the canvas
+    if(flip) flipScale = -1; else flipScale = 1;
+    if(flop) flopScale = -1; else flopScale = 1;
+    ctx.scale(flipScale, flopScale);
+    
+    // Draw the image    
+    ctx.drawImage(img, -width/2, -height/2, width, height);
+    
+    ctx.restore();
+    }
 }
 
 class PolyTwistColourWidth extends BaseShape {
@@ -291,14 +346,29 @@ class TestParent extends BaseShape {
   }
 
   addChild() {
-    let x = Math.random()*1920
-    let y = Math.random()*1080
-    let r = Math.random()*360
-    let w = Math.random()*200+100
-    let s = Math.floor(Math.random()*10)+3
-    let newChild = new TestChild(s,w,x,y,r)
+    // let x = Math.random()*1920
+    // let y = Math.random()*1080
+    // let r = Math.random()*360
+    // let w = Math.random()*200+100
+    // let s = Math.floor(Math.random()*10)+3
+    // let newChild = new TestChild(s,w,x,y,r)
+    // this.children.push(newChild)
+    // console.log(this.children)
+    let newChild = new Larry(5,6);
     this.children.push(newChild)
-    console.log(this.children)
+
+    if(this.children.length ===1){
+      // this.children[0].backgroundImage.src = `larry_photos/backgrounds/field_blue.png`
+    }
+    let listOfYs = this.children.map((child,i)=>{
+      return child.globalY;
+    })
+    console.log(listOfYs)
+    this.children = this.children.sort(((a,b) => a.globalY - b.globalY))
+    listOfYs = this.children.map((child,i)=>{
+      return child.globalY;
+    })
+    console.log(listOfYs)
   }
 }
 class TestChild extends BaseShape {

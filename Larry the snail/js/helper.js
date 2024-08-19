@@ -17,12 +17,13 @@ async function fetchConfig(className) {
       {
         type: "dropdown",
         property: "selectedFood",
-        defaultValue: "lettuce",
+        defaultValue: "joint",
         options: [
-          { value: "lettuce", label: "Lettuce" },
+          { value: "joint", label: "Joint" },
           { value: "apple", label: "Apple" },
           { value: "carrot", label: "Carrot" }
-        ]
+        ],
+        callback: (instance, newValue) => instance.applyFood(newValue)
       },
       {
         type: "range",
@@ -172,7 +173,8 @@ const hatConfig = {
 
 const foodConfig = {
   apple: { sizeMult: 0.25, n: 4 },
-  carrot: { sizeMult: 0.25, n: 6 },
+  carrot: { sizeMult: 0.6, n: 6 },
+  joint: { sizeMult: 0.75, n: 6 },
   nothing: { sizeMult: 2, n: 5 },
 };
 
