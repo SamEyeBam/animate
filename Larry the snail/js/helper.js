@@ -52,9 +52,9 @@ async function fetchConfig(className) {
       // Movement controls
       {
         type: "range",
-        min: -360,
+        min: 0,
         max: 360,
-        defaultValue: 90,
+        defaultValue: 1,
         property: "moveDirection"
       },
       {
