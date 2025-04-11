@@ -19,6 +19,7 @@ class BaseShape {
       if (element && listener) {
         element.removeEventListener("input", listener);
         element.removeEventListener("click", listener);
+        element.removeEventListener("change", listener);
       }
       if (element && element.parentElement) {
         element.parentElement.removeChild(element);
@@ -676,7 +677,7 @@ class NewWave extends BaseShape {
 }
 
 class RaysInShape extends BaseShape {
-  constructor(rays, speed, speedVert, speedHorr, boxSize, trailLength = 50) {
+  constructor(rays, speed, doesWave,speedVertRate, speedHorrRate,speedVert, speedHorr, boxSize, trailLength = 50, lineWidth, colourFree, colourContained, boxVisible,) {
     super();
     this.rays = rays;
     this.speed = speed;
@@ -686,9 +687,16 @@ class RaysInShape extends BaseShape {
     this.trailLength = trailLength;
     this.rayObjects = [];
     this.centerRays = []; // New array for rays heading to center
+    this.lineWidth = lineWidth;
+    this.boxVisible = boxVisible;
+    this.doesWave = doesWave;
+    this.colourFree = colourFree;
+    this.colourContained = colourContained;
+    this.speedHorrRate = speedHorrRate;
+    this.speedVertRate = speedVertRate;
   }
 
-  initialise(config) {
+  initialise(config) { //is overide
     for (let item of config) {
       const { element, listener } = addControl(item, this);
       this.controls.push({ element, listener });
@@ -700,10 +708,10 @@ class RaysInShape extends BaseShape {
     }, this);
     this.controls.push({ element: speedElement, listener: speedListener });
 
-    const { element: trailElement, listener: trailListener } = addControl({
-      type: "range", min: 5, max: 200, defaultValue: this.trailLength, property: "trailLength"
-    }, this);
-    this.controls.push({ element: trailElement, listener: trailListener });
+    // const { element: trailElement, listener: trailListener } = addControl({
+    //   type: "range", min: 5, max: 200, defaultValue: this.trailLength, property: "trailLength"
+    // }, this);
+    // this.controls.push({ element: trailElement, listener: trailListener });
 
     // Prepare rayObjects for the first draw
     this.prepareRayObjects();
@@ -798,21 +806,22 @@ class RaysInShape extends BaseShape {
         }
       }
 
-      // Draw all segments of the trail
-      ctx.lineWidth = 3;
+      // Draw segments
+
       for (let j = 1; j < ray.positions.length; j++) {
         const prev = ray.positions[j - 1];
         const curr = ray.positions[j];
 
-        // Fade color based on position in trail (newer = brighter)
+        // Fade alpha (newer = brighter)
         const alpha = (j / ray.positions.length) * 0.8 + 0.2;
 
         ctx.beginPath();
         ctx.moveTo(prev.x, prev.y);
         ctx.lineTo(curr.x, curr.y);
 
-        // Center-bound rays are pink
-        ctx.strokeStyle = `rgba(255, 51, 170, ${alpha})`;
+        // Contained rays
+        const col = hexToRgb(this.colourFree);
+        ctx.strokeStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${alpha})`;
         ctx.stroke();
       }
     }
@@ -821,6 +830,16 @@ class RaysInShape extends BaseShape {
   draw(elapsed, deltaTime) {
     deltaTime *= this.speedMultiplier / 100;
 
+    if (this.doesWave) {
+      const vertRate = this.speedVertRate /100;
+      const horrRate = this.speedHorrRate /100;
+      this.speedVert = Math.sin(elapsed / 10 * vertRate) * 100 + 100;
+      this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 100 + 100;
+      updateControlInput(this.speedVert, "speedVert");
+      updateControlInput(this.speedHorr, "speedHorr");
+      console.log(this.controls)
+    }
+
     // Define the box boundaries
     const boxLeft = centerX - this.boxSize / 2;
     const boxRight = centerX + this.boxSize / 2;
@@ -828,10 +847,12 @@ class RaysInShape extends BaseShape {
     const boxBottom = centerY + this.boxSize / 2;
 
     // Draw the box boundary for visualization
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(boxLeft, boxTop, this.boxSize, this.boxSize);
-
+    if (this.boxVisible) {
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(boxLeft, boxTop, this.boxSize, this.boxSize);
+    }
+    ctx.lineWidth = this.lineWidth;
     // Process ray movements and collisions
     for (let j = 0; j < this.rayObjects.length; j++) {
       const ray = this.rayObjects[j];
@@ -945,7 +966,7 @@ class RaysInShape extends BaseShape {
       }
 
       // Draw the trail
-      ctx.lineWidth = 3;
+
 
       // Draw all segments of the trail
       for (let i = 1; i < ray.positions.length; i++) {
@@ -963,7 +984,9 @@ class RaysInShape extends BaseShape {
         if (curr.collision) {
           ctx.strokeStyle = `rgba(255, 255, 0, ${alpha})`;
         } else {
-          ctx.strokeStyle = `rgba(50, 50, 50, ${alpha})`;  // Changed from pink to gray
+          const col = hexToRgb(this.colourContained);
+          ctx.strokeStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${alpha})`;
+          // ctx.strokeStyle = `rgba(50, 50, 50, ${alpha})`;  // Changed from pink to gray
         }
 
         ctx.stroke();

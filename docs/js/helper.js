@@ -101,16 +101,48 @@ async function fetchConfig(className) {
     ],
     RaysInShape: [
       { type: "range", min: 50, max: 1000, defaultValue: 300, property: "rays" },
-      { type: "range", min: 1, max: 1000, defaultValue: 2, property: "speed" },
+      { type: "range", min: 1, max: 30, defaultValue: 2, property: "speed" },
+      { type: "checkbox", defaultValue: true, property: "doesWave" },
+      { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVertRate" },
+      { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedHorrRate" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVert" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedHorr" },
       { type: "range", min: 10, max: 2000, defaultValue: 800, property: "boxSize" },
-      { type: "range", min: 10, max: 200, defaultValue: 50, property: "trailLength" },
+      { type: "range", min: 1, max: 200, defaultValue: 20, property: "trailLength" },
+      { type: "range", min: 1, max: 500, defaultValue: 5, property: "lineWidth" },
+      { type: "color", defaultValue: "#43dbad", property: "colourFree" },
+      { type: "color", defaultValue: "#f05c79", property: "colourContained" },
+      { type: "header", text: "--CollisionBox---" },
+      { type: "checkbox", defaultValue: false, property: "boxVisible" },
+      // {
+      //   type: "dropdown",
+      //   property: "exampleDropdown",
+      //   defaultValue: "",
+      //   options: [
+      //     { value: "", label: "None" },
+      //     { value: "field_white", label: "Field Whtie" },
+      //   ]
+      // },
+      // {
+      //   type: "button",
+      //   label: "Apply Background",
+      //   method: "applyBackground"
+      // }
+      // {
+      //   type: "range",
+      //   min: 1,
+      //   max: 10,
+      //   defaultValue: 5,
+      //   property: "magnitude",
+      //   callback: (instance, newValue) => instance.setMagnitude(newValue)
+      // },
 
     ],
   };
   return config[className];
 }
+
+
 
 function addControl(item, instance) {
   let parentDiv = document.getElementById("custom");
@@ -124,6 +156,7 @@ function addControl(item, instance) {
   if (item.type === "range") {
     control = document.createElement("input");
     control.type = "range";
+    control.id = "el" + item.property;
     control.min = item.min;
     control.max = item.max;
     control.value = item.defaultValue;
@@ -176,12 +209,24 @@ function addControl(item, instance) {
       instance[item.property] = newValue;
       title.innerText = item.property + ": " + newValue;
     })
-
+  }
+  else if (item.type === "checkbox") {
+    control = document.createElement("input");
+    control.type = item.type;
+    control.checked = item.defaultValue;
+    instance[item.property] = item.defaultValue;
+    control.id = "el" + item.property;
+    // control.height = "20px";
+    control.addEventListener("change", (event) => {
+      const newValue = event.target.checked;
+      instance[item.property] = newValue;
+      title.innerText = item.property + ": " + newValue;
+    })
   }
 
   if (item.type != "header") {
     control.className = "control";
-    control.id = "el" + item.property;
+    // control.id = "el" + item.property;
   }
 
   if (item.type != "button" && item.type != "header") {
@@ -191,6 +236,23 @@ function addControl(item, instance) {
 
   return { element: control };
 }
+
+function updateControlInput(value, controlName) {// Find and update the slider element
+  const elementSlider = document.querySelector('input[type="range"][id="el'+controlName+'"]');
+  if (elementSlider) {
+    // Update the slider value
+    elementSlider.value = value;
+
+    // Update the text display
+    const elementSliderText = document.getElementById('elTextspeedVert');
+    if (elementSliderText) {
+      elementSliderText.innerText = "speedVert: " + Math.round(this.speedVert);
+    }
+  }
+  console.log("Updated control input:", controlName, value);
+}
+
+
 
 function drawEyelid(width, x1, y1, colour) {
   x1 -= centerX;
@@ -331,6 +393,15 @@ function waveNormal(x, max) {
   return val
 }
 
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
 function LerpHex(a, b, amount) {
   var ah = parseInt(a.replace(/#/g, ""), 16),
     ar = ah >> 16,
@@ -404,17 +475,17 @@ function rotatePointTmp(x, y, centerXX, centerYY, rotation) {
   console.log(Math.cos(orgAngle - rad(rotation)) * d)
   console.log(d)
   // console.log(d)
-  let newPointX = Math.cos(orgAngle - rad(rotation+90)) * d + centerXX;
-  let newPointY = Math.sin(orgAngle - rad(rotation+90)) * d + centerYY;
+  let newPointX = Math.cos(orgAngle - rad(rotation + 90)) * d + centerXX;
+  let newPointY = Math.sin(orgAngle - rad(rotation + 90)) * d + centerYY;
   return [newPointX, newPointY]
 }
 
-function rotatePoint(x,y,rotation){
+function rotatePoint(x, y, rotation) {
   let nCos = Math.cos(rad(rotation))
   // console.log(nCos*(180/Math.PI))
   // console.log(rad(rotation))
   let nSin = Math.sin(rad(rotation))
-  let newX = x*nCos - y*nSin
-  let newY = y*nCos + x*nSin
-  return [newX,newY]
+  let newX = x * nCos - y * nSin
+  let newY = y * nCos + x * nSin
+  return [newX, newY]
 }
