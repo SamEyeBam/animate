@@ -677,7 +677,7 @@ class NewWave extends BaseShape {
 }
 
 class RaysInShape extends BaseShape {
-  constructor(rays, speed, doesWave,speedVertRate, speedHorrRate,speedVert, speedHorr, boxSize, trailLength = 50, lineWidth, colourFree, colourContained, boxVisible,) {
+  constructor(rays, speed, doesWave, speedVertRate, speedHorrRate, speedVert, speedHorr, boxSize, trailLength = 50, lineWidth, fade, colourFree, colourContained, boxVisible,) {
     super();
     this.rays = rays;
     this.speed = speed;
@@ -694,6 +694,7 @@ class RaysInShape extends BaseShape {
     this.colourContained = colourContained;
     this.speedHorrRate = speedHorrRate;
     this.speedVertRate = speedVertRate;
+    this.fade = fade;
   }
 
   initialise(config) { //is overide
@@ -813,7 +814,11 @@ class RaysInShape extends BaseShape {
         const curr = ray.positions[j];
 
         // Fade alpha (newer = brighter)
-        const alpha = (j / ray.positions.length) * 0.8 + 0.2;
+        let alpha = 1;
+        if (this.fade) {
+          alpha = (j / ray.positions.length) * 0.8 + 0.2;
+
+        }
 
         ctx.beginPath();
         ctx.moveTo(prev.x, prev.y);
@@ -831,10 +836,10 @@ class RaysInShape extends BaseShape {
     deltaTime *= this.speedMultiplier / 100;
 
     if (this.doesWave) {
-      const vertRate = this.speedVertRate /100;
-      const horrRate = this.speedHorrRate /100;
-      this.speedVert = Math.sin(elapsed / 10 * vertRate) * 100 + 100;
-      this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 100 + 100;
+      const vertRate = this.speedVertRate / 100;
+      const horrRate = this.speedHorrRate / 100;
+      this.speedVert = Math.sin(elapsed / 10 * vertRate) * 90 + 100;
+      this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 90 + 100;
       updateControlInput(this.speedVert, "speedVert");
       updateControlInput(this.speedHorr, "speedHorr");
       console.log(this.controls)
@@ -974,8 +979,10 @@ class RaysInShape extends BaseShape {
         const curr = ray.positions[i];
 
         // Fade color based on position in trail (newer = brighter)
-        const alpha = (i / ray.positions.length) * 0.8 + 0.2;
-
+        let alpha = 1;
+        if (this.fade) {
+          alpha = (i / ray.positions.length) * 0.8 + 0.2;
+        }
         ctx.beginPath();
         ctx.moveTo(prev.x, prev.y);
         ctx.lineTo(curr.x, curr.y);
