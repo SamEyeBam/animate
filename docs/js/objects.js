@@ -10,7 +10,7 @@ class BaseShape {
       this.controls.push({ element, listener });
     }
 
-    const { element, listener } = addControl({ type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier", }, this);
+    const { element, listener } = addControl({ type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier" }, this);
     this.controls.push({ element, listener });
   }
 
@@ -18,11 +18,14 @@ class BaseShape {
     this.controls.forEach(({ element, listener }) => {
       if (element && listener) {
         element.removeEventListener("input", listener);
+        element.removeEventListener("click", listener);
       }
       if (element && element.parentElement) {
         element.parentElement.removeChild(element);
         const titleElement = document.getElementById("elText" + element.id.slice(2));
-        titleElement.parentElement.removeChild(titleElement);
+        if (titleElement) {
+          titleElement.parentElement.removeChild(titleElement);
+        }
       }
     });
     this.controls = [];
@@ -672,3 +675,302 @@ class NewWave extends BaseShape {
   }
 }
 
+class RaysInShape extends BaseShape {
+  constructor(rays, speed, speedVert, speedHorr, boxSize, trailLength = 50) {
+    super();
+    this.rays = rays;
+    this.speed = speed;
+    this.speedVert = speedVert;
+    this.speedHorr = speedHorr;
+    this.boxSize = boxSize;
+    this.trailLength = trailLength;
+    this.rayObjects = [];
+    this.centerRays = []; // New array for rays heading to center
+  }
+
+  initialise(config) {
+    for (let item of config) {
+      const { element, listener } = addControl(item, this);
+      this.controls.push({ element, listener });
+    }
+
+    // Add controls for speed multiplier and trail length
+    const { element: speedElement, listener: speedListener } = addControl({
+      type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier"
+    }, this);
+    this.controls.push({ element: speedElement, listener: speedListener });
+
+    const { element: trailElement, listener: trailListener } = addControl({
+      type: "range", min: 5, max: 200, defaultValue: this.trailLength, property: "trailLength"
+    }, this);
+    this.controls.push({ element: trailElement, listener: trailListener });
+
+    // Prepare rayObjects for the first draw
+    this.prepareRayObjects();
+  }
+
+  prepareRayObjects() {
+    this.rayObjects = [];
+    for (let i = 0; i < this.rays; i++) {
+      const angle = (360 / this.rays) * i;
+      this.rayObjects.push({
+        angle: angle,
+        lastX: centerX,
+        lastY: centerY,
+        positions: [{ x: centerX, y: centerY, angle: angle }]
+      });
+    }
+    this.centerRays = []; // Initialize centerRays array
+  }
+
+  createCenterRay(x, y) {
+    // Calculate angle towards center
+    const dx = centerX - x;
+    const dy = centerY - y;
+    const angleToCenter = Math.atan2(dy, dx) * 180 / Math.PI;
+
+    // Create new center-bound ray
+    this.centerRays.push({
+      positions: [{ x: x, y: y }],
+      angle: angleToCenter,
+      reachedCenter: false
+    });
+  }
+
+  updateCenterRays(deltaTime) {
+    const centerThreshold = 5; // Distance threshold to consider "reached center"
+    const maxDistance = 2000;
+
+    // Process each center-bound ray
+    for (let i = 0; i < this.centerRays.length; i++) {
+      const ray = this.centerRays[i];
+
+      // Skip rays that have reached the center
+      if (ray.reachedCenter) {
+        // Remove the oldest position from the trail
+        if (ray.positions.length > 0) {
+          ray.positions.shift();
+        }
+
+        // Remove ray if trail is empty
+        if (ray.positions.length <= 1) {
+          this.centerRays.splice(i, 1);
+          i--;
+          continue;
+        }
+      } else {
+        // Get current position
+        const currentPos = ray.positions[ray.positions.length - 1];
+
+        // Calculate new position
+        const dx = (this.speedHorr / 100) * this.speed * Math.cos(rad(ray.angle));
+        const dy = (this.speedVert / 100) * this.speed * Math.sin(rad(ray.angle));
+        const newX = currentPos.x + dx;
+        const newY = currentPos.y + dy;
+
+        // Check if ray has gone too far from origin
+        const distFromOrigin = Math.sqrt(
+          Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2)
+        );
+
+        // Remove rays that have gone too far
+        if (distFromOrigin > maxDistance) {
+          this.centerRays.splice(i, 1);
+          i--;
+          continue;
+        }
+
+        // Add new position to ray
+        ray.positions.push({ x: newX, y: newY });
+
+        // Check if ray has reached center
+        const distToCenter = Math.sqrt(
+          Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2)
+        );
+
+        if (distToCenter <= centerThreshold) {
+          ray.reachedCenter = true;
+        }
+
+        // Remove positions beyond trail length
+        while (ray.positions.length > this.trailLength) {
+          ray.positions.shift();
+        }
+      }
+
+      // Draw all segments of the trail
+      ctx.lineWidth = 3;
+      for (let j = 1; j < ray.positions.length; j++) {
+        const prev = ray.positions[j - 1];
+        const curr = ray.positions[j];
+
+        // Fade color based on position in trail (newer = brighter)
+        const alpha = (j / ray.positions.length) * 0.8 + 0.2;
+
+        ctx.beginPath();
+        ctx.moveTo(prev.x, prev.y);
+        ctx.lineTo(curr.x, curr.y);
+
+        // Center-bound rays are pink
+        ctx.strokeStyle = `rgba(255, 51, 170, ${alpha})`;
+        ctx.stroke();
+      }
+    }
+  }
+
+  draw(elapsed, deltaTime) {
+    deltaTime *= this.speedMultiplier / 100;
+
+    // Define the box boundaries
+    const boxLeft = centerX - this.boxSize / 2;
+    const boxRight = centerX + this.boxSize / 2;
+    const boxTop = centerY - this.boxSize / 2;
+    const boxBottom = centerY + this.boxSize / 2;
+
+    // Draw the box boundary for visualization
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(boxLeft, boxTop, this.boxSize, this.boxSize);
+
+    // Process ray movements and collisions
+    for (let j = 0; j < this.rayObjects.length; j++) {
+      const ray = this.rayObjects[j];
+
+      // Get current position
+      const currentPos = ray.positions[ray.positions.length - 1];
+
+      // Calculate potential new position
+      let dx = (this.speedHorr / 100) * this.speed * Math.cos(rad(ray.angle));
+      let dy = (this.speedVert / 100) * this.speed * Math.sin(rad(ray.angle));
+      let newX = currentPos.x + dx;
+      let newY = currentPos.y + dy;
+      let collisionType = null;
+      const oldAngle = ray.angle;
+
+      // Check for horizontal collision
+      if (newX < boxLeft || newX > boxRight) {
+        // Calculate exact collision point with horizontal wall
+        const collisionX = newX < boxLeft ? boxLeft : boxRight;
+        const collisionRatio = (collisionX - currentPos.x) / dx;
+        const collisionY = currentPos.y + dy * collisionRatio;
+
+        // Add collision point to positions array
+        ray.positions.push({
+          x: collisionX,
+          y: collisionY,
+          angle: oldAngle,
+          collision: 'horizontal'
+        });
+
+        // Create a center-bound ray at the collision point
+        this.createCenterRay(collisionX, collisionY);
+
+        // Reflect horizontally
+        ray.angle = 180 - ray.angle;
+        // Normalize angle
+        ray.angle = ((ray.angle % 360) + 360) % 360;
+
+        // Calculate remaining movement after collision
+        const remainingRatio = 1 - collisionRatio;
+        dx = remainingRatio * (this.speedHorr / 100) * this.speed * Math.cos(rad(ray.angle));
+        dy = remainingRatio * (this.speedVert / 100) * this.speed * Math.sin(rad(ray.angle));
+        newX = collisionX + dx;
+        newY = collisionY + dy;
+        collisionType = 'horizontal';
+      }
+
+      // Check for vertical collision
+      if (newY < boxTop || newY > boxBottom) {
+        if (collisionType === null) {
+          // Calculate exact collision point with vertical wall
+          const collisionY = newY < boxTop ? boxTop : boxBottom;
+          const collisionRatio = (collisionY - currentPos.y) / dy;
+          const collisionX = currentPos.x + dx * collisionRatio;
+
+          // Add collision point to positions array
+          ray.positions.push({
+            x: collisionX,
+            y: collisionY,
+            angle: oldAngle,
+            collision: 'vertical'
+          });
+
+          // Create a center-bound ray at the collision point
+          this.createCenterRay(collisionX, collisionY);
+
+          // Reflect vertically
+          ray.angle = 360 - ray.angle;
+          // Normalize angle
+          ray.angle = ((ray.angle % 360) + 360) % 360;
+
+          // Calculate remaining movement after collision
+          const remainingRatio = 1 - collisionRatio;
+          dx = remainingRatio * (this.speedHorr / 100) * this.speed * Math.cos(rad(ray.angle));
+          dy = remainingRatio * (this.speedVert / 100) * this.speed * Math.sin(rad(ray.angle));
+          newX = collisionX + dx;
+          newY = collisionY + dy;
+        } else {
+          // Second collision in the same frame (corner case)
+          // Simply ensure we stay inside the box
+          newX = Math.max(boxLeft, Math.min(newX, boxRight));
+          newY = Math.max(boxTop, Math.min(newY, boxBottom));
+          ray.positions.push({
+            x: newX,
+            y: newY,
+            angle: ray.angle,
+            collision: 'corner'
+          });
+
+          // Create a center-bound ray at the collision point (corner)
+          this.createCenterRay(newX, newY);
+        }
+      }
+
+      // Ensure rays stay inside the box
+      newX = Math.max(boxLeft, Math.min(newX, boxRight));
+      newY = Math.max(boxTop, Math.min(newY, boxBottom));
+
+      // Add new position to history if there was no collision yet
+      if (collisionType === null) {
+        ray.positions.push({
+          x: newX,
+          y: newY,
+          angle: ray.angle
+        });
+      }
+
+      // Limit positions array to trail length
+      while (ray.positions.length > this.trailLength) {
+        ray.positions.shift();
+      }
+
+      // Draw the trail
+      ctx.lineWidth = 3;
+
+      // Draw all segments of the trail
+      for (let i = 1; i < ray.positions.length; i++) {
+        const prev = ray.positions[i - 1];
+        const curr = ray.positions[i];
+
+        // Fade color based on position in trail (newer = brighter)
+        const alpha = (i / ray.positions.length) * 0.8 + 0.2;
+
+        ctx.beginPath();
+        ctx.moveTo(prev.x, prev.y);
+        ctx.lineTo(curr.x, curr.y);
+
+        // Highlight collision points with different color
+        if (curr.collision) {
+          ctx.strokeStyle = `rgba(255, 255, 0, ${alpha})`;
+        } else {
+          ctx.strokeStyle = `rgba(50, 50, 50, ${alpha})`;  // Changed from pink to gray
+        }
+
+        ctx.stroke();
+      }
+    }
+
+    // Update and draw center-bound rays
+    this.updateCenterRays(deltaTime);
+  }
+}

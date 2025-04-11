@@ -12,13 +12,16 @@ let targetFps = 60;
 let frameDuration = 1000 / targetFps;
 
 let rotation = 0; //was = j = angle
-let paused = true;
+let paused = false;
+let elapsedTime = 0;
+let lastTimestamp = 0;
 render_clear();
 
 let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
     NewWave: NewWave,
+    RaysInShape: RaysInShape,
     PolyTwistColourWidth: PolyTwistColourWidth,
     FloralPhyllo: FloralPhyllo,
     Spiral1: Spiral1,
@@ -65,15 +68,31 @@ updateDrawObj();
 
 function render() {
   setTimeout(() => {
-    requestAnimationFrame(() => {
-      render_clear();
-      if (drawObj) {
-        drawObj.draw(rotation);
-      }
-
+    requestAnimationFrame((timestamp) => {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = timestamp - lastTimestamp;
+      const adjustedElapsed = elapsedTime / 100; // Convert to seconds
+      lastTimestamp = timestamp;
+      let adjustedDeltaTime;
       if (!paused) {
         rotation += deg_per_sec / targetFps;
+        elapsedTime += deltaTime;
+        adjustedDeltaTime = deltaTime / 100; // Convert to seconds
+        // console.log(adjustedDeltaTime)
       }
+      // console.log(deltaTime)
+      // console.log(elapsedTime)
+      render_clear();
+      if (drawObj) {
+        // drawObj.draw(rotation);
+
+        drawObj.draw(adjustedElapsed, adjustedDeltaTime);
+
+      }
+
+      ctx.font = "48px serif";
+      ctx.fillStyle = "white"
+      ctx.fillText(Math.floor(elapsedTime) + "ms", centerX - 100, centerY + 400);
       // drawCenter(300)
     });
     render();

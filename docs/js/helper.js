@@ -99,44 +99,97 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 10, defaultValue: 4, property: "lineWidth" },
       { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
     ],
+    RaysInShape: [
+      { type: "range", min: 50, max: 1000, defaultValue: 300, property: "rays" },
+      { type: "range", min: 1, max: 1000, defaultValue: 2, property: "speed" },
+      { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVert" },
+      { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedHorr" },
+      { type: "range", min: 10, max: 2000, defaultValue: 800, property: "boxSize" },
+      { type: "range", min: 10, max: 200, defaultValue: 50, property: "trailLength" },
+
+    ],
   };
   return config[className];
 }
 
 function addControl(item, instance) {
-  // console.log(item);
   let parentDiv = document.getElementById("custom");
 
   let title = document.createElement("p");
   title.innerText = item.property + ": " + item.defaultValue;
   title.id = "elText" + item.property;
 
-  let control = document.createElement("input");
-  control.type = item.type;
+  let control;
 
   if (item.type === "range") {
+    control = document.createElement("input");
+    control.type = "range";
     control.min = item.min;
     control.max = item.max;
+    control.value = item.defaultValue;
+    control.addEventListener("input", (event) => {
+      const newValue = parseInt(event.target.value, 10);
+      instance[item.property] = newValue;
+      title.innerText = item.property + ": " + newValue;
+
+      if (item.callback) {
+        item.callback(instance, newValue);
+      }
+    });
+  } else if (item.type === "button") {
+    control = document.createElement("button");
+    control.innerText = item.label;
+    control.addEventListener("click", () => {
+      instance[item.method]();
+    });
+  } else if (item.type === "dropdown") {
+    control = document.createElement("select");
+    item.options.forEach(option => {
+      let optionElement = document.createElement("option");
+      optionElement.value = option.value;
+      optionElement.innerText = option.label;
+      control.appendChild(optionElement);
+    });
+    control.value = item.defaultValue;
+    control.addEventListener("change", (event) => {
+      const newValue = event.target.value;
+      instance[item.property] = newValue;
+      title.innerText = item.property + ": " + newValue;
+
+      if (item.callback) {
+        item.callback(instance, newValue);
+      }
+    });
+  } else if (item.type === "header") {
+    control = document.createElement("p");
+    control.innerText = item.text;
+    control.className = "header";
+    control.id = "elHeader" + item.text.replace(/\s+/g, '');
+  }
+  else if (item.type === "color") {
+    control = document.createElement("input");
+    control.type = item.type;
+    control.value = item.defaultValue;
+    control.id = "el" + item.property;
+    control.addEventListener("input", (event) => {
+      const newValue = event.target.value;
+      instance[item.property] = newValue;
+      title.innerText = item.property + ": " + newValue;
+    })
+
   }
 
-  control.value = item.defaultValue;
-  control.className = "control";
-  control.id = "el" + item.property;
+  if (item.type != "header") {
+    control.className = "control";
+    control.id = "el" + item.property;
+  }
 
-  const listener = (event) => {
-    const newValue = event.target.value;
-    instance[item.property] =
-      item.type === "range" ? parseInt(newValue, 10) : newValue;
-
-    title.innerText = item.property + ": " + newValue;
-  };
-
-  control.addEventListener("input", listener);
-
-  parentDiv.appendChild(title);
+  if (item.type != "button" && item.type != "header") {
+    parentDiv.appendChild(title);
+  }
   parentDiv.appendChild(control);
 
-  return { element: control, listener };
+  return { element: control };
 }
 
 function drawEyelid(width, x1, y1, colour) {
