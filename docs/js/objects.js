@@ -21,6 +21,9 @@ class BaseShape {
         element.removeEventListener("click", listener);
         element.removeEventListener("change", listener);
       }
+      else {
+        console.log("Element or listener not found for removal:", element, listener);
+      }
       if (element && element.parentElement) {
         element.parentElement.removeChild(element);
         const titleElement = document.getElementById("elText" + element.id.slice(2));
@@ -701,6 +704,7 @@ class RaysInShape extends BaseShape {
     for (let item of config) {
       const { element, listener } = addControl(item, this);
       this.controls.push({ element, listener });
+
     }
 
     // Add controls for speed multiplier and trail length
@@ -832,6 +836,11 @@ class RaysInShape extends BaseShape {
     }
   }
 
+  setRays(newValue) {
+    this.rays = newValue;
+    this.prepareRayObjects(); // Reinitialize rayObjects with the new number of rays
+  }
+
   draw(elapsed, deltaTime) {
     deltaTime *= this.speedMultiplier / 100;
 
@@ -842,7 +851,6 @@ class RaysInShape extends BaseShape {
       this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 85 + 100;
       updateControlInput(this.speedVert, "speedVert");
       updateControlInput(this.speedHorr, "speedHorr");
-      console.log(this.controls)
     }
 
     // Define the box boundaries

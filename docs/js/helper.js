@@ -100,7 +100,7 @@ async function fetchConfig(className) {
       { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
     ],
     RaysInShape: [
-      { type: "range", min: 50, max: 1000, defaultValue: 6, property: "rays" },
+      { type: "range", min: 50, max: 1000, defaultValue: 500, property: "rays", callback: (instance, newValue) => instance.setRays(newValue) },
       { type: "range", min: 1, max: 30, defaultValue: 2, property: "speed" },
       { type: "checkbox", defaultValue: true, property: "doesWave" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVertRate" },
@@ -108,7 +108,7 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVert" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedHorr" },
       { type: "range", min: 10, max: 2000, defaultValue: 800, property: "boxSize" },
-      { type: "range", min: 1, max: 800, defaultValue: 20, property: "trailLength" },
+      { type: "range", min: 1, max: 80, defaultValue: 5, property: "trailLength" },
       { type: "range", min: 1, max: 500, defaultValue: 5, property: "lineWidth" },
       { type: "checkbox", defaultValue: false, property: "fade" },
       { type: "color", defaultValue: "#43dbad", property: "colourFree" },
@@ -153,6 +153,7 @@ function addControl(item, instance) {
   title.id = "elText" + item.property;
 
   let control;
+  let eventListener = null;
 
   if (item.type === "range") {
     control = document.createElement("input");
@@ -161,7 +162,8 @@ function addControl(item, instance) {
     control.min = item.min;
     control.max = item.max;
     control.value = item.defaultValue;
-    control.addEventListener("input", (event) => {
+
+    eventListener = (event) => {
       const newValue = parseInt(event.target.value, 10);
       instance[item.property] = newValue;
       title.innerText = item.property + ": " + newValue;
@@ -169,7 +171,9 @@ function addControl(item, instance) {
       if (item.callback) {
         item.callback(instance, newValue);
       }
-    });
+    };
+    control.addEventListener("input", eventListener);
+
   } else if (item.type === "button") {
     control = document.createElement("button");
     control.innerText = item.label;
@@ -205,11 +209,14 @@ function addControl(item, instance) {
     control.type = item.type;
     control.value = item.defaultValue;
     control.id = "el" + item.property;
-    control.addEventListener("input", (event) => {
+
+    eventListener = (event) => {
       const newValue = event.target.value;
       instance[item.property] = newValue;
       title.innerText = item.property + ": " + newValue;
-    })
+    };
+
+    control.addEventListener("input", eventListener);
   }
   else if (item.type === "checkbox") {
     control = document.createElement("input");
@@ -235,11 +242,11 @@ function addControl(item, instance) {
   }
   parentDiv.appendChild(control);
 
-  return { element: control };
+  return { element: control, listener: eventListener };
 }
 
 function updateControlInput(value, controlName) {// Find and update the slider element
-  const elementSlider = document.querySelector('input[type="range"][id="el'+controlName+'"]');
+  const elementSlider = document.querySelector('input[type="range"][id="el' + controlName + '"]');
   if (elementSlider) {
     // Update the slider value
     elementSlider.value = value;
@@ -250,7 +257,6 @@ function updateControlInput(value, controlName) {// Find and update the slider e
       elementSliderText.innerText = `${controlName}: ${Math.round(value)}`;
     }
   }
-  console.log("Updated control input:", controlName, value);
 }
 
 
