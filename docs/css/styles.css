@@ -1,3 +1,6 @@
+:root {
+  color-scheme: dark;
+}
 body {
   -webkit-box-sizing: border-box;
   /* Safari/Chrome, other WebKit */
@@ -25,7 +28,14 @@ canvas {
   padding: 0px 20px 0px 20px;
   width: 500px;
   height: 100vh;
-  background-color: rgb(189, 189, 189);
+  background-color: rgba(32, 32, 32, 0.616);
+  overflow-y: scroll;
+}
+@media screen and (max-width: 768px) {
+  #toolbar {
+    width: 100%; /* Full width on mobile */
+    padding: 0px 10px; /* Slightly reduced padding for mobile */
+  }
 }
 
 #custom {
@@ -37,7 +47,22 @@ canvas {
   padding: 0px 20px 0px 20px;
   /* width: 500px; */
   /* height: 100vh; */
-  background-color: rgb(189, 189, 189);
+  /* background-color: rgba(32, 32, 32, 0.616); */
+}
+
+#custom p{
+  color: #e0e0e0;
+  font-family: Roboto, system-ui;
+}
+#toolbar p{
+  color: #e0e0e0;
+  font-family: Roboto, system-ui;
+}
+
+.header {
+  text-align: center;
+  font-weight: bold;
+  padding: 12px 0px 0px 2px;
 }
 
 .button {

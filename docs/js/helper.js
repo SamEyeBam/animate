@@ -100,7 +100,7 @@ async function fetchConfig(className) {
       { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
     ],
     RaysInShape: [
-      { type: "range", min: 50, max: 1000, defaultValue: 300, property: "rays" },
+      { type: "range", min: 50, max: 1000, defaultValue: 6, property: "rays" },
       { type: "range", min: 1, max: 30, defaultValue: 2, property: "speed" },
       { type: "checkbox", defaultValue: true, property: "doesWave" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVertRate" },
@@ -108,7 +108,7 @@ async function fetchConfig(className) {
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedVert" },
       { type: "range", min: 1, max: 200, defaultValue: 100, property: "speedHorr" },
       { type: "range", min: 10, max: 2000, defaultValue: 800, property: "boxSize" },
-      { type: "range", min: 1, max: 60, defaultValue: 20, property: "trailLength" },
+      { type: "range", min: 1, max: 800, defaultValue: 20, property: "trailLength" },
       { type: "range", min: 1, max: 500, defaultValue: 5, property: "lineWidth" },
       { type: "checkbox", defaultValue: false, property: "fade" },
       { type: "color", defaultValue: "#43dbad", property: "colourFree" },
@@ -245,9 +245,9 @@ function updateControlInput(value, controlName) {// Find and update the slider e
     elementSlider.value = value;
 
     // Update the text display
-    const elementSliderText = document.getElementById('elTextspeedVert');
+    const elementSliderText = document.getElementById(`elText${controlName}`);
     if (elementSliderText) {
-      elementSliderText.innerText = "speedVert: " + Math.round(this.speedVert);
+      elementSliderText.innerText = `${controlName}: ${Math.round(value)}`;
     }
   }
   console.log("Updated control input:", controlName, value);
@@ -483,8 +483,6 @@ function rotatePointTmp(x, y, centerXX, centerYY, rotation) {
 
 function rotatePoint(x, y, rotation) {
   let nCos = Math.cos(rad(rotation))
-  // console.log(nCos*(180/Math.PI))
-  // console.log(rad(rotation))
   let nSin = Math.sin(rad(rotation))
   let newX = x * nCos - y * nSin
   let newY = y * nCos + x * nSin

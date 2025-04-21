@@ -838,8 +838,8 @@ class RaysInShape extends BaseShape {
     if (this.doesWave) {
       const vertRate = this.speedVertRate / 100;
       const horrRate = this.speedHorrRate / 100;
-      this.speedVert = Math.sin(elapsed / 10 * vertRate) * 90 + 100;
-      this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 90 + 100;
+      this.speedVert = Math.sin(elapsed / 10 * vertRate) * 85 + 100;
+      this.speedHorr = Math.sin(elapsed / 10 * horrRate) * 85 + 100;
       updateControlInput(this.speedVert, "speedVert");
       updateControlInput(this.speedHorr, "speedHorr");
       console.log(this.controls)

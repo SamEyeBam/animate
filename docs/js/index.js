@@ -3,8 +3,8 @@ let c = document.getElementById("myCanvas");
 let ctx = c.getContext("2d");
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-centerX = ctx.canvas.width / 2;
-centerY = ctx.canvas.height / 2;
+let centerX = ctx.canvas.width / 2;
+let centerY = ctx.canvas.height / 2;
 
 
 let deg_per_sec = 10;
@@ -28,11 +28,11 @@ function createInstance(className, args) {
     FloralAccident: FloralAccident,
     FloralPhyllo_Accident: FloralPhyllo_Accident,
     Nodal_expanding: Nodal_expanding,
-    Phyllotaxis:Phyllotaxis,
-    SquareTwist_angle:SquareTwist_angle,
-    EyePrototype:EyePrototype,
-    CircleExpand:CircleExpand,
-    MaryFace:MaryFace,
+    Phyllotaxis: Phyllotaxis,
+    SquareTwist_angle: SquareTwist_angle,
+    EyePrototype: EyePrototype,
+    CircleExpand: CircleExpand,
+    MaryFace: MaryFace,
     // Add more class constructors here as needed
   };
 
@@ -66,38 +66,36 @@ async function updateDrawObj() {
 
 updateDrawObj();
 
-function render() {
-  setTimeout(() => {
-    requestAnimationFrame((timestamp) => {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const deltaTime = timestamp - lastTimestamp;
-      const adjustedElapsed = elapsedTime / 100; // Convert to seconds
-      lastTimestamp = timestamp;
-      let adjustedDeltaTime;
-      if (!paused) {
-        rotation += deg_per_sec / targetFps;
-        elapsedTime += deltaTime;
-        adjustedDeltaTime = deltaTime / 100; // Convert to seconds
-        // console.log(adjustedDeltaTime)
-      }
-      // console.log(deltaTime)
-      // console.log(elapsedTime)
-      render_clear();
-      if (drawObj) {
-        // drawObj.draw(rotation);
+function render(timestamp) {
+  if (!lastTimestamp) lastTimestamp = timestamp;
+  const deltaTime = timestamp - lastTimestamp;
+  const adjustedElapsed = elapsedTime / 100; // Convert to seconds
+  lastTimestamp = timestamp;
+  let adjustedDeltaTime;
+  if (!paused) {
+    rotation += deg_per_sec / targetFps;
+    elapsedTime += deltaTime;
+    adjustedDeltaTime = deltaTime / 100; // Convert to seconds
+    // console.log(adjustedDeltaTime)
+  }
+  // console.log(deltaTime)
+  // console.log(elapsedTime)
+  render_clear();
+  if (drawObj) {
+    // drawObj.draw(rotation);
 
-        drawObj.draw(adjustedElapsed, adjustedDeltaTime);
+    drawObj.draw(adjustedElapsed, adjustedDeltaTime);
 
-      }
+  }
 
-      ctx.font = "48px serif";
-      ctx.fillStyle = "white"
-      ctx.fillText(Math.floor(elapsedTime) + "ms", centerX - 100, centerY + 400);
-      // drawCenter(300)
-    });
-    render();
-  }, frameDuration);
+  ctx.font = "48px serif";
+  ctx.fillStyle = "white"
+  ctx.fillText(Math.floor(elapsedTime) + "ms", centerX - 100, centerY + 400);
+  // drawCenter(300)
+
+  requestAnimationFrame(render);
 }
+
 
 document
   .getElementById("shape-selector")
@@ -106,7 +104,16 @@ document
 let toolbarShowing = true;
 document.addEventListener("keydown", toggleSettings);
 
-function manualToggleSettings(){
+// Add resize event listener
+window.addEventListener('resize', function () {
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+  centerX = ctx.canvas.width / 2;
+  centerY = ctx.canvas.height / 2;
+
+});
+
+function manualToggleSettings() {
   console.log("hi")
   toolbarShowing = !toolbarShowing;
   let tb = document.getElementById("toolbar");
@@ -149,11 +156,11 @@ function Reset() {
 }
 
 function ForwardFrame() {
-  rotation += deg_per_sec / fps; // was = j = innerRotation, now = rotation
+  rotation += deg_per_sec / targetFps; // was = j = innerRotation, now = rotation
   currentFrame += 1; // was = i
 }
 function BackwardFrame() {
-  rotation -= deg_per_sec / fps; // was = j = innerRotation, now = rotation
+  rotation -= deg_per_sec / targetFps; // was = j = innerRotation, now = rotation
   currentFrame -= 1; // was = i
 }
 
@@ -161,4 +168,4 @@ function ChangeDegPerSec(newValue) {
   deg_per_sec = newValue;
 }
 
-window.onload = render;
+window.onload = requestAnimationFrame(render);
