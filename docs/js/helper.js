@@ -92,6 +92,10 @@ async function fetchConfig(className) {
       { type: "range", min: -180, max: 180, defaultValue: 18, property: "rotate2" },
       { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
     ],
+    Countdown: [
+      { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
+      { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
+    ],
     NewWave: [
       { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
       { type: "range", min: 2, max: 40, defaultValue: 4, property: "sides" },
@@ -146,7 +150,7 @@ async function fetchConfig(className) {
 
 
 function addControl(item, instance) {
-  let parentDiv = document.getElementById("custom");
+  let parentDiv = document.getElementById("shape-controls");
 
   let title = document.createElement("p");
   title.innerText = item.property + ": " + item.defaultValue;
@@ -203,6 +207,9 @@ function addControl(item, instance) {
     control.innerText = item.text;
     control.className = "header";
     control.id = "elHeader" + item.text.replace(/\s+/g, '');
+    // Headers are handled differently - add directly to parent
+    parentDiv.appendChild(control);
+    return { element: control, listener: eventListener };
   }
   else if (item.type === "color") {
     control = document.createElement("input");
@@ -224,7 +231,6 @@ function addControl(item, instance) {
     control.checked = item.defaultValue;
     instance[item.property] = item.defaultValue;
     control.id = "el" + item.property;
-    // control.height = "20px";
     control.addEventListener("change", (event) => {
       const newValue = event.target.checked;
       instance[item.property] = newValue;
@@ -234,15 +240,128 @@ function addControl(item, instance) {
 
   if (item.type != "header") {
     control.className = "control";
-    // control.id = "el" + item.property;
   }
 
-  if (item.type != "button" && item.type != "header") {
-    parentDiv.appendChild(title);
-  }
-  parentDiv.appendChild(control);
+  // Create container div for the control
+  let containerDiv = document.createElement("div");
+  containerDiv.className = "control-container";
 
-  return { element: control, listener: eventListener };
+  // Add title and control to container
+  if (item.type != "button") {
+    containerDiv.appendChild(title);
+  }
+  containerDiv.appendChild(control);
+
+
+  let filtersDiv = document.createElement("div");
+
+  // if (item.type === "range") {
+  //   let addFilterButton = document.createElement("button");
+  //   addFilterButton.innerText = "Add Filter";
+  //   addFilterButton.className = "add-filter-button";
+  //   addFilterButton.addEventListener("click", () => {
+  //     const filterDiv = createFilter(item);
+  //     filtersDiv.appendChild(filterDiv);
+
+  //   });
+  //   filtersDiv.appendChild(addFilterButton);
+  // }
+
+  // Add filters div at the bottom
+  filtersDiv.className = "control-filters";
+  filtersDiv.id = "filters-" + item.property;
+  containerDiv.appendChild(filtersDiv);
+
+  // Add the complete container to parent
+  parentDiv.appendChild(containerDiv);
+
+  return { element: control, listener: eventListener, filtersDiv: filtersDiv };
+}
+
+function createFilter(item) {
+  const filterDiv = document.createElement("div");
+  filterDiv.className = "filter-div";
+  filterDiv.innerText = "sin filter"; // Placeholder text
+
+
+  let minTitle = document.createElement("p");
+  minTitle.innerText = "Min:" + item.defaultValue;
+  filterDiv.appendChild(minTitle);
+
+  let sinMin = document.createElement("input");
+  sinMin.type = "range";
+  sinMin.id = "el-filter-" + item.property;
+  sinMin.min = -item.max;//item.min;
+  sinMin.max = item.max;
+  sinMin.value = item.defaultValue;
+
+  eventListener = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    // instance[item.property] = newValue;
+    minTitle.innerText = "Min: " + newValue;
+
+    if (item.callback) {
+      item.callback(instance, newValue);
+    }
+  };
+
+  sinMin.addEventListener("input", eventListener);
+  filterDiv.appendChild(sinMin);
+
+  let maxTitle = document.createElement("p");
+  maxTitle.innerText = "Max:" + item.defaultValue;
+  filterDiv.appendChild(maxTitle);
+
+
+  let sinMax = document.createElement("input");
+  sinMax.type = "range";
+  sinMax.id = "el-filter-" + item.property;
+  sinMax.min = item.min;
+  sinMax.max = item.max;
+  sinMax.value = item.defaultValue;
+
+  eventListener = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    // instance[item.property] = newValue;
+    maxTitle.innerText = "Max: " + newValue;
+
+    if (item.callback) {
+      item.callback(instance, newValue);
+    }
+  };
+  sinMax.addEventListener("input", eventListener);
+  filterDiv.appendChild(sinMax);
+
+  let rate = createFilterSlider("Rate", item, filterDiv);
+
+  return { filterDiv, min: sinMin, max: sinMax, rate: rate};
+}
+
+function createFilterSlider(name, item, filterDiv) {
+  let minTitle = document.createElement("p");
+  minTitle.innerText = name + ":" + item.defaultValue;
+  filterDiv.appendChild(minTitle);
+
+  let sinMin = document.createElement("input");
+  sinMin.type = "range";
+  sinMin.id = "el-filter-" + item.property;
+  sinMin.min = item.min;
+  sinMin.max = item.max;
+  sinMin.value = item.defaultValue;
+
+  eventListener = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+    // instance[item.property] = newValue;
+    minTitle.innerText = name + ": " + newValue;
+
+    if (item.callback) {
+      item.callback(instance, newValue);
+    }
+  };
+
+  sinMin.addEventListener("input", eventListener);
+  filterDiv.appendChild(sinMin);
+  return sinMin;
 }
 
 function updateControlInput(value, controlName) {// Find and update the slider element

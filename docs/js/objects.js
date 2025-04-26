@@ -6,8 +6,39 @@ class BaseShape {
 
   initialise(config) {
     for (let item of config) {
-      const { element, listener } = addControl(item, this);
-      this.controls.push({ element, listener });
+      const { element, listener, filtersDiv } = addControl(item, this);
+      this.controls.push({ element, listener, });
+
+      if (item.type === "range" && item.property !== "rays") {
+        // Initialize rangeFilter array for this control
+        const controlIndex = this.controls.length - 1;
+        this.controls[controlIndex].rangeFilters = [];
+
+        let addFilterButton = document.createElement("button");
+        addFilterButton.innerText = "Add Filter";
+        addFilterButton.className = "add-filter-button";
+
+        // Store the control index in the click handler closure
+        addFilterButton.addEventListener("click", () => {
+          const { filterDiv, eventListener, min, max, rate } = createFilter(item);
+          filtersDiv.appendChild(filterDiv);
+
+          // Use the stored control index
+          if (this.controls[controlIndex] && this.controls[controlIndex].rangeFilters) {
+            this.controls[controlIndex].rangeFilters.push({
+              element: filterDiv,
+              listener: eventListener,
+              min: min,
+              max: max,
+              rate: rate,
+            });
+          } else {
+            console.error("Control or rangeFilters not found for index:", controlIndex);
+          }
+        });
+
+        filtersDiv.appendChild(addFilterButton);
+      }
     }
 
     const { element, listener } = addControl({ type: "range", min: 1, max: 500, defaultValue: 100, property: "speedMultiplier" }, this);
@@ -24,15 +55,55 @@ class BaseShape {
       else {
         console.log("Element or listener not found for removal:", element, listener);
       }
-      if (element && element.parentElement) {
-        element.parentElement.removeChild(element);
-        const titleElement = document.getElementById("elText" + element.id.slice(2));
-        if (titleElement) {
-          titleElement.parentElement.removeChild(titleElement);
+
+      // Find and remove the container div instead of individual elements
+      if (element && element.id) {
+        // Handle header elements which don't have container
+        if (element.className === "header") {
+          if (element.parentElement) {
+            element.parentElement.removeChild(element);
+          }
+        } else {
+          // For regular controls, find and remove the container
+          const containerDiv = element.closest(".control-container");
+          if (containerDiv && containerDiv.parentElement) {
+            containerDiv.parentElement.removeChild(containerDiv);
+          }
         }
       }
     });
     this.controls = [];
+  }
+
+  updateFilters(elapsed) {
+    for (let i = 0; i < this.controls.length; i++) {
+      const control = this.controls[i];
+
+      if (control.rangeFilters?.length > 0) {
+        let newValue = 0;
+        for (let j = 0; j < control.rangeFilters.length; j++) {
+          const filter = control.rangeFilters[j];
+          // const value = parseFloat(filter.element.value);
+          const min = parseFloat(filter.min.value);
+          const max = parseFloat(filter.max.value);
+          const rate = parseFloat(filter.rate.value);
+
+          const halfRange = (max - min) / 2;
+          const filterValue = min + halfRange + Math.sin(elapsed * (1 / rate)) * halfRange; // Calculate the new value based on the range
+
+          if (filterValue >= min && filterValue <= max) {
+            // console.log(newValue, min, max)
+            newValue += filterValue;
+            console.log("New Value:", newValue, filterValue, min, max);
+          }
+        }
+
+        control.element.value = newValue;
+        const event = new Event('input', { bubbles: true });
+        control.element.dispatchEvent(event);
+
+      }
+    }
   }
 
   draw() {
@@ -653,6 +724,7 @@ class NewWave extends BaseShape {
 
   draw(rotation) {
     rotation *= this.speedMultiplier / 400
+    this.updateFilters(rotation);
     ctx.lineWidth = this.lineWidth
     for (let j = 0; j < this.sides; j++) {
       const radRotation = rad(360 / this.sides * j)
@@ -679,6 +751,60 @@ class NewWave extends BaseShape {
   }
 }
 
+class Countdown extends BaseShape {
+  constructor() {
+    super();
+    this.width;
+    this.sides;
+  }
+
+  secondsUntilDate(targetDate) {
+    const now = new Date();
+    const target = new Date(targetDate);
+    const difference = target.getTime() - now.getTime();
+    return Math.round(difference / 1000);
+  }
+
+  drawProgressBar(progress, barWidth) {
+    const colourBackground = "#0c2f69";
+    const colourProgress = "#4287f5";
+    // const barWidth = 400;
+    const barHeight = 60;
+    const barX = centerX - barWidth / 2;
+    const barY = centerY + 350 - barHeight / 2;
+
+    ctx.fillStyle = colourBackground;
+    ctx.beginPath();
+    ctx.rect(barX, barY, barWidth, 60) 
+    ctx.fill();
+
+    ctx.fillStyle = colourProgress;
+    ctx.beginPath();
+    ctx.rect(barX, barY, (barWidth/100)*progress, 60) 
+    ctx.fill();
+  }
+
+  draw(elapsedTime) {
+    // elapsedTime *= this.speedMultiplier / 400
+
+    ctx.font = "48px serif";
+    ctx.fillStyle = "white"
+    const futureDate = '2025-05-31T08:20:00';
+    const seconds = this.secondsUntilDate(futureDate);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const percentRounded = (((elapsedTime / 1000) / seconds) * 100 ).toFixed(8);
+    ctx.fillText(seconds + " Seconds", centerX - 100, centerY);
+    ctx.fillText(minutes + " Minues", centerX - 100, centerY + 100);
+    ctx.fillText(hours + " Hours", centerX - 100, centerY + 200);
+    ctx.fillText(percentRounded + "% Closer", centerX - 100, centerY + 300);
+    
+    // ctx.fillText(percentRounded + "% Closer", centerX - 100, centerY + 300);
+    // this.drawProgressBar(percentRounded,400);
+    this.drawProgressBar(percentRounded,1000);
+  }
+}
+
 class RaysInShape extends BaseShape {
   constructor(rays, speed, doesWave, speedVertRate, speedHorrRate, speedVert, speedHorr, boxSize, trailLength = 50, lineWidth, fade, colourFree, colourContained, boxVisible,) {
     super();
@@ -702,9 +828,39 @@ class RaysInShape extends BaseShape {
 
   initialise(config) { //is overide
     for (let item of config) {
-      const { element, listener } = addControl(item, this);
-      this.controls.push({ element, listener });
+      const { element, listener, filtersDiv } = addControl(item, this);
+      this.controls.push({ element, listener, });
 
+      if (item.type === "range" && item.property !== "rays") {
+        // Initialize rangeFilter array for this control
+        const controlIndex = this.controls.length - 1;
+        this.controls[controlIndex].rangeFilters = [];
+
+        let addFilterButton = document.createElement("button");
+        addFilterButton.innerText = "Add Filter";
+        addFilterButton.className = "add-filter-button";
+
+        // Store the control index in the click handler closure
+        addFilterButton.addEventListener("click", () => {
+          const { filterDiv, eventListener, min, max, rate } = createFilter(item);
+          filtersDiv.appendChild(filterDiv);
+
+          // Use the stored control index
+          if (this.controls[controlIndex] && this.controls[controlIndex].rangeFilters) {
+            this.controls[controlIndex].rangeFilters.push({
+              element: filterDiv,
+              listener: eventListener,
+              min: min,
+              max: max,
+              rate: rate,
+            });
+          } else {
+            console.error("Control or rangeFilters not found for index:", controlIndex);
+          }
+        });
+
+        filtersDiv.appendChild(addFilterButton);
+      }
     }
 
     // Add controls for speed multiplier and trail length
@@ -841,8 +997,12 @@ class RaysInShape extends BaseShape {
     this.prepareRayObjects(); // Reinitialize rayObjects with the new number of rays
   }
 
+
+
   draw(elapsed, deltaTime) {
     deltaTime *= this.speedMultiplier / 100;
+
+    this.updateFilters(elapsed);
 
     if (this.doesWave) {
       const vertRate = this.speedVertRate / 100;

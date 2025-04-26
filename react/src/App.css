@@ -1,0 +1,21 @@
+/* Remove default App.css styles if they interfere */
+/* You might want to keep some or none depending on desired layout */
+
+/* Example: Remove padding and max-width from #root if set here */
+/* #root {
+  max-width: 100%;
+  padding: 0;
+} */
+
+/* Remove logo styles etc. */
+/* .logo { ... } */
+/* .logo:hover { ... } */
+/* ... etc ... */
+
+/* @keyframes logo-spin { ... } */
+
+/* @media (prefers-reduced-motion: no-preference) { ... } */
+
+/* .card { ... } */
+
+/* .read-the-docs { ... } */

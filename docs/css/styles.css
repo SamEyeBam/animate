@@ -38,7 +38,7 @@ canvas {
   }
 }
 
-#custom {
+#shape-controls {
   display: flex;
   flex-flow: column;
   height: 100%;
@@ -50,13 +50,29 @@ canvas {
   /* background-color: rgba(32, 32, 32, 0.616); */
 }
 
-#custom p{
+
+
+#shape-controls p{
   color: #e0e0e0;
   font-family: Roboto, system-ui;
 }
 #toolbar p{
   color: #e0e0e0;
   font-family: Roboto, system-ui;
+}
+
+.control-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0px 0px 0px 0px;
+}
+
+.filter-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0px 0px 0px 24px;
 }
 
 .header {

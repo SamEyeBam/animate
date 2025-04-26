@@ -21,6 +21,7 @@ let drawObj = null;
 function createInstance(className, args) {
   const classMap = {
     NewWave: NewWave,
+    Countdown: Countdown,
     RaysInShape: RaysInShape,
     PolyTwistColourWidth: PolyTwistColourWidth,
     FloralPhyllo: FloralPhyllo,
@@ -88,9 +89,9 @@ function render(timestamp) {
 
   }
 
-  ctx.font = "48px serif";
-  ctx.fillStyle = "white"
-  ctx.fillText(Math.floor(elapsedTime) + "ms", centerX - 100, centerY + 400);
+  // ctx.font = "48px serif";
+  // ctx.fillStyle = "white"
+  // ctx.fillText(Math.floor(elapsedTime) + "ms", centerX - 100, centerY + 400);
   // drawCenter(300)
 
   requestAnimationFrame(render);
