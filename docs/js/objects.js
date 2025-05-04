@@ -760,7 +760,14 @@ class Countdown extends BaseShape {
 
   secondsUntilDate(targetDate) {
     const now = new Date();
-    const target = new Date(targetDate);
+    
+    // Create the target date specifically in New Zealand timezone (NZST/NZDT)
+    // Format: YYYY-MM-DDThh:mm:ss+12:00 (NZ standard time)
+    // The '+12:00' part makes it explicit that we're using NZ timezone
+    const nzTimeString = targetDate.replace('T', 'T').concat('+12:00');
+    const target = new Date(nzTimeString);
+    
+    // Get difference in milliseconds and convert to seconds
     const difference = target.getTime() - now.getTime();
     return Math.round(difference / 1000);
   }
@@ -808,7 +815,7 @@ class Countdown extends BaseShape {
     ctx.fillText(percentRounded + "% Closer", centerX, centerY + 300);
 
     const milestoneSeconds = 2000000;
-    const target = new Date(futureDate);
+    const target = new Date(futureDate + '+12:00'); // Add NZ timezone offset here too
     const milestoneDate = new Date(target.getTime() - milestoneSeconds * 1000).toLocaleString()
     ctx.fillText(milestoneDate, centerX, centerY + 100);
     ctx.fillText("^-- " + milestoneSeconds + " milestone", centerX, centerY + 200);
