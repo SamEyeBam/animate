@@ -765,43 +765,57 @@ class Countdown extends BaseShape {
     return Math.round(difference / 1000);
   }
 
-  drawProgressBar(progress, barWidth) {
+  drawProgressBar(progress) {
     const colourBackground = "#0c2f69";
     const colourProgress = "#4287f5";
-    // const barWidth = 400;
+    const barWidth = ctx.canvas.width;
     const barHeight = 60;
-    const barX = centerX - barWidth / 2;
-    const barY = centerY + 350 - barHeight / 2;
+    // const barX = centerX - barWidth / 2;
+    const barX = 0;
+    // const barY = centerY + 350 - barHeight / 2;
+    const barY = ctx.canvas.height - barHeight;
 
     ctx.fillStyle = colourBackground;
     ctx.beginPath();
-    ctx.rect(barX, barY, barWidth, 60) 
+    ctx.rect(barX, barY, barWidth, barHeight)
     ctx.fill();
 
     ctx.fillStyle = colourProgress;
     ctx.beginPath();
-    ctx.rect(barX, barY, (barWidth/100)*progress, 60) 
+    ctx.rect(barX, barY, (barWidth / 100) * progress, barHeight)
     ctx.fill();
   }
 
   draw(elapsedTime) {
     // elapsedTime *= this.speedMultiplier / 400
 
-    ctx.font = "48px serif";
+    let fontSize = 48;
+    if(ctx.canvas.width < 1000){
+      fontSize = 24;
+    }
+
+    ctx.font = fontSize + "px serif";
     ctx.fillStyle = "white"
+    ctx.textAlign = "center";
     const futureDate = '2025-05-31T08:20:00';
     const seconds = this.secondsUntilDate(futureDate);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(seconds / 3600);
-    const percentRounded = (((elapsedTime / 1000) / seconds) * 100 ).toFixed(8);
-    ctx.fillText(seconds + " Seconds", centerX - 100, centerY);
-    ctx.fillText(minutes + " Minues", centerX - 100, centerY + 100);
-    ctx.fillText(hours + " Hours", centerX - 100, centerY + 200);
-    ctx.fillText(percentRounded + "% Closer", centerX - 100, centerY + 300);
-    
+    const percentRounded = (((elapsedTime / 1000) / seconds) * 100).toFixed(8);
+    ctx.fillText(seconds + " Seconds", centerX, centerY - 200);
+    ctx.fillText(minutes + " Minues", centerX, centerY - 100);
+    ctx.fillText(hours + " Hours", centerX, centerY);
+    ctx.fillText(percentRounded + "% Closer", centerX, centerY + 300);
+
+    const milestoneSeconds = 2000000;
+    const target = new Date(futureDate);
+    const milestoneDate = new Date(target.getTime() - milestoneSeconds * 1000).toLocaleString()
+    ctx.fillText(milestoneDate, centerX, centerY + 100);
+    ctx.fillText("^-- " + milestoneSeconds + " milestone", centerX, centerY + 200);
+
     // ctx.fillText(percentRounded + "% Closer", centerX - 100, centerY + 300);
     // this.drawProgressBar(percentRounded,400);
-    this.drawProgressBar(percentRounded,1000);
+    this.drawProgressBar(percentRounded);
   }
 }
 
