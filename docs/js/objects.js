@@ -752,10 +752,9 @@ class NewWave extends BaseShape {
 }
 
 class Countdown extends BaseShape {
-  constructor() {
+  constructor(milestone) {
     super();
-    this.width;
-    this.sides;
+    this.milestone = milestone;
   }
 
   secondsUntilDate(targetDate) {
@@ -790,7 +789,7 @@ class Countdown extends BaseShape {
     ctx.fillStyle = colourProgress;
     ctx.beginPath();
     ctx.rect(barX, barY, (barWidth / 100) * progress, barHeight)
-    ctx.fill();
+    ctx.fill();;
   }
 
   draw(elapsedTime) {
@@ -814,14 +813,24 @@ class Countdown extends BaseShape {
     ctx.fillText(hours + " Hours", centerX, centerY);
     ctx.fillText(percentRounded + "% Closer", centerX, centerY + 300);
 
-    const milestoneSeconds = 2000000;
+    const milestoneSeconds = this.milestone;
     const target = new Date(futureDate + '+12:00'); // Add NZ timezone offset here too
     const milestoneDate = new Date(target.getTime() - milestoneSeconds * 1000).toLocaleString()
     ctx.fillText(milestoneDate, centerX, centerY + 100);
     ctx.fillText("^-- " + milestoneSeconds + " milestone", centerX, centerY + 200);
 
-    // ctx.fillText(percentRounded + "% Closer", centerX - 100, centerY + 300);
-    // this.drawProgressBar(percentRounded,400);
+    // Calculate when a single pixel will appear on the progress bar
+    const canvasWidth = ctx.canvas.width;
+    // Calculate how many seconds are needed to move a single pixel
+    // Each pixel represents (100/canvasWidth) percent of the total progress
+    // We need to know how many seconds that percentage represents
+    const secondsPerPixel = (seconds/canvasWidth);
+    console.log(elapsedTime)
+    const secondsUntilFirstPixel = secondsPerPixel - (elapsedTime/10);
+    // console.log(secondsUntilFirstPixel)
+    
+    ctx.fillText("Time until first pixel: " + Math.round(secondsUntilFirstPixel) + " seconds", centerX, centerY + 350);
+    
     this.drawProgressBar(percentRounded);
   }
 }

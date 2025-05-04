@@ -93,8 +93,7 @@ async function fetchConfig(className) {
       { type: "range", min: 0, max: 400, defaultValue: 160, property: "width2" },
     ],
     Countdown: [
-      { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
-      { type: "range", min: 100, max: 1000, defaultValue: 100, property: "limiter" },
+      { type: "range", min: 8000, max: 2000000, defaultValue: 2000000, property: "milestone" },
     ],
     NewWave: [
       { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
