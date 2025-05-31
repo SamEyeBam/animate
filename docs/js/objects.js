@@ -803,7 +803,7 @@ class Countdown extends BaseShape {
     ctx.font = fontSize + "px serif";
     ctx.fillStyle = "white"
     ctx.textAlign = "center";
-    const futureDate = '2025-05-31T08:20:00';
+    const futureDate = '2025-06-01T04:30:00';
     const seconds = this.secondsUntilDate(futureDate);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(seconds / 3600);
