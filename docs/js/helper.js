@@ -45,6 +45,8 @@ async function fetchConfig(className) {
     ],
     Phyllotaxis: [
       { type: "range", min: 1, max: 40, defaultValue: 24, property: "width" },
+      { type: "range", min: 1, max: 40, defaultValue: 10, property: "size" },
+      { type: "range", min: 1, max: 40, defaultValue: 4, property: "sizeMin" },
       { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
       { type: "range", min: 1, max: 10000, defaultValue: 300, property: "nMax" },
       { type: "range", min: 0, max: 2, defaultValue: 0, property: "wave" },

@@ -310,9 +310,11 @@ class Nodal_expanding extends BaseShape {
   }
 }
 class Phyllotaxis extends BaseShape {
-  constructor(width, start, nMax, wave, colour1, colour2) {
+  constructor(width, size, sizeMin, start, nMax, wave, colour1, colour2) {
     super();
     this.width = width;
+    this.size = size;
+    this.sizeMin = sizeMin;
     this.start = start;
     this.nMax = nMax;
     this.wave = wave;
@@ -324,7 +326,7 @@ class Phyllotaxis extends BaseShape {
     const startColor = [45, 129, 252];
     const endColor = [252, 3, 98];
     const distanceMultiplier = 3;
-    const maxIterations = 200;
+    const maxIterations = this.nMax;
     //   angle=0;
     for (let n = 0; n < maxIterations; n++) {
       ctx.beginPath();
@@ -336,7 +338,7 @@ class Phyllotaxis extends BaseShape {
       const radius = distanceMultiplier * n;
       const xCoord = radius * Math.cos(nAngle) + centerX;
       const yCoord = radius * Math.sin(nAngle) + centerY;
-      ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
+      ctx.arc(xCoord, yCoord, this.size, 0, 2 * Math.PI);
       ctx.fillStyle = colourToText(nColor);
       ctx.fill();
     }
@@ -368,7 +370,7 @@ class Phyllotaxis extends BaseShape {
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
-    const sizeMultiplier = this.nMax / (5 - 3)
+    const sizeMultiplier = this.nMax / this.size +  (5 - 3)
     if (this.wave === 1) {
       this.drawWave(rotation)
     }
@@ -385,7 +387,7 @@ class Phyllotaxis extends BaseShape {
         const y = r * Math.sin(a) + centerY;
 
         ctx.beginPath();
-        ctx.arc(x, y, (n / sizeMultiplier) + 3, 0, 2 * Math.PI);
+        ctx.arc(x, y, (n / sizeMultiplier) + this.sizeMin, 0, 2 * Math.PI);
         ctx.fillStyle = ncolour;
         // ctx.fillStyle = colourToText(ncolour);
         ctx.fill();
@@ -759,13 +761,13 @@ class Countdown extends BaseShape {
 
   secondsUntilDate(targetDate) {
     const now = new Date();
-    
+
     // Create the target date specifically in New Zealand timezone (NZST/NZDT)
     // Format: YYYY-MM-DDThh:mm:ss+12:00 (NZ standard time)
     // The '+12:00' part makes it explicit that we're using NZ timezone
     const nzTimeString = targetDate.replace('T', 'T').concat('+12:00');
     const target = new Date(nzTimeString);
-    
+
     // Get difference in milliseconds and convert to seconds
     const difference = target.getTime() - now.getTime();
     return Math.round(difference / 1000);
@@ -796,7 +798,7 @@ class Countdown extends BaseShape {
     // elapsedTime *= this.speedMultiplier / 400
 
     let fontSize = 48;
-    if(ctx.canvas.width < 1000){
+    if (ctx.canvas.width < 1000) {
       fontSize = 24;
     }
 
@@ -824,13 +826,13 @@ class Countdown extends BaseShape {
     // Calculate how many seconds are needed to move a single pixel
     // Each pixel represents (100/canvasWidth) percent of the total progress
     // We need to know how many seconds that percentage represents
-    const secondsPerPixel = (seconds/canvasWidth);
+    const secondsPerPixel = (seconds / canvasWidth);
     console.log(elapsedTime)
-    const secondsUntilFirstPixel = secondsPerPixel - (elapsedTime/10);
+    const secondsUntilFirstPixel = secondsPerPixel - (elapsedTime / 10);
     // console.log(secondsUntilFirstPixel)
-    
+
     ctx.fillText("Time until first pixel: " + Math.round(secondsUntilFirstPixel) + " seconds", centerX, centerY + 350);
-    
+
     this.drawProgressBar(percentRounded);
   }
 }
