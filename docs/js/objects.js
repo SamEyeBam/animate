@@ -310,7 +310,7 @@ class Nodal_expanding extends BaseShape {
   }
 }
 class Phyllotaxis extends BaseShape {
-  constructor(width, size, sizeMin, start, nMax, wave, colour1, colour2) {
+  constructor(width, size, sizeMin, start, nMax, wave, spiralProngs, colour1, colour2) {
     super();
     this.width = width;
     this.size = size;
@@ -318,6 +318,7 @@ class Phyllotaxis extends BaseShape {
     this.start = start;
     this.nMax = nMax;
     this.wave = wave;
+    this.spiralProngs = spiralProngs;
     this.colour1 = colour1;
     this.colour2 = colour2;
   }
@@ -343,6 +344,7 @@ class Phyllotaxis extends BaseShape {
       ctx.fill();
     }
   }
+
   drawSpiral(angle) {
     angle /= 5000
     const startColor = [45, 129, 252];
@@ -350,27 +352,30 @@ class Phyllotaxis extends BaseShape {
     const distanceMultiplier = 2;
     const maxIterations = 1000;
 
-
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY); // Start at the center
     for (let n = 0; n < maxIterations; n++) {
       const nColor = lerpRGB(startColor, endColor, Math.cos(rad(n / 2)));
 
-      const nAngle = n * angle + Math.sin(angle * n * 2);
+      const nAngle = n * angle + Math.sin(angle * n * this.spiralProngs);
       const radius = distanceMultiplier * n;
       const xCoord = radius * Math.cos(nAngle) + centerX;
       const yCoord = radius * Math.sin(nAngle) + centerY;
 
-      ctx.beginPath();
-      ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
-      ctx.fillStyle = colourToText(nColor);
-      ctx.fill();
+
+      // ctx.arc(xCoord, yCoord, 8, 0, 2 * Math.PI);
+      ctx.lineTo(xCoord, yCoord);
+      // ctx.fillStyle = colourToText(nColor);
+      // ctx.fill();
     }
+    ctx.stroke();
   }
 
   // Draw_nodal(300, 100, 31, rotation, "blue");
   draw(rotation) {
     rotation *= (this.speedMultiplier / 300)
     rotation += this.start
-    const sizeMultiplier = this.nMax / this.size +  (5 - 3)
+    const sizeMultiplier = this.nMax / this.size + (5 - 3)
     if (this.wave === 1) {
       this.drawWave(rotation)
     }

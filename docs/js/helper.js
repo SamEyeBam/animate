@@ -50,6 +50,7 @@ async function fetchConfig(className) {
       { type: "range", min: 0, max: 3141, defaultValue: 0, property: "start" },
       { type: "range", min: 1, max: 10000, defaultValue: 300, property: "nMax" },
       { type: "range", min: 0, max: 2, defaultValue: 0, property: "wave" },
+      { type: "range", min: 1, max: 12, defaultValue: 2, property: "spiralProngs" },
       { type: "color", defaultValue: "#2D81FC", property: "colour1" },
       { type: "color", defaultValue: "#FC0362", property: "colour2" },
     ],
@@ -98,7 +99,7 @@ async function fetchConfig(className) {
       { type: "range", min: 8000, max: 2000000, defaultValue: 2000000, property: "milestone" },
     ],
     NewWave: [
-      { type: "range", min: 300, max: 600, defaultValue: 342, property: "width" },
+      { type: "range", min: 300, max: 1600, defaultValue: 342, property: "width" },
       { type: "range", min: 2, max: 40, defaultValue: 4, property: "sides" },
       { type: "range", min: 1, max: 100, defaultValue: 1, property: "step" },
       { type: "range", min: 1, max: 10, defaultValue: 4, property: "lineWidth" },
