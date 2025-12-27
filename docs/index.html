@@ -10,24 +10,8 @@
 <body style="margin:0;">
   <canvas id="myCanvas" style="display: block;box-sizing: border-box;"></canvas>
   <div id="toolbar">
-    <br>
-    <select id="shape-selector">
-      <option value="RaysInShape">Rays</option>
-      <option value="Countdown">Countdown</option>
-      <option value="NewWave">NewWave</option>
-      <option value="EyePrototype">EyePrototype</option>
-      <option value="Nodal_expanding">Nodal_expanding</option>
-      <option value="MaryFace">MaryFace</option>
-      <option value="CircleExpand">CircleExpand</option>
-      <option value="PolyTwistColourWidth">PolyTwistColourWidth</option>
-      <option value="FloralPhyllo">FloralPhyllo</option>
-      <option value="FloralPhyllo_Accident">FloralPhyllo_Accident</option>
-      <option value="Spiral1">Spiral1</option>
-      <option value="FloralAccident">FloralAccident</option>
-      <option value="Phyllotaxis">Phyllotaxis</option>
-      <option value="SquareTwist_angle">SquareTwist_angle</option>
-    </select>
-    <div id="shape-controls"></div>
+    <!-- Shape layers -->
+    <div id="layers-container"></div>
     <br>
     <p>Controls:</p>
     <p>
@@ -52,10 +36,40 @@
     <button onclick="manualToggleSettings()" class="button">Show/hide</button>
   </div>
 </body>
-<script src="./js/helper.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Utilities (must load first - used by everything) -->
+<script src="./js/utils/helpers.js" type="text/javascript"></script>
 <script src="./js/math.js" type="text/javascript"></script>
-<script src="./js/objects.js" type="text/javascript"></script>
-<script src="./js/index.js" ></script>
+
+<!-- Core modules -->
+<script src="./js/core/ShapeRegistry.js" type="text/javascript"></script>
+<script src="./js/core/AnimationEngine.js" type="text/javascript"></script>
+<script src="./js/core/Scene.js" type="text/javascript"></script>
+<script src="./js/core/BaseShape.js" type="text/javascript"></script>
+
+<!-- Control system -->
+<script src="./js/controls/FilterManager.js" type="text/javascript"></script>
+<script src="./js/controls/ControlFactory.js" type="text/javascript"></script>
+<script src="./js/controls/ControlManager.js" type="text/javascript"></script>
+<script src="./js/presets.js" type="text/javascript"></script>
+<script src="./js/controls/SceneUI.js" type="text/javascript"></script>
+
+<!-- Shape definitions -->
+<script src="./js/shapes/PolyTwistColourWidth.js" type="text/javascript"></script>
+<script src="./js/shapes/FloralPhyllo.js" type="text/javascript"></script>
+<script src="./js/shapes/Spiral1.js" type="text/javascript"></script>
+<script src="./js/shapes/FloralAccident.js" type="text/javascript"></script>
+<script src="./js/shapes/FloralPhyllo_Accident.js" type="text/javascript"></script>
+<script src="./js/shapes/Nodal_expanding.js" type="text/javascript"></script>
+<script src="./js/shapes/Phyllotaxis.js" type="text/javascript"></script>
+<script src="./js/shapes/SquareTwist_angle.js" type="text/javascript"></script>
+<script src="./js/shapes/CircleExpand.js" type="text/javascript"></script>
+<script src="./js/shapes/EyePrototype.js" type="text/javascript"></script>
+<script src="./js/shapes/MaryFace.js" type="text/javascript"></script>
+<script src="./js/shapes/NewWave.js" type="text/javascript"></script>
+<script src="./js/shapes/Countdown.js" type="text/javascript"></script>
+<script src="./js/shapes/RaysInShape.js" type="text/javascript"></script>
+
+<!-- Main application -->
+<script src="./js/index.js" type="text/javascript"></script>
 
 </html>
