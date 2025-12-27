@@ -57,6 +57,26 @@ canvas {
 }
 
 
+/* Playback controls - pinned to bottom of toolbar */
+.playback-controls {
+  margin-top: auto;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(25, 25, 25, 0.95);
+  position: sticky;
+  bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .playback-controls {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 15px 10px;
+  }
+}
+
 .controls {
   display: flex;
   margin: 8px 0px;
@@ -117,6 +137,32 @@ canvas {
 
 .buttonReset{
   background-color: #f4e1e1;
+  width: 100%;
+}
+
+/* Speed Control */
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(40, 45, 50, 0.4);
+  border-radius: 6px;
+}
+
+.speed-label {
+  color: #e0e0e0;
+  font-family: Roboto, system-ui;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+#inputSpeed {
+  flex: 1;
+  height: 6px;
+  cursor: pointer;
+  accent-color: #3a9bdc;
 }
 
 /* ============================================
@@ -128,7 +174,7 @@ canvas {
   flex-direction: column;
   margin: 2px 0;
   padding: 6px 8px;
-  background: rgba(40, 45, 50, 0.5);
+  background: rgba(40, 45, 50, 0.35);
   border-radius: 4px;
 }
 
@@ -258,7 +304,7 @@ canvas {
 .control-settings-panel {
   margin-top: 8px;
   padding: 8px;
-  background: rgba(30, 35, 40, 0.6);
+  background: rgba(30, 35, 40, 0.4);
   border-radius: 4px;
   border-left: 2px solid #5a6a7a;
 }
@@ -319,7 +365,7 @@ canvas {
 
 /* Individual filter item */
 .filter-item {
-  background: rgba(40, 50, 60, 0.5);
+  background: rgba(40, 50, 60, 0.35);
   border-left: 3px solid #4a9eff;
   border-radius: 0 4px 4px 0;
   padding: 6px 8px;
@@ -453,7 +499,7 @@ canvas {
 .param-bounds-panel {
   margin-top: 4px;
   padding: 4px;
-  background: rgba(30, 40, 50, 0.5);
+  background: rgba(30, 40, 50, 0.35);
   border-radius: 3px;
 }
 
@@ -499,8 +545,8 @@ canvas {
 .scene-btn {
   padding: 6px 10px;
   font-size: 11px;
-  background: #3a3a3a;
-  border: 1px solid #444;
+  background: rgba(58, 58, 58, 0.7);
+  border: 1px solid rgba(68, 68, 68, 0.6);
   border-radius: 4px;
   color: #e0e0e0;
   cursor: pointer;
@@ -708,8 +754,8 @@ canvas {
 
 /* Layer panels */
 .layer-panel {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: rgba(26, 26, 26, 0.7);
+  border: 1px solid rgba(51, 51, 51, 0.6);
   border-radius: 6px;
   margin-bottom: 10px;
   overflow: hidden;
@@ -719,8 +765,8 @@ canvas {
   display: flex;
   align-items: center;
   padding: 8px 10px;
-  background: #252525;
-  border-bottom: 1px solid #333;
+  background: rgba(37, 37, 37, 0.7);
+  border-bottom: 1px solid rgba(51, 51, 51, 0.6);
   gap: 8px;
 }
 

@@ -17,6 +17,7 @@ class AnimationEngine {
     this.elapsedTime = 0;
     this.rotation = 0;
     this.degPerSec = 10;
+    this.speedMultiplier = 1.0;
     
     // State
     this.paused = false;
@@ -78,8 +79,8 @@ class AnimationEngine {
     
     if (!this.paused) {
       this.rotation += this.degPerSec / this.targetFps;
-      this.elapsedTime += deltaTime;
-      adjustedDeltaTime = deltaTime / 100;
+      this.elapsedTime += deltaTime * this.speedMultiplier;
+      adjustedDeltaTime = (deltaTime * this.speedMultiplier) / 100;
     }
     
     const adjustedElapsed = this.elapsedTime / 1000;
@@ -127,24 +128,24 @@ class AnimationEngine {
   }
 
   /**
-   * Step forward one frame
+   * Step forward one frame (advances elapsed time by 1 frame)
    */
   stepForward() {
-    this.rotation += this.degPerSec / this.targetFps;
+    this.elapsedTime += this.frameDuration;
   }
 
   /**
-   * Step backward one frame
+   * Step backward one frame (rewinds elapsed time by 1 frame)
    */
   stepBackward() {
-    this.rotation -= this.degPerSec / this.targetFps;
+    this.elapsedTime = Math.max(0, this.elapsedTime - this.frameDuration);
   }
 
   /**
-   * Set degrees per second
+   * Set speed multiplier (-10 to 10)
    */
-  setSpeed(degPerSec) {
-    this.degPerSec = parseFloat(degPerSec);
+  setSpeed(speed) {
+    this.speedMultiplier = parseFloat(speed);
   }
 
   /**

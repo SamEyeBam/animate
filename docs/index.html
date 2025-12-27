@@ -12,25 +12,20 @@
   <div id="toolbar">
     <!-- Shape layers -->
     <div id="layers-container"></div>
-    <br>
-    <p>Controls:</p>
-    <p>
-      Press "Space" to pause and start the animation
-    </p>
-    <p>
-      Press "P" to show/hide the control panel
-    </p>
-    <br>
-    <p>Speed</p>
-    <input type="text" id="inputDegPerSec" value="10" onchange="ChangeDegPerSec(this.value)">
-    <br>
-    <p>Controls</p>
-    <div class="controls">
-      <button class="controlFrameButton button-8" onclick="BackwardFrame()"><</button>
-          <button class="controlPauseButton button-8" id="pauseButton" onclick="TogglePause()">Play</button>
-          <button class="controlFrameButton button-8" onclick="ForwardFrame()">></button>
+    
+    <!-- Playback controls - pinned to bottom -->
+    <div class="playback-controls">
+      <div class="speed-control">
+        <span class="speed-label">Speed: <span id="speedValue">1.0</span>x</span>
+        <input type="range" id="inputSpeed" min="-10" max="10" step="0.1" value="1" oninput="ChangeSpeed(this.value)">
+      </div>
+      <div class="controls">
+        <button class="controlFrameButton button-8" onclick="BackwardFrame()"><</button>
+        <button class="controlPauseButton button-8" id="pauseButton" onclick="TogglePause()">Pause</button>
+        <button class="controlFrameButton button-8" onclick="ForwardFrame()">></button>
+      </div>
+      <button class="buttonReset button-8" id="resetButton" onclick="Reset()">Reset Timeline</button>
     </div>
-    <button class="buttonReset button-8" id="resetButton" onclick="Reset()">Reset Rotation</button>
   </div>
   <div>
     <button onclick="manualToggleSettings()" class="button">Show/hide</button>

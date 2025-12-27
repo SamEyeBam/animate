@@ -48,7 +48,7 @@ function toggleSettings(e) {
     toolbarShowing = !toolbarShowing;
   }
   if (e.code === "Space") {
-    engine.togglePause();
+    TogglePause();
   }
 
   let tb = document.getElementById("toolbar");
@@ -73,8 +73,10 @@ function BackwardFrame() {
   engine.stepBackward();
 }
 
-function ChangeDegPerSec(newValue) {
-  engine.setSpeed(newValue);
+function ChangeSpeed(newValue) {
+  const speed = parseFloat(newValue);
+  engine.setSpeed(speed);
+  document.getElementById('speedValue').textContent = speed.toFixed(1);
 }
 
 function render_clear() {
