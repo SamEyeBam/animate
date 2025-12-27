@@ -5,59 +5,10 @@
  * Each preset has: name, description, and data (scene export)
  */
 const BUILT_IN_PRESETS = [
-  {
-    name: "Hypnotic Spiral",
-    description: "Classic spiral pattern with smooth colors",
-    builtIn: true,
-    data: {
-      version: 1,
-      layers: [
-        {
-          name: "Spiral1",
-          visible: true,
-          paused: false,
-          collapsed: true,
-          values: {
-            width: 400,
-            n: 6,
-            piv: 60,
-            step: 1,
-            line_width: 2
-          },
-          filters: {}
-        }
-      ]
-    }
-  },
-  {
-    name: "Floral Bloom",
-    description: "Organic flower-like pattern",
-    builtIn: true,
-    data: {
-      version: 1,
-      layers: [
-        {
-          name: "FloralPhyllo",
-          visible: true,
-          paused: false,
-          collapsed: true,
-          values: {
-            width: 500,
-            n: 8,
-            piv: 45,
-            start: 0,
-            end: 180,
-            step: 1,
-            line_width: 1
-          },
-          filters: {}
-        }
-      ]
-    }
-  },
+
   {
     name: "Poly Twist Rainbow",
-    description: "Colorful twisting polygon",
+    description: "hexagon bby",
     builtIn: true,
     data: {
       version: 1,
@@ -92,15 +43,19 @@ const BUILT_IN_PRESETS = [
           name: "Nodal_expanding",
           visible: true,
           paused: false,
-          collapsed: true,
+          collapsed: false,
           values: {
-            width: 300,
-            nodeCount: 12,
+            expand: 2,
+            points: 550,
             start: 0,
+            line_width: 4,
             colour1: "#ffffff",
-            colour2: "#4a9eff"
+            colour2: "#4a9eff",
+            colour_change: 3,
+            speedMultiplier: 535
           },
-          filters: {}
+          filters: {},
+          controlBounds: {}
         }
       ]
     }
@@ -110,43 +65,43 @@ const BUILT_IN_PRESETS = [
     description: "Mesmerizing sine wave radiation",
     builtIn: true,
     data: {
-  version: 1,
-  layers: [
-    {
-      name: "NewWave",
-      visible: true,
-      paused: false,
-      collapsed: false,
-      values: {
-        width: 967,
-        sides: 8,
-        step: 42,
-        lineWidth: 3,
-        limiter: 159,
-        speedMultiplier: 556
-      },
-      filters: {
-        limiter: [
-          {
-            type: "sin",
-            params: {
-              min: 42,
-              max: 240,
-              rate: 0.5
+      version: 1,
+      layers: [
+        {
+          name: "NewWave",
+          visible: true,
+          paused: false,
+          collapsed: false,
+          values: {
+            width: 967,
+            sides: 8,
+            step: 42,
+            lineWidth: 3,
+            limiter: 159,
+            speedMultiplier: 556
+          },
+          filters: {
+            limiter: [
+              {
+                type: "sin",
+                params: {
+                  min: 42,
+                  max: 240,
+                  rate: 0.5
+                }
+              }
+            ]
+          }
+          ,
+          controlBounds: {
+            limiter: {
+              min: 1,
+              max: 1000
             }
           }
-        ]
-      }
-      ,
-      controlBounds: {
-        limiter: {
-          min: 1,
-          max: 1000
         }
-      }
+      ]
     }
-  ]
-}
   },
   {
     name: "Black Hole Spiral",
@@ -160,37 +115,41 @@ const BUILT_IN_PRESETS = [
           visible: true,
           paused: false,
           collapsed: true,
-          values: { width: 350, n: 4, piv: 90, step: 1, line_width: 2,
+          values: {
+            width: 350, n: 4, piv: 90, step: 1, line_width: 2,
             colour: "#7734D3"
-           },
+          },
           filters: {}
         },
-        
+
       ]
     }
   },
   {
-    name: "Phyllotaxis Garden",
-    description: "Nature-inspired spiral arrangement",
+    name: "PhylloCone Blob",
+    description: "Mystery orb",
     builtIn: true,
     data: {
       version: 1,
       layers: [
         {
-          name: "Phyllotaxis",
+          name: "PhylloCone",
           visible: true,
           paused: false,
-          collapsed: true,
+          collapsed: false,
           values: {
-            n: 300,
-            c: 8,
-            start: 137.5,
-            colour1: "#ff6b6b",
-            colour2: "#4ecdc4",
-            dotSize: 6,
-            mode: "spiral"
+            start: 0,
+            spiralProngs: 4,
+            width_10: 12,
+            iterations: 437,
+            distance: 1,
+            line_width: 2,
+            colour1: "#2D81FC",
+            colour2: "#FC0362",
+            speedMultiplier: 100
           },
-          filters: {}
+          filters: {},
+          controlBounds: {}
         }
       ]
     }

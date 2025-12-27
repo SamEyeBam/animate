@@ -43,7 +43,7 @@ class BaseShape {
   constructor() {
     this.controls = [];
     this.controlManager = null;
-    this.speedMultiplier = 500;
+    this.speedMultiplier = 100;
   }
 
   /**
