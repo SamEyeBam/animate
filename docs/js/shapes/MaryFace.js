@@ -23,9 +23,9 @@ class MaryFace extends BaseShape {
     this.y2 = y2;
     this.rotate2 = rotate2;
     this.width2 = width2;
-    this.eye1 = new EyePrototype(x1, y1, rotate1, 0, width1, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb");
-    this.eye2 = new EyePrototype(x2, y2, rotate2, 0, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb");
-    this.eye3 = new EyePrototype(110, -280, rotate2 + 2, 1, width2, 10, 1, 1, 0, 0, 0, 1, "#00fffb", "#00fffb", "#00fffb");
+    this.eye1 = new EyePrototype(x1, y1, rotate1, 0, width1, 10, 1, 1, 0, 0, 0, 1, [0, 255, 251], [0, 255, 251], [0, 255, 251]);
+    this.eye2 = new EyePrototype(x2, y2, rotate2, 0, width2, 10, 1, 1, 0, 0, 0, 1, [0, 255, 251], [0, 255, 251], [0, 255, 251]);
+    this.eye3 = new EyePrototype(110, -280, rotate2 + 2, 1, width2, 10, 1, 1, 0, 0, 0, 1, [0, 255, 251], [0, 255, 251], [0, 255, 251]);
   }
 
   draw(elapsed) {

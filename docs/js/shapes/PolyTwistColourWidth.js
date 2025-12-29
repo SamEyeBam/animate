@@ -8,8 +8,8 @@ class PolyTwistColourWidth extends BaseShape {
     { type: 'range', min: 2, max: 5, defaultValue: 5, property: 'line_width' },
     { type: 'range', min: 1, max: 100, defaultValue: 50, property: 'depth' },
     { type: 'range', min: -180, max: 180, defaultValue: -90, property: 'rotation' },
-    { type: 'color', defaultValue: '#4287f5', property: 'colour1' },
-    { type: 'color', defaultValue: '#42f57b', property: 'colour2' },
+    { type: 'color', defaultValue: [66, 135, 245], property: 'colour1' },
+    { type: 'color', defaultValue: [66, 245, 123], property: 'colour2' },
   ];
 
   constructor(sides, width, line_width, depth, rotation, colour1, colour2) {
@@ -41,7 +41,7 @@ class PolyTwistColourWidth extends BaseShape {
 
     for (let i = 0; i < this.depth; i++) {
       const fraction = i / this.depth;
-      const ncolour = LerpHex(this.colour1, this.colour2, fraction);
+      const ncolour = colourToText(lerpRGB(this.colour1, this.colour2, fraction));
       DrawPolygon(this.sides, this.width * widthMultiplier ** i, out_angle * i + this.rotation, ncolour, this.line_width);
     }
   }

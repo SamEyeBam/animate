@@ -5,7 +5,7 @@ class SquareTwist_angle extends BaseShape {
   static config = [
     { type: 'range', min: 1, max: 800, defaultValue: 400, property: 'width' },
     { type: 'range', min: 1, max: 10, defaultValue: 1, property: 'line_width' },
-    { type: 'color', defaultValue: '#2D81FC', property: 'colour1' },
+    { type: 'color', defaultValue: [45, 129, 252], property: 'colour1' },
   ];
 
   constructor(width, line_width, colour1) {
@@ -20,7 +20,7 @@ class SquareTwist_angle extends BaseShape {
     ctx.translate(centerX, centerY);
     ctx.rotate(rad(angle + 180));
     ctx.beginPath();
-    ctx.strokeStyle = colour;
+    ctx.strokeStyle = colourToText(colour);
     ctx.lineWidth = this.line_width;
     ctx.rect(-size / 2, -size / 2, size, size);
     ctx.stroke();

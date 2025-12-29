@@ -14,8 +14,8 @@ class RaysInShape extends BaseShape {
     { type: 'range', min: 1, max: 80, defaultValue: 5, property: 'trailLength' },
     { type: 'range', min: 1, max: 500, defaultValue: 5, property: 'lineWidth' },
     { type: 'checkbox', defaultValue: false, property: 'fade' },
-    { type: 'color', defaultValue: '#43dbad', property: 'colourFree' },
-    { type: 'color', defaultValue: '#f05c79', property: 'colourContained' },
+    { type: 'color', defaultValue: [67, 219, 173], property: 'colourFree' },
+    { type: 'color', defaultValue: [240, 92, 121], property: 'colourContained' },
     { type: 'header', text: '--CollisionBox---' },
     { type: 'checkbox', defaultValue: false, property: 'boxVisible' },
   ];
@@ -134,8 +134,8 @@ class RaysInShape extends BaseShape {
         ctx.moveTo(prev.x, prev.y);
         ctx.lineTo(curr.x, curr.y);
 
-        const col = hexToRgb(this.colourFree);
-        ctx.strokeStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${alpha})`;
+        const col = this.colourFree;
+        ctx.strokeStyle = `rgba(${col[0]}, ${col[1]}, ${col[2]}, ${alpha})`;
         ctx.stroke();
       }
     }
@@ -274,8 +274,8 @@ class RaysInShape extends BaseShape {
         if (curr.collision) {
           ctx.strokeStyle = `rgba(255, 255, 0, ${alpha})`;
         } else {
-          const col = hexToRgb(this.colourContained);
-          ctx.strokeStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${alpha})`;
+          const col = this.colourContained;
+          ctx.strokeStyle = `rgba(${col[0]}, ${col[1]}, ${col[2]}, ${alpha})`;
         }
 
         ctx.stroke();

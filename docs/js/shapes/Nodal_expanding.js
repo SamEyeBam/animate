@@ -3,12 +3,12 @@
  */
 class Nodal_expanding extends BaseShape {
   static config = [
-    { type: 'range', min: 1, max: 100, defaultValue: 5, property: 'expand' },
+    { type: 'range', min: 0, max: 100, defaultValue: 0.1, property: 'expand' },
     { type: 'range', min: 1, max: 1000, defaultValue: 150, property: 'points' },
     { type: 'range', min: 1, max: 360, defaultValue: 0, property: 'start' },
     { type: 'range', min: 1, max: 10, defaultValue: 6, property: 'line_width' },
-    { type: 'color', defaultValue: '#2D81FC', property: 'colour1' },
-    { type: 'color', defaultValue: '#FC0362', property: 'colour2' },
+    { type: 'color', defaultValue: [45, 129, 252], property: 'colour1' },
+    { type: 'color', defaultValue: [252, 3, 98], property: 'colour2' },
     { type: 'range', min: 0, max: 10, defaultValue: 5, property: 'colour_change' },
   ];
 
@@ -31,7 +31,7 @@ class Nodal_expanding extends BaseShape {
 
     for (let z = 1; z <= this.points; z++) {
       ctx.beginPath();
-      const ncolour = LerpHex(this.colour1, this.colour2, z / this.points);
+      const ncolour = colourToText(lerpRGB(this.colour1, this.colour2, z / this.points));
 
       ctx.moveTo(
         centerX + (Math.cos(rad(angle * (z - 1) + 0)) * (length - this.expand)),

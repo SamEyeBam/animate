@@ -9,8 +9,8 @@ class PhylloCone extends BaseShape {
     { type: 'range', min: 1, max: 2000, defaultValue: 1000, property: 'iterations' },
     { type: 'range', min: 1, max: 10, defaultValue: 2, property: 'distance' },
     { type: 'range', min: 1, max: 10, defaultValue: 2, property: 'line_width' },
-    { type: 'color', defaultValue: '#2D81FC', property: 'colour1' },
-    { type: 'color', defaultValue: '#FC0362', property: 'colour2' },
+    { type: 'color', defaultValue: [45, 129, 252], property: 'colour1' },
+    { type: 'color', defaultValue: [252, 3, 98], property: 'colour2' },
   
   ];
 
@@ -43,7 +43,7 @@ class PhylloCone extends BaseShape {
       ctx.lineTo(xCoord, yCoord);
     }
     ctx.lineWidth = this.line_width;
-    ctx.strokeStyle = this.colour1;
+    ctx.strokeStyle = colourToText(this.colour1);
     ctx.stroke();
     console.log(this.line_width);
   }

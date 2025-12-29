@@ -9,8 +9,8 @@ class Phyllotaxis extends BaseShape {
     { type: 'range', min: 0, max: 3141, defaultValue: 0, property: 'start' },
     { type: 'range', min: 1, max: 10000, defaultValue: 300, property: 'nMax' },
     { type: 'checkbox', defaultValue: false, property: 'giggle' },
-    { type: 'color', defaultValue: '#2D81FC', property: 'colour1' },
-    { type: 'color', defaultValue: '#FC0362', property: 'colour2' },
+    { type: 'color', defaultValue: [45, 129, 252], property: 'colour1' },
+    { type: 'color', defaultValue: [252, 3, 98], property: 'colour2' },
   ];
 
   constructor(width, size, sizeMin, start, nMax, giggle, colour1, colour2) {
@@ -32,7 +32,7 @@ class Phyllotaxis extends BaseShape {
 
     for (let n = 0; n < maxIterations; n++) {
       ctx.beginPath();
-      const ncolour = LerpHex(this.colour1, this.colour2, n / this.nMax);
+      const ncolour = colourToText(lerpRGB(this.colour1, this.colour2, n / this.nMax));
       const nAngle = n * angle + Math.sin(rad(n * 1 + angle * 40000)) / 2;
       const radius = distanceMultiplier * n;
       const xCoord = radius * Math.cos(nAngle) + centerX;
@@ -52,7 +52,7 @@ class Phyllotaxis extends BaseShape {
       this.drawGiggle(rotation);
     } else {
       for (let n = 0; n < this.nMax; n += 1) {
-        const ncolour = LerpHex(this.colour1, this.colour2, n / this.nMax);
+        const ncolour = colourToText(lerpRGB(this.colour1, this.colour2, n / this.nMax));
         const a = n * (rotation / 1000);
         const r = this.width * Math.sqrt(n);
         const x = r * Math.cos(a) + centerX;

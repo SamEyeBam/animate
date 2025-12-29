@@ -15,9 +15,9 @@ class EyePrototype extends BaseShape {
     { type: 'range', min: 0, max: 1, defaultValue: 0, property: 'draw_expand' },
     { type: 'range', min: 0, max: 1, defaultValue: 1, property: 'draw_hypno' },
     { type: 'range', min: 1, max: 10, defaultValue: 1, property: 'line_width' },
-    { type: 'color', defaultValue: '#00fffb', property: 'colourPupil' },
-    { type: 'color', defaultValue: '#ff0000', property: 'colourSpiral' },
-    { type: 'color', defaultValue: '#00fffb', property: 'colourExpand' },
+    { type: 'color', defaultValue: [0, 255, 251], property: 'colourPupil' },
+    { type: 'color', defaultValue: [255, 0, 0], property: 'colourSpiral' },
+    { type: 'color', defaultValue: [0, 255, 251], property: 'colourExpand' },
     { type: 'range', min: 0, max: 1, defaultValue: 1, property: 'draw_eyelid' },
   ];
 
@@ -42,7 +42,7 @@ class EyePrototype extends BaseShape {
     this.colourPupil = colourPupil;
     this.colourSpiral = colourSpiral;
     this.colourExpand = colourExpand;
-    this.centerPulse = new CircleExpand(10, 30, 1, 0, "#2D81FC", "#FC0362");
+    this.centerPulse = new CircleExpand(10, 30, 1, 0, [45, 129, 252], [252, 3, 98]);
   }
 
   drawEyelid(rotation) {
@@ -94,7 +94,7 @@ class EyePrototype extends BaseShape {
   }
 
   drawGrowEye(step) {
-    ctx.strokeStyle = this.colourExpand;
+    ctx.strokeStyle = colourToText(this.colourExpand);
     ctx.beginPath();
     ctx.lineWidth = 5;
     ctx.arc(centerX + this.x, centerY + this.y, step, 0, 2 * Math.PI);
@@ -102,7 +102,7 @@ class EyePrototype extends BaseShape {
   }
 
   drawCircle(step) {
-    ctx.strokeStyle = this.colourPupil;
+    ctx.strokeStyle = colourToText(this.colourPupil);
     ctx.beginPath();
     ctx.lineWidth = 5;
     ctx.arc(centerX + this.x, centerY + this.y, step, 0, 2 * Math.PI);
@@ -110,7 +110,7 @@ class EyePrototype extends BaseShape {
   }
 
   drawSpiral(step) {
-    ctx.strokeStyle = this.colourSpiral;
+    ctx.strokeStyle = colourToText(this.colourSpiral);
     const a = 1;
     const b = 5;
     ctx.moveTo(centerX, centerY);

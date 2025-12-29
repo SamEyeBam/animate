@@ -5,7 +5,7 @@ class Spiral1 extends BaseShape {
   static config = [
     { type: 'range', min: 1, max: 50, defaultValue: 20, property: 'sides' },
     { type: 'range', min: 1, max: 600, defaultValue: 240, property: 'width' },
-    { type: 'color', defaultValue: '#4287f5', property: 'colour' },
+    { type: 'color', defaultValue: [66, 135, 245], property: 'colour' },
   ];
 
   constructor(sides, width, colour) {
@@ -37,7 +37,7 @@ class Spiral1 extends BaseShape {
         end + rad(rotation) + rad(n),
         0
       );
-      ctx.strokeStyle = this.colour;
+      ctx.strokeStyle = colourToText(this.colour);
       ctx.stroke();
 
       ctx.beginPath();
@@ -49,7 +49,7 @@ class Spiral1 extends BaseShape {
         end - (end - stt) / 2 + rad(n) - rad(rotation),
         0
       );
-      ctx.strokeStyle = this.colour;
+      ctx.strokeStyle = colourToText(this.colour);
       ctx.stroke();
 
       stt = end + -(rad(rot - piv));

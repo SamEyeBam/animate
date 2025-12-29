@@ -48,7 +48,7 @@ class Countdown extends BaseShape {
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     
-    const futureDate = '2025-06-01T04:30:00';
+    const futureDate = '2026-12-31T04:30:00';
     const seconds = this.secondsUntilDate(futureDate);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(seconds / 3600);

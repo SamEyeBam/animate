@@ -302,13 +302,24 @@ class ControlFactory {
     input.type = 'color';
     input.className = 'control control-color';
     input.id = `el${config.property}`;
-    input.value = instance[config.property] ?? config.defaultValue;
+    
+    // Handle both RGB array and hex string for initial value
+    const currentValue = instance[config.property] ?? config.defaultValue;
+    if (Array.isArray(currentValue)) {
+      input.value = rgbArrayToHex(currentValue);
+    } else {
+      input.value = currentValue;
+      // Also convert the instance value to RGB array if it's hex
+      instance[config.property] = hexToRgbArray(currentValue);
+    }
 
     const listener = (event) => {
-      const newValue = event.target.value;
-      instance[config.property] = newValue;
+      const hexValue = event.target.value;
+      // Convert hex to RGB array for internal use
+      const rgbValue = hexToRgbArray(hexValue);
+      instance[config.property] = rgbValue;
       if (config.callback) {
-        config.callback(instance, newValue);
+        config.callback(instance, rgbValue);
       }
     };
     input.addEventListener('input', listener);

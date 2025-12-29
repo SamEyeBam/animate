@@ -21,18 +21,36 @@ function colourToText(colour) {
   return "rgb(" + colour[0] + "," + colour[1] + "," + colour[2] + ")";
 }
 
+
 /**
- * Convert hex color to RGB object
- * @param {string} hex - Hex color string (e.g., '#ff0000')
- * @returns {{r: number, g: number, b: number}|null} RGB object or null
+ * Convert hex color to RGB array
+ * @param {string} hex - Hex color string (with or without #)
+ * @returns {number[]} RGB array [r, g, b]
+ */
+function hexToRgbArray(hex) {
+  // supports "#RRGGBB" (you can add "#RGB" if needed)
+  if (hex[0] === "#") hex = hex.slice(1);
+  const n = parseInt(hex, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+/**
+ * Convert hex color to RGB object (for backward compatibility)
+ * @param {string} hex - Hex color string (with or without #)
+ * @returns {{r: number, g: number, b: number}} RGB object
  */
 function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
+  const arr = hexToRgbArray(hex);
+  return { r: arr[0], g: arr[1], b: arr[2] };
+}
+
+/**
+ * Convert RGB array to hex color string
+ * @param {number[]} rgb - RGB array [r, g, b]
+ * @returns {string} Hex color string with #
+ */
+function rgbArrayToHex(rgb) {
+  return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
 /**
@@ -73,23 +91,6 @@ function lerpRGB(a, b, t) {
   return result;
 }
 
-/**
- * Legacy LerpRGB function (handles negative t)
- * @param {number[]} a - Start RGB array
- * @param {number[]} b - End RGB array  
- * @param {number} t - Interpolation amount
- * @returns {number[]} Interpolated RGB array
- */
-function LerpRGB(a, b, t) {
-  if (t < 0) {
-    t *= -1;
-  }
-  const newColor = [0, 0, 0];
-  newColor[0] = a[0] + (b[0] - a[0]) * t;
-  newColor[1] = a[1] + (b[1] - a[1]) * t;
-  newColor[2] = a[2] + (b[2] - a[2]) * t;
-  return newColor;
-}
 
 /**
  * Generate a wave-normalized value (0-1 range using sine)

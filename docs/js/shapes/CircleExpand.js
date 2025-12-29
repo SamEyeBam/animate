@@ -7,8 +7,8 @@ class CircleExpand extends BaseShape {
     { type: 'range', min: 50, max: 150, defaultValue: 150, property: 'gap' },
     { type: 'range', min: 0, max: 1, defaultValue: 1, property: 'linear' },
     { type: 'range', min: 0, max: 1, defaultValue: 1, property: 'heart' },
-    { type: 'color', defaultValue: '#fc03cf', property: 'colour1' },
-    { type: 'color', defaultValue: '#00fffb', property: 'colour2' },
+    { type: 'color', defaultValue: [252, 3, 207], property: 'colour1' },
+    { type: 'color', defaultValue: [0, 255, 251], property: 'colour2' },
   ];
 
   constructor(nCircles, gap, linear, heart, colour1, colour2) {
@@ -19,17 +19,6 @@ class CircleExpand extends BaseShape {
     this.heart = heart;
     this.colour1 = colour1;
     this.colour2 = colour2;
-  }
-
-  lerpColor(a, b, amount) {
-    const ah = +a.replace('#', '0x');
-    const ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff;
-    const bh = +b.replace('#', '0x');
-    const br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff;
-    const rr = ar + amount * (br - ar);
-    const rg = ag + amount * (bg - ag);
-    const rb = ab + amount * (bb - ab);
-    return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
   }
 
   arraySort(x, y) {
@@ -80,7 +69,7 @@ class CircleExpand extends BaseShape {
     const newArr = arrOfWidths.sort(this.arraySort);
 
     for (let i = this.nCircles - 1; i >= 0; i--) {
-      const newColour = this.lerpColor(this.colour1, this.colour2, newArr[i].c);
+      const newColour = colourToText(lerpRGB(this.colour1, this.colour2, newArr[i].c));
 
       if (this.heart) {
         this.drawHeart(newArr[i].r, newColour);
