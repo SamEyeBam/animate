@@ -3,16 +3,18 @@
  */
 class FloralPhyllo extends BaseShape {
   static config = [
-    { type: 'range', min: 1, max: 600, defaultValue: 300, property: 'width' },
-    { type: 'range', min: 1, max: 300, defaultValue: 150, property: 'depth' },
+    { type: 'range', min: 1, max: 100, defaultValue: 60, property: 'width_start' },
+    { type: 'range', min: 1, max: 1000, defaultValue: 650, property: 'width_scale' },
+    { type: 'range', min: 1, max: 1000, defaultValue: 200, property: 'depth' },
     { type: 'range', min: 0, max: 3141, defaultValue: 0, property: 'start' },
     { type: 'color', defaultValue: [66, 135, 245], property: 'colour1' },
     { type: 'color', defaultValue: [252, 3, 98], property: 'colour2' },
   ];
 
-  constructor(width, depth, start, colour1, colour2) {
+  constructor(width_start,width_scale, depth, start, colour1, colour2) {
     super();
-    this.width = width;
+    this.width_start = width_start;
+    this.width_scale = width_scale;
     this.depth = depth;
     this.start = start;
     this.colour1 = colour1;
@@ -32,7 +34,7 @@ class FloralPhyllo extends BaseShape {
       const x = r * Math.cos(a) + centerX;
       const y = r * Math.sin(a) + centerY;
 
-      drawEyelid(n * 2.4 + 40, x, y, ncolour);
+      drawPetal(n * this.width_scale/100 + this.width_start, x, y, ncolour);
     }
   }
 }

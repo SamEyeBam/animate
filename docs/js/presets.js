@@ -7,52 +7,71 @@
 const BUILT_IN_PRESETS = [
 
   {
-    name: "Poly Twist Rainbow",
-    description: "hexagon bby",
+    name: "Minds Eye is Full Of Flowers",
+    description: "Look at me",
     builtIn: true,
     data: {
       version: 1,
       layers: [
         {
-          name: "PolyTwistColourWidth",
-          visible: true,
-          paused: false,
-          collapsed: true,
-          values: {
-            sides: 6,
-            width: 500,
-            line_width: 2,
-            depth: 80,
-            rotation: 0,
-            colour1: "#ff0066",
-            colour2: "#00ffff"
-          },
-          filters: {}
-        }
-      ]
-    }
-  },
-  {
-    name: "Expanding Nodes",
-    description: "Pulsing nodal pattern",
-    builtIn: true,
-    data: {
-      version: 1,
-      layers: [
-        {
-          name: "Nodal_expanding",
+          name: "FloralPhyllo",
           visible: true,
           paused: false,
           collapsed: false,
           values: {
-            expand: 2,
-            points: 550,
-            start: 0,
-            line_width: 4,
-            colour1: "#ffffff",
-            colour2: "#4a9eff",
-            colour_change: 3,
-            speedMultiplier: 535
+            width_start: 30,
+            width_scale: 333,
+            depth: 200,
+            start: 625,
+            colour1: [
+              66,
+              135,
+              245
+            ],
+            colour2: [
+              252,
+              3,
+              98
+            ],
+            speedMultiplier: 500
+          },
+          filters: {},
+          controlBounds: {}
+        },
+        {
+          name: "EyePrototype",
+          visible: true,
+          paused: false,
+          collapsed: false,
+          values: {
+            x: 0,
+            y: 0,
+            rotate: 0,
+            flip: 0,
+            width: 531,
+            blink_speed: 27,
+            draw_spiral: 0,
+            spiral_full: 1,
+            draw_pupil: 0,
+            draw_expand: 0,
+            draw_hypno: 1,
+            line_width: 1,
+            colourPupil: [
+              0,
+              255,
+              251
+            ],
+            colourSpiral: [
+              255,
+              0,
+              0
+            ],
+            colourExpand: [
+              0,
+              255,
+              251
+            ],
+            speedMultiplier: 100
           },
           filters: {},
           controlBounds: {}

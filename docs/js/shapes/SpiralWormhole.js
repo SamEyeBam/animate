@@ -1,7 +1,7 @@
 /**
  * Spiral1 - Dual-direction spiral pattern
  */
-class Spiral1 extends BaseShape {
+class SpiralWormhole extends BaseShape {
   static config = [
     { type: 'range', min: 1, max: 50, defaultValue: 20, property: 'sides' },
     { type: 'range', min: 1, max: 600, defaultValue: 240, property: 'width' },
@@ -16,6 +16,7 @@ class Spiral1 extends BaseShape {
   }
 
   draw(elapsed) {
+    elapsed *= 10
     this.updateFilters(elapsed);
     const rotation = elapsed * (this.speedMultiplier / 100);
     const rot = Math.round((this.sides - 2) * 180 / this.sides * 2);
@@ -57,4 +58,4 @@ class Spiral1 extends BaseShape {
   }
 }
 
-shapeRegistry.register('Spiral1', Spiral1);
+shapeRegistry.register('SpiralWormhole', SpiralWormhole);

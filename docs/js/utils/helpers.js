@@ -54,6 +54,74 @@ function rgbArrayToHex(rgb) {
 }
 
 /**
+ * Cached petal path for efficient reuse (created once, transformed many times)
+ * @type {Path2D|null}
+ */
+let _petalPathCache = null;
+
+/**
+ * Get or create the cached petal path (unit size, pointing right from origin)
+ * @returns {Path2D}
+ */
+function getPetalPath() {
+  if (!_petalPathCache) {
+    _petalPathCache = new Path2D();
+    _petalPathCache.moveTo(0, 0);
+    _petalPathCache.quadraticCurveTo(0.5, 0.5, 1, 0);
+    _petalPathCache.quadraticCurveTo(0.5, -0.5, 0, 0);
+  }
+  return _petalPathCache;
+}
+
+/**
+ * Draw a petal shape efficiently using canvas transforms
+ * Much faster than drawEyelid - uses cached path and transforms
+ * @param {number} width - Width/length of the petal
+ * @param {number} x - X position
+ * @param {number} y - Y position  
+ * @param {string} colour - Fill color (CSS string)
+ */
+function drawPetal(width, x, y, colour, line_width = 2) {
+  const angle = Math.atan2(y - centerY, x - centerX);
+  
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.scale(width, width);
+  
+  ctx.fillStyle = colour;
+  ctx.fill(getPetalPath());
+  
+  ctx.lineWidth = 2 / width; // Scale line width inversely so it stays consistent
+  ctx.strokeStyle = "black";
+  ctx.stroke(getPetalPath());
+  
+  ctx.restore();
+}
+
+/**
+ * Draw multiple petals efficiently by batching transforms
+ * Even faster for large numbers - minimizes state changes
+ * @param {Array<{width: number, x: number, y: number, colour: string}>} petals
+ */
+function drawPetalsBatch(petals) {
+  const path = getPetalPath();
+  
+  for (let i = 0; i < petals.length; i++) {
+    const p = petals[i];
+    const angle = Math.atan2(p.y - centerY, p.x - centerX);
+    
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
+    ctx.scale(p.width, p.width);
+    ctx.fillStyle = p.colour;
+    ctx.fill(path);
+    ctx.restore();
+  }
+}
+
+/**
  * Linear interpolation between two hex colors
  * @param {string} a - Start hex color
  * @param {string} b - End hex color

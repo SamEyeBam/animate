@@ -3,16 +3,15 @@
  */
 class Nodal_expanding extends BaseShape {
   static config = [
-    { type: 'range', min: 0, max: 100, defaultValue: 0.1, property: 'expand' },
-    { type: 'range', min: 1, max: 1000, defaultValue: 150, property: 'points' },
-    { type: 'range', min: 1, max: 360, defaultValue: 0, property: 'start' },
+    { type: 'range', min: 0, max: 100, defaultValue: 1, property: 'expand' },
+    { type: 'range', min: 1, max: 10000, defaultValue: 1000, property: 'points' },
+    { type: 'range', min: 1, max: 360, defaultValue: 32, property: 'start' },
     { type: 'range', min: 1, max: 10, defaultValue: 6, property: 'line_width' },
     { type: 'color', defaultValue: [45, 129, 252], property: 'colour1' },
     { type: 'color', defaultValue: [252, 3, 98], property: 'colour2' },
-    { type: 'range', min: 0, max: 10, defaultValue: 5, property: 'colour_change' },
   ];
 
-  constructor(expand, points, start, line_width, colour1, colour2, colour_change) {
+  constructor(expand, points, start, line_width, colour1, colour2) {
     super();
     this.expand = expand;
     this.points = points;
@@ -20,7 +19,6 @@ class Nodal_expanding extends BaseShape {
     this.line_width = line_width;
     this.colour1 = colour1;
     this.colour2 = colour2;
-    this.colour_change = colour_change;
   }
 
   draw(elapsed) {
