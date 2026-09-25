@@ -25,6 +25,9 @@ engine.setScene(scene);
 
 // Initialize Scene UI
 const sceneUI = new SceneUI(scene, 'layers-container');
+sceneUI.presetBasePath = new URL('../', document.currentScript.src).pathname;
+sceneUI.loadPresetFromPath();
+window.addEventListener('popstate', () => sceneUI.loadPresetFromPath());
 
 // ============================================
 // Event Listeners

@@ -213,6 +213,39 @@ class SceneUI {
     if (index >= 0 && index < presets.length) {
       this.scene.importFromJSON(presets[index].data, this);
       this.hidePresetsModal();
+      const name = this.presetSlug(presets[index].name);
+      if (name && this.presetBasePath !== undefined) {
+        history.pushState(null, '', this.presetBasePath + encodeURIComponent(name));
+      }
+    }
+  }
+
+  presetSlug(name) {
+    return name.trim().toLowerCase().replace(/\s+/g, '-');
+  }
+
+  loadPresetFromPath() {
+    const path = window.location.pathname;
+    if (!path.startsWith(this.presetBasePath)) return;
+    let name;
+    try {
+      name = decodeURIComponent(path.slice(this.presetBasePath.length).replace(/\/$/, ''));
+    } catch {
+      return;
+    }
+    if (!name || name === 'index.html') {
+      this.scene.clear();
+      this.clearAllPanels();
+      return;
+    }
+    const presets = [...this.getBuiltInPresets(), ...this.getPresets()];
+    const preset = presets.find(item => this.presetSlug(item.name) === this.presetSlug(name));
+    if (preset) {
+      this.scene.importFromJSON(preset.data, this);
+    } else {
+      this.scene.clear();
+      this.clearAllPanels();
+      alert(`Preset "${name}" was not found. Choose a preset from the Presets menu.`);
     }
   }
 

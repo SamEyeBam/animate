@@ -87,7 +87,7 @@ class ControlFactory {
     // Label showing property name
     const label = document.createElement('span');
     label.className = 'control-label-inline';
-    label.textContent = config.property;
+    label.textContent = config.label || config.property;
 
     // Value display (editable)
     const valueDisplay = document.createElement('span');
@@ -102,6 +102,7 @@ class ControlFactory {
     input.id = `el${config.property}`;
     input.min = config.min;
     input.max = config.max;
+    input.step = config.step ?? 1;
     input.value = instance[config.property] ?? config.defaultValue;
 
     // Store original config bounds for reference
@@ -296,7 +297,7 @@ class ControlFactory {
 
     const label = document.createElement('span');
     label.className = 'control-label-inline';
-    label.textContent = config.property;
+    label.textContent = config.label || config.property;
 
     const input = document.createElement('input');
     input.type = 'color';
@@ -351,7 +352,7 @@ class ControlFactory {
 
     const label = document.createElement('span');
     label.className = 'control-label-inline';
-    label.textContent = config.property;
+    label.textContent = config.label || config.property;
 
     const input = document.createElement('input');
     input.type = 'checkbox';
@@ -393,7 +394,7 @@ class ControlFactory {
     const label = document.createElement('p');
     label.className = 'control-label';
     label.id = `elText${config.property}`;
-    label.textContent = `${config.property}: ${config.defaultValue}`;
+    label.textContent = config.label || `${config.property}: ${instance[config.property] ?? config.defaultValue}`;
 
     const select = document.createElement('select');
     select.className = 'control control-dropdown';
@@ -410,7 +411,7 @@ class ControlFactory {
     const listener = (event) => {
       const newValue = event.target.value;
       instance[config.property] = newValue;
-      label.textContent = `${config.property}: ${newValue}`;
+      label.textContent = config.label || `${config.property}: ${newValue}`;
       if (config.callback) {
         config.callback(instance, newValue);
       }
